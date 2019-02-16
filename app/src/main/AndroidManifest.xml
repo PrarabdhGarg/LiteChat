@@ -23,6 +23,11 @@ package="com.example.litechat">
             android:resource="@xml/searchable" />
     </activity>
 
+
+        <activity android:name=".view.activities.LoginActivity"/>
+
+
+
     <activity android:name=".view.activities.SearchResultsActivity">
     <intent-filter>
         <action android:name="android.intent.action.SEARCH" />
