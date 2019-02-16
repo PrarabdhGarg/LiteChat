@@ -1,5 +1,6 @@
 package com.example.litechat.view.activities
 
+import android.content.Intent
 import android.support.design.widget.TabLayout
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
@@ -37,6 +38,8 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+
+        startActivity(Intent(this@HomeActivity , LoginActivity::class.java))
 
         setSupportActionBar(toolbar)
         // Create the adapter that will return a fragment for each of the three
