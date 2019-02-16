@@ -25,7 +25,7 @@ package="com.example.litechat">
 
 
         <activity android:name=".view.activities.LoginActivity"/>
-
+        <activity android:name=".view.activities.DeveloperActivity"/>
 
 
     <activity android:name=".view.activities.SearchResultsActivity">
