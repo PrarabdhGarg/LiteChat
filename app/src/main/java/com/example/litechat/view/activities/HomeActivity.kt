@@ -94,6 +94,12 @@ class HomeActivity : AppCompatActivity() {
         else if (id==R.id.action_developers){
             return true
         }
+        else if (id == R.id.action_signOut)
+        {
+            FirebaseAuth.getInstance().signOut()
+            startActivity(Intent(this@HomeActivity , LoginActivity::class.java))
+            return true
+        }
 
         return super.onOptionsItemSelected(item)
     }

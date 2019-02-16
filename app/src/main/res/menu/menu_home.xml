@@ -13,9 +13,15 @@
         android:orderInCategory="100"
         android:title="@string/action_developers"
         app:showAsAction="never" />
+
     <item android:id="@+id/search"
         android:title="@string/search_title"
         android:icon="@drawable/ic_search_white_24dp"
         app:actionViewClass="android.widget.SearchView"
         app:showAsAction="collapseActionView|ifRoom" />
+
+    <item android:id="@+id/action_signOut"
+          android:title="@string/action_signOut"
+          android:orderInCategory="100"
+          app:showAsAction="never"/>
 </menu>
