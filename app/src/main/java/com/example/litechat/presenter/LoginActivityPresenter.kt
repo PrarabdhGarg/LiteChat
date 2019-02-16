@@ -1,26 +1,28 @@
 package com.example.litechat.presenter
 
 import android.app.Activity
-import android.app.AlertDialog
 import android.content.Context
 import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
-import com.example.litechat.listeners.ListenerObject
+import com.example.litechat.contracts.LoginContact
+import com.example.litechat.listeners.OnAccountSearchListenerObject
+import com.example.litechat.listeners.OnLoginListenerObject
 import com.example.litechat.model.UserDataModel
-import com.google.android.gms.tasks.Task
+import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseException
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.auth.User
 import java.util.concurrent.TimeUnit
 
 
-class LoginActivityPresenter
+class LoginActivityPresenter : LoginContact.Presenter
 {
-    fun checkAccountExists (number : String , listener : ListenerObject)
+    var onLoginListenerObject : OnLoginListenerObject? = null
+    override fun checkAccountExists (number : String, listener1 : OnAccountSearchListenerObject)
     {
         var flag = false
         val database = FirebaseFirestore.getInstance()
@@ -29,31 +31,32 @@ class LoginActivityPresenter
                 if(document.id == number)
                 {
                     flag = true
-                    listener.listener!!.onUserAccountMatch()
+                    listener1.listener!!.onUserAccountMatch()
                 }
             }
             if(flag == false)
             {
-                listener.listener!!.onUserAccountNotFound()
+                listener1.listener!!.onUserAccountNotFound()
             }
         }
     }
 
-    fun addUserToFirebase(number : String , id : String , name : String)
+    override fun addUserToFirebase(number : String, id : String, name : String)
     {
         val database = FirebaseFirestore.getInstance()
-        val user : UserDataModel = UserDataModel(id = id , name = name , number = number)
-        database.collection("Users").add(user)
+        val user : UserDataModel = UserDataModel(Id = id , Name = name , Number = number)
+        database.collection("Users").document(number.toString()).set(user)
     }
 
-    fun verifyNumber(number : String , activity : Activity , context: Context , dialog: ProgressBar)
+    override fun verifyNumber(number : String, activity : Activity, context: Context, dialog: ProgressBar , loginListener : OnLoginListenerObject)
     {
-
+        onLoginListenerObject = loginListener
         var mCallbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks =
             object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
                 override fun onVerificationCompleted(p0: PhoneAuthCredential?) {
                     Log.d("Verification", "SMS Verification Sucessful\n$p0")
                     dialog.visibility = View.INVISIBLE
+                    signInWithPhoneAuthCredential(p0!! , context)
                     Toast.makeText(context, "Verification Sucessfull", Toast.LENGTH_LONG).show()
                 }
 
@@ -73,15 +76,16 @@ class LoginActivityPresenter
             .verifyPhoneNumber("+91$number", 60, TimeUnit.SECONDS, activity, mCallbacks)
     }
 
-    fun verifyNumber(number : String , activity : Activity , context: Context , dialog: ProgressBar , name: String)
+    override fun verifyNumber(number : String, activity : Activity, context: Context, dialog: ProgressBar, name: String , loginListener : OnLoginListenerObject)
     {
-
+        onLoginListenerObject = loginListener
         var mCallbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks =
             object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
                 override fun onVerificationCompleted(p0: PhoneAuthCredential?) {
                     Log.d("Verification", "SMS Verification Sucessful\n$p0")
                     dialog.visibility = View.INVISIBLE
                     addUserToFirebase(number , p0.toString() , name)
+                    signInWithPhoneAuthCredential(p0!! , context)
                     Toast.makeText(context, "Verification Sucessfull", Toast.LENGTH_LONG).show()
                 }
 
@@ -102,6 +106,16 @@ class LoginActivityPresenter
     }
 
 
-
+    override fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential, context: Context) {
+        var mAuth : FirebaseAuth = FirebaseAuth(FirebaseApp.getInstance())
+        mAuth.signInWithCredential(credential).addOnSuccessListener {result ->
+            Toast.makeText(context , result.user.toString() , Toast.LENGTH_SHORT).show()
+            onLoginListenerObject!!.listener!!.onScucess()
+        }
+            .addOnFailureListener { exception ->
+                Toast.makeText(context , exception.toString() , Toast.LENGTH_SHORT).show()
+                onLoginListenerObject!!.listener!!.onFailure()
+            }
+    }
 
 }

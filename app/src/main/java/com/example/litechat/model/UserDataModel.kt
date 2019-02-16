@@ -1,9 +1,9 @@
 package com.example.litechat.model
 
 data class UserDataModel(
-    val number : String,
-    val id : String,
-    var about : String = "",
-    var name : String ,
-    var currentChats : HashMap<String , String> = HashMap()
+    val Number : String,
+    val Id : String,
+    var About : String = "",
+    var Name : String ,
+    var CurrentChats : HashMap<String , String> = HashMap()
 )

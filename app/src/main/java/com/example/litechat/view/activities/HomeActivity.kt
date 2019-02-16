@@ -18,6 +18,7 @@ import com.example.litechat.R
 import com.example.litechat.view.fragments.FragmentChat
 import com.example.litechat.view.fragments.FragmentContact
 import com.example.litechat.view.fragments.FragmentStatus
+import com.google.firebase.auth.FirebaseAuth
 
 
 import kotlinx.android.synthetic.main.activity_home.*
@@ -39,7 +40,12 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        startActivity(Intent(this@HomeActivity , LoginActivity::class.java))
+        //If user is already logged in, no need to open the LoginActivity again
+        
+        if(FirebaseAuth.getInstance().currentUser == null)
+        {
+            startActivity(Intent(this@HomeActivity , LoginActivity::class.java))
+        }
 
         setSupportActionBar(toolbar)
         // Create the adapter that will return a fragment for each of the three
