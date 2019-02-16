@@ -42,7 +42,6 @@ class HomeActivity : AppCompatActivity() {
      * [android.support.v4.app.FragmentStatePagerAdapter].
      */
     private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
-    private val PERMISSIONS_REQUEST_READ_CONTACTS = 100
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,8 +49,6 @@ class HomeActivity : AppCompatActivity() {
         setContentView(R.layout.activity_home)
 
         //If user is already logged in, no need to open the LoginActivity again
-
-        requestPermissions(arrayOf(Manifest.permission.READ_CONTACTS), PERMISSIONS_REQUEST_READ_CONTACTS)
 
         if(FirebaseAuth.getInstance().currentUser == null)
         {

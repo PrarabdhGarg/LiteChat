@@ -1,5 +1,6 @@
 package com.example.litechat.view.activities
 
+import android.Manifest
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -22,6 +23,7 @@ import kotlinx.android.synthetic.main.login_screen.*
 
 class LoginActivity : AppCompatActivity() , LoginContact.View
 {
+    private val PERMISSIONS_REQUEST_READ_CONTACTS = 100
     var mobileNumber : String? = null
     var firebaseAuth : FirebaseAuth? = null
     var loginActivityPresenter : LoginActivityPresenter? = null   //Stores the instance of the presenter that will be used throughout this activity
@@ -33,6 +35,9 @@ class LoginActivity : AppCompatActivity() , LoginContact.View
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login_screen)
+
+        requestPermissions(arrayOf(Manifest.permission.READ_CONTACTS), PERMISSIONS_REQUEST_READ_CONTACTS)
+
         FirebaseApp.initializeApp(baseContext)
         loginActivityPresenter = LoginActivityPresenter()
         firebaseAuth = FirebaseAuth.getInstance()
