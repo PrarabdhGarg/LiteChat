@@ -7,9 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.litechat.R
 
-class FragmentContact: Fragment() {
+class FragmentContact: Fragment(){
+
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
         val view = inflater.inflate(R.layout.fragment_contact, container, false)
         return view
+
     }
 }

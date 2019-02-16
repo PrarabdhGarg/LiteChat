@@ -1,6 +1,7 @@
 package com.example.litechat.view.activities
 
 
+import android.Manifest
 import android.app.SearchManager
 import android.content.Context
 
@@ -41,13 +42,17 @@ class HomeActivity : AppCompatActivity() {
      * [android.support.v4.app.FragmentStatePagerAdapter].
      */
     private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
+    private val PERMISSIONS_REQUEST_READ_CONTACTS = 100
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
         //If user is already logged in, no need to open the LoginActivity again
-        
+
+        requestPermissions(arrayOf(Manifest.permission.READ_CONTACTS), PERMISSIONS_REQUEST_READ_CONTACTS)
+
         if(FirebaseAuth.getInstance().currentUser == null)
         {
             startActivity(Intent(this@HomeActivity , LoginActivity::class.java))
