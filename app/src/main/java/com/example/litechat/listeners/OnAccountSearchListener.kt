@@ -1,6 +1,6 @@
 package com.example.litechat.listeners
 
-interface CustomListener {
+interface OnAccountSearchListener {
     fun onUserAccountMatch()
     fun onUserAccountNotFound()
 }
