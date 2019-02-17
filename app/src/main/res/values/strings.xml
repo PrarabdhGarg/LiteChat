@@ -5,7 +5,7 @@
     <string name="tab_text_2">Contact</string>
     <string name="tab_text_3">Status</string>
 
-    <!-- Names for the Menu Item View -->
+    <!-- Names for the Menu Item LoginView -->
     <string name="action_settings">Profile</string>
     <string name="action_developers">Developers</string>
     <string name="action_signOut">Log Out</string>
