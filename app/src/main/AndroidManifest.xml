@@ -16,7 +16,7 @@
 
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".view.activities.PersonalChat">
+        <activity android:name=".view.activities.ChatActivity">
         </activity>
         <activity android:name=".view.activities.HomeActivity">
             <intent-filter>

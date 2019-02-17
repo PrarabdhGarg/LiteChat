@@ -24,7 +24,6 @@ import android.widget.SearchView
 import com.example.litechat.R
 import com.example.litechat.view.fragments.FragmentChat
 import com.example.litechat.view.fragments.FragmentContact
-import com.example.litechat.view.fragments.FragmentDevelopers
 import com.example.litechat.view.fragments.FragmentStatus
 import com.google.firebase.auth.FirebaseAuth
 
@@ -98,10 +97,6 @@ class HomeActivity : AppCompatActivity() {
         }
         else if (id==R.id.action_developers){
 
-<<<<<<< HEAD
-            // start activity for developer
-
-=======
             startActivity(Intent(this@HomeActivity, DeveloperActivity::class.java))
             return true
         }
@@ -109,7 +104,6 @@ class HomeActivity : AppCompatActivity() {
         {
             FirebaseAuth.getInstance().signOut()
             startActivity(Intent(this@HomeActivity , LoginActivity::class.java))
->>>>>>> cdd4efab07fcdaeb30ed436f6b8309ca06f03e12
             return true
         }
 
