@@ -1,6 +1,7 @@
 package com.example.litechat.view.activities
 
 
+import android.Manifest
 import android.app.SearchManager
 import android.content.Context
 
@@ -42,12 +43,13 @@ class HomeActivity : AppCompatActivity() {
      */
     private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
         //If user is already logged in, no need to open the LoginActivity again
-        
+
         if(FirebaseAuth.getInstance().currentUser == null)
         {
             startActivity(Intent(this@HomeActivity , LoginActivity::class.java))
@@ -89,11 +91,13 @@ class HomeActivity : AppCompatActivity() {
         val id = item.itemId
 
         if (id == R.id.action_profile) {
+
+            // start Activity for Profile
             return true
         }
         else if (id==R.id.action_developers){
 
-            startActivity(Intent(this@HomeActivity, DeveloperActivity::class.java))
+   startActivity(Intent(this@HomeActivity, DeveloperActivity::class.java))
             return true
         }
         else if (id == R.id.action_signOut)
@@ -127,6 +131,8 @@ class HomeActivity : AppCompatActivity() {
                 2   ->{ val fragmentStatus= FragmentStatus()
                     return fragmentStatus }
             }
+
+
             return   fragmentChat
         }
 
@@ -136,38 +142,4 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-//    class PlaceholderFragment : Fragment() {
-//
-//        override fun onCreateView(
-//            inflater: LayoutInflater, container: ViewGroup?,
-//            savedInstanceState: Bundle?
-//        ): LoginView? {
-//            val rootView = inflater.inflate(R.layout.fragment_home, container, false)
-//            rootView.section_label.text = getString(R.string.section_format, arguments?.getInt(ARG_SECTION_NUMBER))
-//            return rootView
-//        }
-//
-//        companion object {
-//            /**
-//             * The fragment argument representing the section number for this
-//             * fragment.
-//             */
-//            private val ARG_SECTION_NUMBER = "section_number"
-//
-//            /**
-//             * Returns a new instance of this fragment for the given section
-//             * number.
-//             */
-//            fun newInstance(sectionNumber: Int): PlaceholderFragment {
-//                val fragment = PlaceholderFragment()
-//                val args = Bundle()
-//                args.putInt(ARG_SECTION_NUMBER, sectionNumber)
-//                fragment.arguments = args
-//                return fragment
-//            }
-//        }
-//    }
 }
