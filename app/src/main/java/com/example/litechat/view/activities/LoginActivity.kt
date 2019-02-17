@@ -11,27 +11,22 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
 import com.example.litechat.R
-import com.example.litechat.contracts.LoginContact
-import com.example.litechat.listeners.OnAccountSearchListener
-import com.example.litechat.listeners.OnAccountSearchListenerObject
-import com.example.litechat.listeners.OnLoginListener
-import com.example.litechat.listeners.OnLoginListenerObject
+import com.example.litechat.contracts.LoginContract
 import com.example.litechat.presenter.LoginActivityPresenter
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.login_screen.*
 
-class LoginActivity : AppCompatActivity() , LoginContact.View
+class LoginActivity : AppCompatActivity() , LoginContract.LoginView
 {
     private val PERMISSIONS_REQUEST_READ_CONTACTS = 100
     var mobileNumber : String? = null
     var firebaseAuth : FirebaseAuth? = null
     var loginActivityPresenter : LoginActivityPresenter? = null   //Stores the instance of the presenter that will be used throughout this activity
     var userName : String? = null
-    var loginListener : OnLoginListenerObject? = null   //This listener is called after the mobile verification is done and the firebase Auth tries to login the user
-    var onDataCheckListener : OnAccountSearchListenerObject? = null   //This listener is called after the check for all existing users has been completed
     var doubleBackToExitPressedOnce = false   //This variable is true if the user has pressed the button once. This variable gets reset after every 2 seconds
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login_screen)
@@ -39,50 +34,9 @@ class LoginActivity : AppCompatActivity() , LoginContact.View
         requestPermissions(arrayOf(Manifest.permission.READ_CONTACTS), PERMISSIONS_REQUEST_READ_CONTACTS)
 
         FirebaseApp.initializeApp(baseContext)
-        loginActivityPresenter = LoginActivityPresenter()
+        loginActivityPresenter = LoginActivityPresenter(this)
         firebaseAuth = FirebaseAuth.getInstance()
         ProgressBar!!.visibility=View.INVISIBLE
-
-        onDataCheckListener = OnAccountSearchListenerObject()
-        loginListener = OnLoginListenerObject()
-
-        loginListener!!.setCustomObjectListener(object : OnLoginListener{
-            override fun onScucess() {
-                finish()
-            }
-
-            override fun onFailure() {
-                Toast.makeText(applicationContext , "Login Failure. Please Try Again" , Toast.LENGTH_SHORT).show()
-            }
-
-        })
-
-        onDataCheckListener!!.setCustomObjectListener(object : OnAccountSearchListener{
-            override fun onUserAccountNotFound() {
-                /**
-                 * Ask user to create new Account
-                 */
-                Log.d("TAG " , "New User")
-                loginButton.text = "SignUp"
-                editTextName.visibility = View.VISIBLE
-                ProgressBar!!.visibility = View.INVISIBLE
-                window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-            }
-
-            override fun onUserAccountMatch() {
-                /**
-                 * Login the User into the app
-                 */
-                Log.d("TAG " , "Existing User")
-                ProgressBar!!.visibility = View.VISIBLE
-                window.setFlags(
-                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-                loginActivityPresenter!!.verifyNumber(mobileNumber!! , this@LoginActivity , applicationContext , dialog = ProgressBar , loginListener = loginListener!!)
-                window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-            }
-
-        })
 
         loginButton.setOnClickListener {
             when {
@@ -137,12 +91,13 @@ class LoginActivity : AppCompatActivity() , LoginContact.View
 
     override fun onFirstButtonPressed()
     {
+        Log.d("LOGIN" , "onFirstPressed Callsed")
         mobileNumber = editTextNumber.text.toString()
         ProgressBar!!.setVisibility (View.VISIBLE)
         window.setFlags(
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-        loginActivityPresenter!!.checkAccountExists(mobileNumber!! , onDataCheckListener!!)
+        loginActivityPresenter!!.checkAccountExists(mobileNumber!!)
     }
 
     /**
@@ -160,7 +115,39 @@ class LoginActivity : AppCompatActivity() , LoginContact.View
         window.setFlags(
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-        loginActivityPresenter!!.verifyNumber(mobileNumber!! , this , applicationContext , ProgressBar , userName!! , loginListener!!)
+        loginActivityPresenter!!.verifyNumber(mobileNumber!! , this , applicationContext , ProgressBar , userName!!)
+    }
+
+    override fun onUserAccontNotFound() {
+        /**
+         * Ask user to create new Account
+         */
+        Log.d("TAG " , "New User")
+        loginButton.text = "SignUp"
+        editTextName.visibility = View.VISIBLE
+        ProgressBar!!.visibility = View.INVISIBLE
+        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+    }
+
+    override fun onUserAccountFound() {
+        /**
+         * Login the User into the app
+         */
+        Log.d("TAG " , "Existing User")
+        ProgressBar!!.visibility = View.VISIBLE
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+        loginActivityPresenter!!.verifyNumber(mobileNumber!! , this@LoginActivity , applicationContext , dialog = ProgressBar)
+        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+    }
+
+    override fun changeActivity() {
+        finish()
+    }
+
+    override fun onLoginError() {
+        Toast.makeText(applicationContext , "Error while logging in the user" , Toast.LENGTH_SHORT).show()
     }
 
 }

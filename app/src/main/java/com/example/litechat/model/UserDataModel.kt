@@ -5,5 +5,6 @@ data class UserDataModel(
     val Id : String,
     var About : String = "",
     var Name : String ,
-    var CurrentChats : HashMap<String , String> = HashMap()
+    var CurrentChats : HashMap<String , String> = HashMap(),
+    var CurrentActivity : String = ""
 )

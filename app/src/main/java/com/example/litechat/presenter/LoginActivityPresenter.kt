@@ -6,9 +6,7 @@ import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
-import com.example.litechat.contracts.LoginContact
-import com.example.litechat.listeners.OnAccountSearchListenerObject
-import com.example.litechat.listeners.OnLoginListenerObject
+import com.example.litechat.contracts.LoginContract
 import com.example.litechat.model.UserDataModel
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseException
@@ -19,10 +17,11 @@ import com.google.firebase.firestore.FirebaseFirestore
 import java.util.concurrent.TimeUnit
 
 
-class LoginActivityPresenter : LoginContact.Presenter
+class LoginActivityPresenter (loginView : LoginContract.LoginView): LoginContract.LoginPresenter
 {
-    var onLoginListenerObject : OnLoginListenerObject? = null
-    override fun checkAccountExists (number : String, listener1 : OnAccountSearchListenerObject)
+    var loginActivity = loginView
+
+    override fun checkAccountExists (number : String)
     {
         var flag = false
         val database = FirebaseFirestore.getInstance()
@@ -31,12 +30,12 @@ class LoginActivityPresenter : LoginContact.Presenter
                 if(document.id == number)
                 {
                     flag = true
-                    listener1.listener!!.onUserAccountMatch()
+                    loginActivity.onUserAccountFound()
                 }
             }
             if(flag == false)
             {
-                listener1.listener!!.onUserAccountNotFound()
+                loginActivity.onUserAccontNotFound()
             }
         }
     }
@@ -44,13 +43,12 @@ class LoginActivityPresenter : LoginContact.Presenter
     override fun addUserToFirebase(number : String, id : String, name : String)
     {
         val database = FirebaseFirestore.getInstance()
-        val user : UserDataModel = UserDataModel(Id = id , Name = name , Number = number)
+        val user = UserDataModel(Id = id , Name = name , Number = number)
         database.collection("Users").document(number.toString()).set(user)
     }
 
-    override fun verifyNumber(number : String, activity : Activity, context: Context, dialog: ProgressBar , loginListener : OnLoginListenerObject)
+    override fun verifyNumber(number : String, activity : Activity, context: Context, dialog: ProgressBar)
     {
-        onLoginListenerObject = loginListener
         var mCallbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks =
             object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
                 override fun onVerificationCompleted(p0: PhoneAuthCredential?) {
@@ -76,9 +74,8 @@ class LoginActivityPresenter : LoginContact.Presenter
             .verifyPhoneNumber("+91$number", 60, TimeUnit.SECONDS, activity, mCallbacks)
     }
 
-    override fun verifyNumber(number : String, activity : Activity, context: Context, dialog: ProgressBar, name: String , loginListener : OnLoginListenerObject)
+    override fun verifyNumber(number : String, activity : Activity, context: Context, dialog: ProgressBar, name: String)
     {
-        onLoginListenerObject = loginListener
         var mCallbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks =
             object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
                 override fun onVerificationCompleted(p0: PhoneAuthCredential?) {
@@ -110,11 +107,11 @@ class LoginActivityPresenter : LoginContact.Presenter
         var mAuth : FirebaseAuth = FirebaseAuth(FirebaseApp.getInstance())
         mAuth.signInWithCredential(credential).addOnSuccessListener {result ->
             Toast.makeText(context , result.user.toString() , Toast.LENGTH_SHORT).show()
-            onLoginListenerObject!!.listener!!.onScucess()
+            loginActivity.changeActivity()
         }
             .addOnFailureListener { exception ->
                 Toast.makeText(context , exception.toString() , Toast.LENGTH_SHORT).show()
-                onLoginListenerObject!!.listener!!.onFailure()
+                loginActivity.onLoginError()
             }
     }
 

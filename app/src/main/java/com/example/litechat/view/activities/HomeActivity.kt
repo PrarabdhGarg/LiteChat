@@ -2,10 +2,14 @@ package com.example.litechat.view.activities
 
 
 import android.Manifest
+import android.app.Activity
 import android.app.SearchManager
 import android.content.Context
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
 
 import android.support.design.widget.TabLayout
 import android.support.design.widget.Snackbar
@@ -15,11 +19,14 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.SearchView
 import com.example.litechat.R
 import com.example.litechat.view.fragments.FragmentChat
@@ -98,6 +105,7 @@ class HomeActivity : AppCompatActivity() {
         else if (id==R.id.action_developers){
 
             startActivity(Intent(this@HomeActivity, DeveloperActivity::class.java))
+   startActivity(Intent(this@HomeActivity, DeveloperActivity::class.java))
             return true
         }
         else if (id == R.id.action_signOut)
@@ -142,5 +150,15 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
+    {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
+            //val thumbnail: Bitmap = data!!.getParcelableExtra("data")
+            val fullPhotoUri: Uri? = data!!.data
+            Log.d("Image Search" , fullPhotoUri.toString())
+        }
+    }
 
 }
