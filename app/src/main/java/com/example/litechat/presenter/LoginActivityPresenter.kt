@@ -62,7 +62,7 @@ class LoginActivityPresenter : LoginContact.Presenter
 
                 override fun onVerificationFailed(p0: FirebaseException?) {
                     Log.d("Verification", "SMS Verification UnSucessful\n$p0")
-                    Toast.makeText(context, "Verification UnSucessfull", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "Verification UnSucessfull ${p0.toString()}", Toast.LENGTH_LONG).show()
                 }
 
                 override fun onCodeSent(p0: String?, p1: PhoneAuthProvider.ForceResendingToken?) {
@@ -91,7 +91,7 @@ class LoginActivityPresenter : LoginContact.Presenter
 
                 override fun onVerificationFailed(p0: FirebaseException?) {
                     Log.d("Verification", "SMS Verification UnSucessful\n$p0")
-                    Toast.makeText(context, "Verification UnSucessfull", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "Verification UnSucessfull ${p0.toString()}", Toast.LENGTH_LONG).show()
                 }
 
                 override fun onCodeSent(p0: String?, p1: PhoneAuthProvider.ForceResendingToken?) {

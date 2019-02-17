@@ -1,6 +1,7 @@
 package com.example.litechat.view.activities
 
 
+import android.Manifest
 import android.app.SearchManager
 import android.content.Context
 
@@ -43,12 +44,13 @@ class HomeActivity : AppCompatActivity() {
      */
     private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
         //If user is already logged in, no need to open the LoginActivity again
-        
+
         if(FirebaseAuth.getInstance().currentUser == null)
         {
             startActivity(Intent(this@HomeActivity , LoginActivity::class.java))
@@ -96,8 +98,18 @@ class HomeActivity : AppCompatActivity() {
         }
         else if (id==R.id.action_developers){
 
+<<<<<<< HEAD
             // start activity for developer
 
+=======
+            startActivity(Intent(this@HomeActivity, DeveloperActivity::class.java))
+            return true
+        }
+        else if (id == R.id.action_signOut)
+        {
+            FirebaseAuth.getInstance().signOut()
+            startActivity(Intent(this@HomeActivity , LoginActivity::class.java))
+>>>>>>> cdd4efab07fcdaeb30ed436f6b8309ca06f03e12
             return true
         }
 
