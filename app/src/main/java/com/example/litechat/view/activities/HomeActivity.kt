@@ -57,10 +57,10 @@ class HomeActivity : AppCompatActivity() {
 
         //If user is already logged in, no need to open the LoginActivity again
 
-        if(FirebaseAuth.getInstance().currentUser == null)
-        {
-            startActivity(Intent(this@HomeActivity , LoginActivity::class.java))
-        }
+//        if(FirebaseAuth.getInstance().currentUser == null)
+//        {
+//            startActivity(Intent(this@HomeActivity , LoginActivity::class.java))
+//        }
 
         setSupportActionBar(toolbar)
         // Create the adapter that will return a fragment for each of the three
@@ -105,7 +105,6 @@ class HomeActivity : AppCompatActivity() {
         else if (id==R.id.action_developers){
 
             startActivity(Intent(this@HomeActivity, DeveloperActivity::class.java))
-   startActivity(Intent(this@HomeActivity, DeveloperActivity::class.java))
             return true
         }
         else if (id == R.id.action_signOut)
