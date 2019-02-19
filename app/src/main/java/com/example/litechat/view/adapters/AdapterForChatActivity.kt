@@ -6,12 +6,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.example.litechat.R
 
-class ChatAdapter(dataset :ArrayList<String>): RecyclerView.Adapter<ChatAdapter.MyViewHolder>() {
+class AdapterForChatActivity(dataset :ArrayList<String>): RecyclerView.Adapter<AdapterForChatActivity.MyViewHolder>() {
 
 private lateinit var dataset: ArrayList<String>
     class MyViewHolder(val textView: TextView): RecyclerView.ViewHolder(textView)
 
-    override fun onCreateViewHolder(parent: ViewGroup, p1: Int): ChatAdapter.MyViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, p1: Int): AdapterForChatActivity.MyViewHolder {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
         val textView = LayoutInflater.from(parent.context)
             .inflate(R.layout.my_text_view, parent, false) as TextView
@@ -25,7 +25,7 @@ private lateinit var dataset: ArrayList<String>
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun onBindViewHolder(holder: ChatAdapter.MyViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: AdapterForChatActivity.MyViewHolder, position: Int) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
         holder.textView.text = dataset[position]
     }

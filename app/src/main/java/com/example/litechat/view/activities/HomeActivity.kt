@@ -7,6 +7,7 @@ import android.app.SearchManager
 import android.content.Context
 
 import android.content.Intent
+import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -28,7 +29,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.SearchView
+import android.widget.Toast
 import com.example.litechat.R
+import com.example.litechat.model.UserProfileData
 import com.example.litechat.view.fragments.FragmentChat
 import com.example.litechat.view.fragments.FragmentContact
 import com.example.litechat.view.fragments.FragmentStatus
@@ -38,7 +41,8 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_home.*
 
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity()
+{
 
     /**
      * The [android.support.v4.view.PagerAdapter] that will provide
@@ -49,6 +53,7 @@ class HomeActivity : AppCompatActivity() {
      * [android.support.v4.app.FragmentStatePagerAdapter].
      */
     private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
+    private var fragment : FragmentStatus? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,6 +66,8 @@ class HomeActivity : AppCompatActivity() {
         {
             startActivity(Intent(this@HomeActivity , LoginActivity::class.java))
         }
+
+
 
         setSupportActionBar(toolbar)
         // Create the adapter that will return a fragment for each of the three
@@ -91,6 +98,11 @@ class HomeActivity : AppCompatActivity() {
         return true
     }
 
+    override fun onStart() {
+        UserProfileData.UserNumber = "8369276419"
+        super.onStart()
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -105,7 +117,6 @@ class HomeActivity : AppCompatActivity() {
         else if (id==R.id.action_developers){
 
             startActivity(Intent(this@HomeActivity, DeveloperActivity::class.java))
-   startActivity(Intent(this@HomeActivity, DeveloperActivity::class.java))
             return true
         }
         else if (id == R.id.action_signOut)
@@ -137,9 +148,9 @@ class HomeActivity : AppCompatActivity() {
                     return fragmentContact}
 
                 2   ->{ val fragmentStatus= FragmentStatus()
+                    fragment = fragmentStatus
                     return fragmentStatus }
             }
-
 
             return   fragmentChat
         }
@@ -150,7 +161,6 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
     {
         super.onActivityResult(requestCode, resultCode, data)
@@ -158,6 +168,8 @@ class HomeActivity : AppCompatActivity() {
             //val thumbnail: Bitmap = data!!.getParcelableExtra("data")
             val fullPhotoUri: Uri? = data!!.data
             Log.d("Image Search" , fullPhotoUri.toString())
+            UserProfileData.UserImage = fullPhotoUri
+            fragment!!.onNewStatusImageSelected(fullPhotoUri!!)
         }
     }
 
