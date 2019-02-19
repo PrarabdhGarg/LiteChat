@@ -116,7 +116,7 @@ class HomeActivity : AppCompatActivity()
         }
         else if (id==R.id.action_developers){
 
-   startActivity(Intent(this@HomeActivity, DeveloperActivity::class.java))
+            startActivity(Intent(this@HomeActivity, DeveloperActivity::class.java))
             return true
         }
         else if (id == R.id.action_signOut)

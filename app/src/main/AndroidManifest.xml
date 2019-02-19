@@ -17,7 +17,7 @@
 
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".view.activities.PersonalChat">
+        <activity android:name=".view.activities.ChatActivity">
         </activity>
         <activity android:name=".view.activities.HomeActivity">
             <!--<intent-filter>
@@ -40,6 +40,7 @@
                     android:resource="@xml/searchable"/>
         </activity>
         <activity android:name=".view.activities.LoginActivity"/>
+        <activity android:name=".view.activities.DeveloperActivity"/>
         <activity android:name=".view.activities.SearchResultsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH"/>
