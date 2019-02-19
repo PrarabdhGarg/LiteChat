@@ -1,15 +1,13 @@
 package com.example.litechat.interactors
 
-import com.example.litechat.contracts.ChatContract
-import com.example.litechat.model.UserDataModel
+import com.example.litechat.contracts.AllChatsContractFrag
 import com.example.litechat.model.UserProfileData
 import com.google.firebase.firestore.FirebaseFirestore
-import java.util.concurrent.ArrayBlockingQueue
 
-class ChatInteractor : ChatContract.CInteractor {
-  /* private  var database: FirebaseFirestore?=null
+class FragmentChatInteractor():AllChatsContractFrag.CFInteractor {
+    private  var database: FirebaseFirestore?=null
     private lateinit  var numberKeys :ArrayList<String>
-private lateinit var groupKeys:ArrayList<String>
+    private lateinit var groupKeys:ArrayList<String>
 
     override fun getPersonalChats(): Array<Pair<String, MutableMap<String, Any>>> {
         lateinit var chats: Array<Pair<String, MutableMap<String, Any>>>
@@ -67,6 +65,7 @@ private lateinit var groupKeys:ArrayList<String>
                 }
             }
 
-     return groupChats
+        return groupChats
     }
-*/}
+
+}

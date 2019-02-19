@@ -20,8 +20,8 @@ class ChatActivity : AppCompatActivity(),ChatContract.CView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
-  var string = intent.getStringExtra("Number")
-        chatPresenter.getMessageFromId(string)
+        //removed getExtra method
+      //  chatPresenter.getMessageFromId()
 
         mydataset.add("Hi")
 
