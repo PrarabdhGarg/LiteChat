@@ -6,12 +6,15 @@ interface ChatContract {
       fun displayMessage()
     }
     interface CInteractor{
-        fun getMessage(number:String)
-        fun getAllCurrentChatNames(number:String)
+        fun getPersonalChats(s: String)
+       // fun getGroupChats():  Array<Pair<String,MutableMap<String,Any>>>
     }
     interface CPresenter{
       fun setMessage()
       fun getMessageFromId(number: String)
+        // methods to get chats from interactor in presenter
+
+
 
     }
 }
