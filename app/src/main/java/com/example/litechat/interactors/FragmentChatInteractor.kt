@@ -1,15 +1,22 @@
 package com.example.litechat.interactors
 
 import com.example.litechat.contracts.AllChatsContractFrag
+import com.example.litechat.model.ChatModel
 import com.example.litechat.model.UserProfileData
 import com.google.firebase.firestore.FirebaseFirestore
 
-class FragmentChatInteractor():AllChatsContractFrag.CFInteractor {
+class FragmentChatInteractor(p1:AllChatsContractFrag.CFPresenter):AllChatsContractFrag.CFInteractor {
+
     private  var database: FirebaseFirestore?=null
     private lateinit  var numberKeys :ArrayList<String>
     private lateinit var groupKeys:ArrayList<String>
+    private lateinit var p2:AllChatsContractFrag.CFPresenter
+    init {
+        p2=p1
+    }
 
-    override fun getPersonalChats(): Array<Pair<String, MutableMap<String, Any>>> {
+    override fun getPersonalChats():ChatModel {
+        var chatModel:ChatModel
         lateinit var chats: Array<Pair<String, MutableMap<String, Any>>>
         database = FirebaseFirestore.getInstance()
         database!!.collection("Users").document(UserProfileData.UserNumber).get()
@@ -18,11 +25,12 @@ class FragmentChatInteractor():AllChatsContractFrag.CFInteractor {
 
                 var currentChats = result.get("currentChats") as Array<Pair<String, String>>
 
-
                 for (i in 0 until currentChats.size) {
                     if (UserProfileData.UserNumber.toInt() > currentChats[i].first.toInt())
                         numberKeys.add(currentChats[i].first + UserProfileData.UserNumber)
+
                     else
+
                         numberKeys.add(UserProfileData.UserNumber + currentChats[i].first)
 
                 }
@@ -37,13 +45,13 @@ class FragmentChatInteractor():AllChatsContractFrag.CFInteractor {
                     }
                 }
 
+
             }
-        return chats
+        return chatModel
     }
 
 
-
-    override fun getGroupChats(): Array<Pair<String, MutableMap<String, Any>>> {
+    override fun getGroupChats(): ChatModel {
         lateinit var groupChats: Array<Pair<String,MutableMap<String,Any>>>
         database!!.collection("Users").document(UserProfileData.UserNumber).get()
             .addOnSuccessListener { result ->
