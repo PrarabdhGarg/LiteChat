@@ -21,7 +21,7 @@ class ChatActivity : AppCompatActivity(),ChatContract.CView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
   var string = intent.getStringExtra("Number")
-        chatPresenter.getMessageFromId(string)
+        chatPresenter.getMessageFromId()
 
         mydataset.add("Hi")
 
