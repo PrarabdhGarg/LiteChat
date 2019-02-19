@@ -6,5 +6,6 @@ data class UserDataModel(
     var About : String = "",
     var Name : String ,
     var CurrentChats : HashMap<String , String> = HashMap(),
-    var CurrentActivity : String = ""
+    var CurrentActivity : String = "",
+    var Image : String = ""
 )

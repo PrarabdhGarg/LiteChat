@@ -5,6 +5,7 @@
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
 
     <application
@@ -19,6 +20,15 @@
         <activity android:name=".view.activities.ChatActivity">
         </activity>
         <activity android:name=".view.activities.HomeActivity">
+            <!--<intent-filter>
+                <action android:name="android.intent.action.GET_CONTENT" />
+                <category android:name="android.intent.category.DEFAULT" />
+                &lt;!&ndash; The OPENABLE category declares that the returned file is accessible
+                     from a content provider that supports OpenableColumns
+                     and ContentResolver.openFileDescriptor() &ndash;&gt;
+                <category android:name="android.intent.category.OPENABLE" />
+            </intent-filter>-->
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -30,6 +40,7 @@
                     android:resource="@xml/searchable"/>
         </activity>
         <activity android:name=".view.activities.LoginActivity"/>
+        <activity android:name=".view.activities.DeveloperActivity"/>
         <activity android:name=".view.activities.SearchResultsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH"/>
