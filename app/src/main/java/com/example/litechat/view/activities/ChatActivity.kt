@@ -4,7 +4,8 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import com.example.litechat.R
 import com.example.litechat.contracts.ChatContract
-import com.example.litechat.view.adapters.ChatAdapter
+import com.example.litechat.presenter.ChatPresenter
+import com.example.litechat.view.adapters.AdapterForChatActivity
 import kotlinx.android.synthetic.main.activity_chat.*
 
 class ChatActivity : AppCompatActivity(),ChatContract.CView {
@@ -13,17 +14,20 @@ class ChatActivity : AppCompatActivity(),ChatContract.CView {
     }
 
 
-    private lateinit var  ChatAdapter: ChatAdapter
+    private lateinit var  AdapterForChatActivity: AdapterForChatActivity
     private lateinit  var mydataset: ArrayList<String>
+    private var chatPresenter= ChatPresenter()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
+  var string = intent.getStringExtra("Number")
+        chatPresenter.getMessageFromId(string)
 
         mydataset.add("Hi")
 
-        ChatAdapter = ChatAdapter(mydataset)
+        AdapterForChatActivity = AdapterForChatActivity(mydataset)
         recyclerView.apply {
-            adapter= ChatAdapter
+            adapter= AdapterForChatActivity
              setHasFixedSize(true)
         }
     }
