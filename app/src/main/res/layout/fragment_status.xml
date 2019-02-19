@@ -18,7 +18,7 @@
             android:inputType="none"
             app:layout_constraintBottom_toBottomOf="@id/statusImageView"
             android:hint="Your recent activity goes here"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" android:singleLine="false"/>
 
     <ImageButton
             android:layout_width="wrap_content"
