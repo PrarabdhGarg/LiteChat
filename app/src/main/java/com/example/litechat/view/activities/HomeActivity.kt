@@ -7,6 +7,7 @@ import android.app.SearchManager
 import android.content.Context
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -20,6 +21,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
@@ -32,6 +34,7 @@ import android.widget.SearchView
 import android.widget.Toast
 import com.example.litechat.R
 import com.example.litechat.model.UserProfileData
+import com.example.litechat.presenter.HomeActivityPresenter
 import com.example.litechat.view.fragments.FragmentChat
 import com.example.litechat.view.fragments.FragmentContact
 import com.example.litechat.view.fragments.FragmentStatus
@@ -39,6 +42,7 @@ import com.google.firebase.auth.FirebaseAuth
 
 
 import kotlinx.android.synthetic.main.activity_home.*
+import java.lang.Exception
 
 
 class HomeActivity : AppCompatActivity()
@@ -66,8 +70,12 @@ class HomeActivity : AppCompatActivity()
         {
             startActivity(Intent(this@HomeActivity , LoginActivity::class.java))
         }
-
-
+        else{
+            var number = FirebaseAuth.getInstance().currentUser!!.phoneNumber
+            UserProfileData.UserNumber = number!!.substring(3)
+            Log.d("HomeActivity" , "Else enterd in auth.getIstance $number")
+            HomeActivityPresenter(applicationContext).getUserDataOnLogin(number!!)
+        }
 
         setSupportActionBar(toolbar)
         // Create the adapter that will return a fragment for each of the three
@@ -84,9 +92,8 @@ class HomeActivity : AppCompatActivity()
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
         }
-
+        Log.d("MobileOnCreate" , UserProfileData.UserNumber)
     }
-
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -99,7 +106,6 @@ class HomeActivity : AppCompatActivity()
     }
 
     override fun onStart() {
-        UserProfileData.UserNumber = "8369276419"
         super.onStart()
     }
 
@@ -164,6 +170,9 @@ class HomeActivity : AppCompatActivity()
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
     {
         super.onActivityResult(requestCode, resultCode, data)
+        var preferances : SharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        preferances.getString("CurrentUserNumber" , "123456789")
+        Log.d("MobileNumberPrefer" , preferances.getString("CurrentUserNumber" , "123456789"))
         if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
             //val thumbnail: Bitmap = data!!.getParcelableExtra("data")
             val fullPhotoUri: Uri? = data!!.data

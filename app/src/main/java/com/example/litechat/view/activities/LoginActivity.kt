@@ -1,6 +1,7 @@
 package com.example.litechat.view.activities
 
 import android.Manifest
+import android.content.Context
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -16,10 +17,11 @@ import com.example.litechat.presenter.LoginActivityPresenter
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.login_screen.*
+import java.security.AccessController.getContext
 
 class LoginActivity : AppCompatActivity() , LoginContract.LoginView
 {
-    private val PERMISSIONS_REQUEST_READ_CONTACTS = 100
+    private val PERMISSIONS_REQUEST_READ_STORAGE = 200
     var mobileNumber : String? = null
     var firebaseAuth : FirebaseAuth? = null
     var loginActivityPresenter : LoginActivityPresenter? = null   //Stores the instance of the presenter that will be used throughout this activity
@@ -31,7 +33,7 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login_screen)
 
-        requestPermissions(arrayOf(Manifest.permission.READ_CONTACTS), PERMISSIONS_REQUEST_READ_CONTACTS)
+        requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE , Manifest.permission.READ_CONTACTS) , PERMISSIONS_REQUEST_READ_STORAGE)
 
         FirebaseApp.initializeApp(baseContext)
         loginActivityPresenter = LoginActivityPresenter(this)
@@ -148,6 +150,11 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
 
     override fun onLoginError() {
         Toast.makeText(applicationContext , "Error while logging in the user" , Toast.LENGTH_SHORT).show()
+    }
+
+    override fun getCurrentContext() : Context
+    {
+        return applicationContext
     }
 
 }

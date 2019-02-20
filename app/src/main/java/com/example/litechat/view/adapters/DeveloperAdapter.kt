@@ -22,7 +22,6 @@ class DeveloperAdapter(private var fnamesAndImages: List<Pair<String, Int>>, pri
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DeveloperHolder {
 
         val view: View = LayoutInflater.from(parent.context).inflate(R.layout.developers_list, parent, false)
-
         return DeveloperHolder(view)
     }
 
