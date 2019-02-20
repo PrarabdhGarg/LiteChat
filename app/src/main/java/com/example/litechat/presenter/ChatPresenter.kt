@@ -1,11 +1,21 @@
 package com.example.litechat.presenter
 
 import com.example.litechat.contracts.ChatContract
+import com.example.litechat.interactors.ChatInteractor
 
 class ChatPresenter : ChatContract.CPresenter {
-    override fun setMessage() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
+    /* var chatInteractor =  ChatInteractor()
+
+    override fun getMessageFromId() {
+
+    override fun getMessageFromId() {
+
+        chatInteractor.getPersonalChats()
+        chatInteractor.getGroupChats()
     }
 
+    override fun setMessage() {
+         }*/
 
 }
