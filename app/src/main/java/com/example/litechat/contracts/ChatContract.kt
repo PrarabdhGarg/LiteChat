@@ -1,19 +1,22 @@
 package com.example.litechat.contracts
 
+import com.example.litechat.model.ChatModelK
+
 interface ChatContract {
     interface CView{
-
-      fun displayMessage()
+     // fun displayMessage()
     }
+
     interface CInteractor{
         // method returns personal chats to user
-        fun getPersonalChats(): Array<Pair<String,MutableMap<String,Any>>>
-       fun getGroupChats():  Array<Pair<String,MutableMap<String,Any>>>
+      //  fun getPersonalChats(): ArrayList<ChatModelK>
+      // fun getGroupChats():  Array<Pair<String,MutableMap<String,Any>>>
     }
     interface CPresenter{
-      fun setMessage()
-      fun getMessageFromId()
-        // methods to get chats from interactor in presenter
+     // fun setMessage()
+     // fun getMessageFromId()
+
+
 
 
 

@@ -4,6 +4,7 @@ package com.example.litechat.view.activities
 import android.Manifest
 import android.app.Activity
 import android.app.SearchManager
+import android.content.ContentResolver
 import android.content.Context
 
 import android.content.Intent
@@ -31,7 +32,10 @@ import android.widget.ImageView
 import android.widget.SearchView
 import android.widget.Toast
 import com.example.litechat.R
+import com.example.litechat.contracts.HomeActivityContract
+import com.example.litechat.model.ContactsModel
 import com.example.litechat.model.UserProfileData
+import com.example.litechat.presenter.HomeActivityPresenter
 import com.example.litechat.view.fragments.FragmentChat
 import com.example.litechat.view.fragments.FragmentContact
 import com.example.litechat.view.fragments.FragmentStatus
@@ -41,8 +45,15 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_home.*
 
 
-class HomeActivity : AppCompatActivity()
+class HomeActivity : AppCompatActivity(), HomeActivityContract.View
 {
+    //function to pass context to HomeActivityPresenter
+
+    override fun passContextRoom(): Context = applicationContext
+
+    //function to pass contentResolver to HomeActivityPresenter
+
+    override fun passContentResolver(): ContentResolver = contentResolver
 
     /**
      * The [android.support.v4.view.PagerAdapter] that will provide
@@ -54,6 +65,7 @@ class HomeActivity : AppCompatActivity()
      */
     private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
     private var fragment : FragmentStatus? = null
+    private val homeActivityPresenter = HomeActivityPresenter(this, ContactsModel())
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -99,8 +111,12 @@ class HomeActivity : AppCompatActivity()
     }
 
     override fun onStart() {
-        UserProfileData.UserNumber = "8369276419"
         super.onStart()
+
+       if (homeActivityPresenter.passUserList().isEmpty()) {
+
+            homeActivityPresenter.getContacts()
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

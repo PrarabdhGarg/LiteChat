@@ -10,8 +10,9 @@ import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.example.litechat.ListenerObjectTry
 import com.example.litechat.R
+import com.example.litechat.model.DataChatModel
 
-class AdapterForFragmentChat(private var dataset :ArrayList<String>, private var context: Context,
+class AdapterForFragmentChat(/*private var dataset :ArrayList<String>,*/ private var context: Context,
                              private var listenerObjectTryImage: ListenerObjectTry,private var listenerObjectTryChat: ListenerObjectTry): RecyclerView.Adapter<AdapterForFragmentChat.MyViewHolder>() {
 
 //    private lateinit var dataset: ArrayList<String>
@@ -32,13 +33,14 @@ class AdapterForFragmentChat(private var dataset :ArrayList<String>, private var
 
 
     override fun getItemCount(): Int {
-        return dataset.size
+        return DataChatModel.personalChatModelArray.size
            }
 
     override fun onBindViewHolder(holder: AdapterForFragmentChat.MyViewHolder, position: Int) {
 
-        holder.textView.text = dataset[position]
-        Glide.with(context).load(R.drawable.akshat).into(holder.imageView)
+        holder.textView.text = DataChatModel.personalChatModelArray.get(position).currentChats.first+" "+
+                DataChatModel.personalChatModelArray.get(position).currentChats.second
+        Glide.with(context).load(R.drawable.profile).into(holder.imageView)
 
         holder.textView.setOnClickListener(object : View.OnClickListener{
 

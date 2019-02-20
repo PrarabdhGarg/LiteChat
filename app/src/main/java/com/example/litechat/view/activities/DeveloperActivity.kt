@@ -18,7 +18,7 @@ class DeveloperActivity : AppCompatActivity() {
         setContentView(R.layout.activity_developer)
 
         val nameAndImages = arrayListOf(Pair("Suyash Soni",R.drawable.suyash),Pair("Prarabdh Garg",R.drawable.prarabdh),
-            Pair("Akshat Gupta",R.drawable.akshat),Pair("Ishita Aggrawal",R.drawable.ishita))
+            Pair("Akshat Gupta",R.drawable.akshat),Pair("Ishita Aggarwal",R.drawable.ishita))
 
         val fnameAndImages = nameAndImages.shuffled()
 
