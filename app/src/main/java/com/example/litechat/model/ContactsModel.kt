@@ -8,6 +8,9 @@ import com.example.litechat.model.contactsRoom.AppDatabse
 import com.example.litechat.model.contactsRoom.User
 
 class ContactsModel: HomeActivityContract.Model{
+    override fun getUserDataFromFirestore(number: String) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     override fun roomSetData(applicationContext: Context, userList: List<User>) {
         val db = Room.databaseBuilder(applicationContext, AppDatabse::class.java, "Contact_Database")

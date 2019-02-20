@@ -27,7 +27,7 @@ interface HomeActivityContract {
     interface View{
 
         fun passContentResolver() : ContentResolver
-        fun passContextRoom(): Context
+        fun passContext(): Context
 
     }
 

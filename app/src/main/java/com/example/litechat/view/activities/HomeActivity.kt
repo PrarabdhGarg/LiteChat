@@ -1,7 +1,6 @@
 package com.example.litechat.view.activities
 
 
-import android.Manifest
 import android.app.Activity
 import android.app.SearchManager
 import android.content.ContentResolver
@@ -9,9 +8,6 @@ import android.content.Context
 
 import android.content.Intent
 import android.content.SharedPreferences
-import android.database.Cursor
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 
 import android.support.design.widget.TabLayout
@@ -23,16 +19,10 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.provider.MediaStore
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.SearchView
-import android.widget.Toast
 import com.example.litechat.R
 import com.example.litechat.contracts.HomeActivityContract
 import com.example.litechat.model.ContactsModel
@@ -45,14 +35,13 @@ import com.google.firebase.auth.FirebaseAuth
 
 
 import kotlinx.android.synthetic.main.activity_home.*
-import java.lang.Exception
 
 
 class HomeActivity : AppCompatActivity(), HomeActivityContract.View
 {
     //function to pass context to HomeActivityPresenter
 
-    override fun passContextRoom(): Context = applicationContext
+    override fun passContext(): Context = applicationContext
 
     //function to pass contentResolver to HomeActivityPresenter
 
@@ -82,10 +71,11 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View
             startActivity(Intent(this@HomeActivity , LoginActivity::class.java))
         }
         else{
+
             var number = FirebaseAuth.getInstance().currentUser!!.phoneNumber
             UserProfileData.UserNumber = number!!.substring(3)
             Log.d("HomeActivity" , "Else enterd in auth.getIstance $number")
-            HomeActivityPresenter(applicationContext).getUserDataOnLogin(number!!)
+            homeActivityPresenter.getUserDataOnLogin(number)
         }
 
         setSupportActionBar(toolbar)
