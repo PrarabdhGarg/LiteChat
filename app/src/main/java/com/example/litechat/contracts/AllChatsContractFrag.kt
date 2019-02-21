@@ -1,10 +1,14 @@
 package com.example.litechat.contracts
 
 import com.example.litechat.model.ChatModelK
+import com.example.litechat.model.MessageList
 
 class AllChatsContractFrag {
     interface CFView{
            fun setContactstoFragmentChat()
+           fun setGroupNames(groupChatNames:ArrayList<String>)
+           fun setPersonalChatN1()
+           fun setPersonalChatN2()
     }
     interface CFInteractor{
 
@@ -19,8 +23,9 @@ class AllChatsContractFrag {
         fun contactsToBeShown(arr:Array<Pair<String, String>>)
         /**methods to notify presenter that data has been recieved
          * */
-        fun personalChatsDataRecieved()
-        fun groupChatsDataRecieved()
+        fun personalChatsDataRecievedN1(allChatArrayListN1 :ArrayList<MessageList>)
+        fun personalChatsDataRecievedN2(allChatArrayListN2 :ArrayList<MessageList>)
+        fun groupChatsDataRecieved(groupChatNames:ArrayList<String>)
 
         // methods to get chats from interactor in presenter
     }

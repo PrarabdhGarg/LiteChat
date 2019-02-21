@@ -1,197 +1,152 @@
 package com.example.litechat.interactors
 
-import android.app.Notification
 import android.util.Log
 import com.example.litechat.contracts.AllChatsContractFrag
-import com.example.litechat.model.ChatModelK
-import com.example.litechat.model.DataChatModel
-import com.example.litechat.model.UserProfileData
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
+import com.example.litechat.model.*
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.QuerySnapshot
 
 class FragmentChatInteractor(p1: AllChatsContractFrag.CFPresenter) : AllChatsContractFrag.CFInteractor {
 
     private var database: FirebaseFirestore? = null
-    private lateinit var numberKeys: ArrayList<String>
-    private lateinit var groupKeys: ArrayList<String>
+
     private lateinit var p2: AllChatsContractFrag.CFPresenter
 
     init {
         p2 = p1
     }
+    var allChatArrayListN1 =ArrayList<MessageList>()
+    var allChatArrayListN2 =ArrayList<MessageList>()
+    var messagesOfOnePersonN1 = ArrayList<MessageModel>()
+    var messagesOfOnePersonN2 = ArrayList<MessageModel>()
+    var messagesOfOneGroup = ArrayList<MessageModel>()
+    var allChatArrayListGroup =ArrayList<MessageList>()
+    var finalNumberKeys = ArrayList<String>()
+    lateinit var current: ArrayList<String>
+    var chatModelK: ChatModelK?= null
+
 
     override fun getPersonalChats()/*: ArrayList<ChatModelK> */ {
 
-        var chatModel = ArrayList<ChatModelK>()
 
-        lateinit var chats: Array<Pair<String, MutableMap<String, Any>>>
-         var finalNumberKeys= ArrayList<String>()
-        lateinit var current: ArrayList<String>
-        var arrayChat = ArrayList<Pair<String,String?>>()
         database = FirebaseFirestore.getInstance()
 
+// get all chats of cutrrent logged in user
+        database!!.collection("Chats").whereEqualTo("number1", "9826936889").get().addOnSuccessListener { documents ->
 
-        database!!.collection("Users").get().addOnCompleteListener { task ->
-            if (task.isSuccessful) {
+            for (doc in documents) {
+                Log.d("Query1", doc.data.toString())
 
-                for (document in task.result!!) {
+                var x = doc["number1"].toString()
+                Log.d("Query2", x)
 
-                    var currentChats = document.data
-                    var dd = currentChats.get("number") as String?
-                    if (dd.equals("9826936889")) {
-                        current = currentChats.get("currentChats") as ArrayList<String>
-                        Log.d("Final", current[0] + current[1])
+                doc.reference.collection("messages").orderBy("sentOn").get().addOnSuccessListener { messages ->
 
+                    for (mess in messages) {
+                        var obj = mess.toObject(MessageModel::class.java)
+                        messagesOfOnePersonN1.add(obj)
+
+                        Log.d("QueryMessages", obj.message.toString() + " \n " + obj.sentOn.toString() + obj.sentBy)
                     }
-                }
+                    var obj2 = MessageList()
+                    obj2!!.otherPerson = x
 
-                    for (i in 0 until current.size) {
-                        if (9826936889 > current[i].toLong()) {
-                            finalNumberKeys.add(current[i] +"9826936889")
-
-                        } else {
-
-                            finalNumberKeys.add("9826936889" + finalNumberKeys[i])
-
-                        }
-                    }
-
-                    Log.d("Fin",UserProfileData.UserNumber.toString())
-
-                   /* for (i in 0 until finalNumberKeys.size) {*/
-
-                        //lateinit var chatArray: Array<Pair<String,Array<Pair<String,String>>>>
-                        database!!.collection("Chats").get().addOnCompleteListener { document ->
-                              if(document.isSuccessful){
-
-                                  for(doc in document.result!!){
-
-                                      var personalChat = doc.data as HashMap<String,String>
-
-                                      var sorted = personalChat.toSortedMap(compareBy { it })
-                                      Log.d("k1",personalChat.toString())
-                                      Log.d("k1",sorted.toString())
-                                      var arrayChit: MutableCollection<String> = sorted.values
-
-
-                                      for (i in 0 until arrayChit.size){
-                                          var message = arrayChit.elementAt(i).indexOf('$',0,false)
-                                          var name = arrayChit.elementAt(i).substring(0,message)
-                                          var mess = arrayChit.elementAt(i).substring(message+1)
-                                          Log.d("FinalMessage",name+"\n"+mess)
-                                      }
-                                     /*
-                                      arrayChat.add(Pair(personalChat.keys.first(), personalChat[personalChat.keys.first()]))
-                                      Log.d("Finaaa",arrayChat.toString()+arrayChat.get(0).second)
-                                      var message = arrayChat[0].second!!.indexOf('$',0,false)
-                                            var name = arrayChat[0].second!!.substring(0,message)
-                                            var mess = arrayChat[0].second!!.substring(message+1)*/
-                                    //  Log.d("FinalMessage",name+"\n"+mess)
-
-                                  }
-                              //}
-
-                        }
-                    //}
-
-
-
-
+                    obj2!!.allMessages = messagesOfOnePersonN1
+                    Log.d("Query3", messagesOfOnePersonN1[0].message.toString())
+                    Log.d("Query4", obj2!!.otherPerson.toString() + "\n" + obj2!!.allMessages.toString())
+                    allChatArrayListN1.add(obj2)
+                    Log.d("Query5", allChatArrayListN1.size.toString())
                 }
             }
+            p2.personalChatsDataRecievedN1(allChatArrayListN1)
+
+
+        }
+
+        database!!.collection("Chats").whereEqualTo("number2", "9826936889").get().addOnSuccessListener { documents ->
+
+            for (doc in documents) {
+                Log.d("Query6", doc.data.toString())
+
+                var x = doc["number2"].toString()
+                Log.d("Query7", x)
+
+                doc.reference.collection("messages").orderBy("sentOn").get().addOnSuccessListener { messages ->
+
+                    for (mess in messages) {
+                        var obj = mess.toObject(MessageModel::class.java)
+                        messagesOfOnePersonN2.add(obj)
+
+                        Log.d("QueryMessages", obj.message.toString() + " \n " + obj.sentOn.toString() + obj.sentBy)
+                    }
+                    var obj2 = MessageList()
+                    obj2!!.otherPerson = x
+
+                    obj2!!.allMessages = messagesOfOnePersonN2
+                    Log.d("Query8", messagesOfOnePersonN2[0].message.toString())
+                    Log.d("Query9", obj2!!.otherPerson.toString() + "\n" + obj2!!.allMessages.toString())
+                    allChatArrayListN2.add(obj2)
+                    Log.d("Query10", allChatArrayListN2.size.toString())
+                }
+            }
+
+            p2.personalChatsDataRecievedN2(allChatArrayListN2)
         }
 
 
-        /* val docRef = database.collection("Users").document(UserProfileData.)
-        docRef.get()
-            .addOnSuccessListener { document ->
-                if (document != null) {
-                    Log.d(TAG, "DocumentSnapshot data: " + document.data)
-                } else {
-                    Log.d(TAG, "No such document")
-                }
-            }
-            .addOnFailureListener { exception ->
-                Log.d(TAG, "get failed with ", exception)
-            }*/
-        // [END get_document]
-       /* database!!.collection("Users").document(UserProfileData.UserNumber).get()
-            .addOnSuccessListener { result ->
-
-
-                var currentChats = result.get("currentChats") as Array<Pair<String, String>>
-
-                for (i in 0 until currentChats.size) {
-                    if (UserProfileData.UserNumber.toInt() > currentChats[i].first.toInt()) {
-                        numberKeys.add(currentChats[i].first + UserProfileData.UserNumber)
-                        chatModel[i].currentChats = android.util.Pair(currentChats[i].first, currentChats[i].second)
-                    } else {
-
-                        numberKeys.add(UserProfileData.UserNumber + currentChats[i].first)
-                        chatModel[i].currentChats = android.util.Pair(currentChats[i].first, currentChats[i].second)
-                    }
-                }
-
-
-                for (i in 0 until numberKeys.size) {
-
-                    //lateinit var chatArray: Array<Pair<String,Array<Pair<String,String>>>>
-                    database!!.collection("Chats").document(numberKeys[i]).get().addOnSuccessListener { result ->
-
-                        chats[i] = Pair(numberKeys[i], result.data as MutableMap<String, Any>)
-                        chatModel[i].chats = chats[i]
-                    }
-                }
-
-                DataChatModel.personalChatModelArray = chatModel
-                p2.personalChatsDataRecieved()
-
-            }*/
-
-
-        /*   return chatModel*/
     }
+    override fun getGroupChats() {
 
 
-    override fun getGroupChats()/*: ArrayList<ChatModelK> */ {
+        var currentGroupChats=ArrayList<String>()
 
-       /* lateinit var groupChats: Array<Pair<String, MutableMap<String, Any>>>
-        var groupChatModel = ArrayList<ChatModelK>()
-
-        database!!.collection("Users").document(UserProfileData.UserNumber).get()
-            .addOnSuccessListener { result ->
-
-                var currentGroupChats: Array<Pair<String, String>> =
-                    result.get("currentGroupChats") as Array<Pair<String, String>>
-
-                for (i in 0 until currentGroupChats.size) {
-                    groupKeys.add(currentGroupChats[i].first)
-
-                    groupChatModel[i].currentChats =
-                        android.util.Pair(currentGroupChats[i].first, currentGroupChats[i].second)
+         database!!.collection("Users").whereEqualTo("number","9826936889").get()
+             .addOnSuccessListener { documents ->
 
 
-                }
+                 for (doc in documents) {
 
-                for (i in 0 until groupKeys.size) {
-
-                    database!!.collection("Chats").document(groupKeys[i]).get().addOnSuccessListener { result ->
-
-                        groupChats[i] = Pair(groupKeys[i], result.data as MutableMap<String, Any>)
+                     currentGroupChats = doc["currentGroupChats"] as ArrayList<String>
+                     Log.d("groupName", currentGroupChats.toString())
 
 
-                        groupChatModel[i].chats = groupChats[i]
+
+                 database!!.collection("Chats").whereEqualTo("name" , "GroupName").get().addOnSuccessListener { documents ->
+
+                     for(doc in documents)
+                     {
+                         Log.d("QueryG6",doc.data.toString())
+
+                         var x = doc["name"].toString()
+                         Log.d("QueryG7",x)
+
+                         doc.reference.collection("messages").orderBy("sentOn").get().addOnSuccessListener { messages ->
+
+                             for(mess in messages)
+                             {
+                                 var obj = mess.toObject(MessageModel::class.java)
+
+                                 messagesOfOneGroup.add(obj)
+
+                                 Log.d("QueryGMessages",obj.message.toString()+" \n "+obj.sentOn.toString() +obj.sentBy)
+                             }
+                             var obj2 = MessageList()
+                             obj2!!.otherPerson=x // GroupName
+
+                             obj2!!.allMessages= messagesOfOneGroup
+                             Log.d("QueryG8",messagesOfOneGroup[0].message.toString())
+                             Log.d("QueryG9",obj2!!.otherPerson.toString()+"\n"+obj2!!.allMessages.toString())
+                             allChatArrayListGroup.add(obj2)
+                             Log.d("QueryG10",allChatArrayListGroup.size.toString())
+                         }
+                     }
+                 }
+
+                 }
 
 
-                    }
-                }
-
-                DataChatModel.groupChatModelArray = groupChatModel
-            }*/
-
-        /*return groupChats*/
+             }
+                    AllChatDataModel.allChatArrayListGroupStatic=allChatArrayListGroup
+                    p2.groupChatsDataRecieved(currentGroupChats)
     }
 
 }

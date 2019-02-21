@@ -2,8 +2,12 @@ package com.example.litechat.presenter
 
 import com.example.litechat.contracts.AllChatsContractFrag
 import com.example.litechat.interactors.FragmentChatInteractor
+import com.example.litechat.model.MessageList
 
 class FragmentChatPresenter(var view: AllChatsContractFrag.CFView):AllChatsContractFrag.CFPresenter {
+    override fun personalChatsDataRecievedN2(allChatArrayListN2: ArrayList<MessageList>) {
+
+    }
 
     override fun contactsToBeShown(arr: Array<Pair<String, String>>){
 
@@ -17,12 +21,12 @@ class FragmentChatPresenter(var view: AllChatsContractFrag.CFView):AllChatsContr
     }
 
     // methods to set data in fragmentChat
-    override fun personalChatsDataRecieved() {
+    override fun personalChatsDataRecievedN1(allChatArrayListN1 :ArrayList<MessageList>) {
               view.setContactstoFragmentChat()
     }
 
-    override fun groupChatsDataRecieved() {
-
+    override fun groupChatsDataRecieved(groupChatNames:ArrayList<String>) {
+                 view.setGroupNames(groupChatNames)
     }
 
     override fun getChats() {

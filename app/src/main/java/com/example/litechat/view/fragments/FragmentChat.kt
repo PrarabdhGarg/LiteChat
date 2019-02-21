@@ -17,6 +17,19 @@ import com.example.litechat.view.adapters.AdapterForFragmentChat
 import kotlinx.android.synthetic.main.fragment_chat.*
 
 class FragmentChat: Fragment(),AllChatsContractFrag.CFView{
+    var ngroupChatNames=ArrayList<String>()
+
+    override fun setGroupNames(groupChatNames:ArrayList<String>) {
+        ngroupChatNames=groupChatNames
+    }
+
+    override fun setPersonalChatN1() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun setPersonalChatN2() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     private lateinit var  listenerForChat: ListenerObjectTry
    private  lateinit var listenerForProfile: ListenerObjectTry
@@ -56,14 +69,14 @@ class FragmentChat: Fragment(),AllChatsContractFrag.CFView{
         })
 
 
+        var   adapterForFragmentChat= AdapterForFragmentChat(/*dataset,*/context!!,listenerForProfile,listenerForChat)
+        recyView_FragmentChat.adapter= adapterForFragmentChat
 
 
         return view
     }
 
     override fun setContactstoFragmentChat() {
-        var   adapterForFragmentChat= AdapterForFragmentChat(/*dataset,*/context!!,listenerForProfile,listenerForChat)
-        recyView_FragmentChat.adapter= adapterForFragmentChat
 
     }
 

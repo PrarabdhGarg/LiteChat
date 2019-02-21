@@ -4,6 +4,6 @@ import android.util.Pair
 
 data class ChatModelK(
 
-    var currentChats: Pair<String, String> ,
+    var currentChats: Pair<String, ArrayList<MessageModel>> ,
     var chats:kotlin.Pair<String, MutableMap<String, kotlin.Any>>
 )

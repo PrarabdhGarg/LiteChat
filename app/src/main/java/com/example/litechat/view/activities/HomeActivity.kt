@@ -74,10 +74,12 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View
 
         //If user is already logged in, no need to open the LoginActivity again
 
+/*
         if(FirebaseAuth.getInstance().currentUser == null)
         {
             startActivity(Intent(this@HomeActivity , LoginActivity::class.java))
         }
+*/
 
 
 
@@ -113,10 +115,10 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View
     override fun onStart() {
         super.onStart()
 
-       if (homeActivityPresenter.passUserList().isEmpty()) {
+     /*  if (homeActivityPresenter.passUserList().isEmpty()) {
 
             homeActivityPresenter.getContacts()
-        }
+        }*/
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
