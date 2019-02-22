@@ -68,8 +68,13 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
       adapterForFragmentChat = AdapterForFragmentChat(chatNamesForFragment,context!!, listenerForProfile, listenerForChat)
       view.findViewById<RecyclerView>(R.id.recyView_FragmentChat).adapter = adapterForFragmentChat
 
-        frag.getChats()
+
         return view
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        frag.getChats()
+        super.onCreate(savedInstanceState)
     }
 
     override fun setGroupNames(groupChatNames: ArrayList<String>) {

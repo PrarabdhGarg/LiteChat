@@ -111,10 +111,10 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View
     override fun onStart() {
     super.onStart()
 
-      if (homeActivityPresenter.passUserList().isEmpty()) {
+      /*if (homeActivityPresenter.passUserList().isEmpty()) {
 
            homeActivityPresenter.getContacts()
-       }
+       }*/
 }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
