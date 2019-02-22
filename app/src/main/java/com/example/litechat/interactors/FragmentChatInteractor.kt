@@ -3,6 +3,7 @@ package com.example.litechat.interactors
 import android.util.Log
 import com.example.litechat.contracts.AllChatsContractFrag
 import com.example.litechat.model.*
+import com.example.litechat.model.AllChatDataModel.allChatArrayListGroupStatic
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 
@@ -20,8 +21,6 @@ class FragmentChatInteractor(p1: AllChatsContractFrag.CFPresenter) : AllChatsCon
     private var messagesOfOnePersonN1 = ArrayList<MessageModel>()
     private var messagesOfOnePersonN2 = ArrayList<MessageModel>()
     private var messagesOfOneGroup = ArrayList<MessageModel>()
-    private var allChatArrayListGroup =ArrayList<MessageList>()
-
 
     override fun getPersonalChats() {
 
@@ -141,47 +140,49 @@ class FragmentChatInteractor(p1: AllChatsContractFrag.CFPresenter) : AllChatsCon
                      Log.d("groupName", currentGroupChats.toString())
 
 
+                     for (i in 0 until currentGroupChats.size) {
+                         database!!.collection("Chats").whereEqualTo("name", currentGroupChats[i]).get()
+                             .addOnSuccessListener { documents ->
 
-                 database!!.collection("Chats").whereEqualTo("name" , "GroupName").get().addOnSuccessListener { documents ->
+                                 for (doc in documents) {
+                                     Log.d("QueryG6", doc.data.toString())
 
-                     for(doc in documents)
-                     {
-                         Log.d("QueryG6",doc.data.toString())
+                                     var x = doc["name"].toString()
+                                     Log.d("QueryG7", x)
 
-                         var x = doc["name"].toString()
-                         Log.d("QueryG7",x)
+                                     doc.reference.collection("messages").orderBy("sentOn").get()
+                                         .addOnSuccessListener { messages ->
 
-                         doc.reference.collection("messages").orderBy("sentOn").get().addOnSuccessListener { messages ->
+                                             for (mess in messages) {
+                                                 var obj = mess.toObject(MessageModel::class.java)
 
-                             for(mess in messages)
-                             {
-                                 var obj = mess.toObject(MessageModel::class.java)
+                                                 messagesOfOneGroup.add(obj)
 
-                                 messagesOfOneGroup.add(obj)
+                                                 Log.d(
+                                                     "QueryGMessages",
+                                                     obj.message.toString() + " \n " + obj.sentOn.toString() + obj.sentBy
+                                                 )
+                                             }
+                                             var obj2 = MessageList()
+                                             obj2!!.otherPerson = x // GroupName
 
-                                 Log.d("QueryGMessages",obj.message.toString()+" \n "+obj.sentOn.toString() +obj.sentBy)
+                                             obj2!!.allMessages = messagesOfOneGroup
+                                             Log.d("QueryG8", messagesOfOneGroup[0].message.toString())
+                                             Log.d(
+                                                 "QueryG9",
+                                                 obj2!!.otherPerson.toString() + "\n" + obj2!!.allMessages.toString()
+                                             )
+                                             AllChatDataModel.allChatArrayListGroupStatic.add(obj2)
+                                         }
+                                 }
                              }
-                             var obj2 = MessageList()
-                             obj2!!.otherPerson=x // GroupName
 
-                             obj2!!.allMessages= messagesOfOneGroup
-                             Log.d("QueryG8",messagesOfOneGroup[0].message.toString())
-                             Log.d("QueryG9",obj2!!.otherPerson.toString()+"\n"+obj2!!.allMessages.toString())
-                             allChatArrayListGroup.add(obj2)
-                             AllChatDataModel.allChatArrayListGroupStatic.add(obj2)
-                             Log.d("QueryG11",AllChatDataModel.allChatArrayListGroupStatic.size.toString())
-                             Log.d("QueryG10",allChatArrayListGroup.toString())
-                         }
                      }
+                     }
+                     p2.groupChatsDataRecieved(currentGroupChats)
                  }
 
-                 }
 
-                 AllChatDataModel.allChatArrayListGroupStatic.addAll(allChatArrayListGroup)
-
-
-                 p2.groupChatsDataRecieved(currentGroupChats)
-             }
 
     }
 

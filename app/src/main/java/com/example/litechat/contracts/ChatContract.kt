@@ -6,6 +6,8 @@ interface ChatContract {
     interface CView{
 
      // fun displayMessage()
+
+
     }
 
     interface CInteractor{
@@ -14,12 +16,6 @@ interface ChatContract {
       // fun getGroupChats():  Array<Pair<String,MutableMap<String,Any>>>
     }
     interface CPresenter{
-     // fun setMessage()
-     // fun getMessageFromId()
-
-
-
-
-
+        fun setGroupMessage()
     }
 }

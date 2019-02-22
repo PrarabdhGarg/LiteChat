@@ -1,21 +1,12 @@
 package com.example.litechat.presenter
 
+import android.view.View
 import com.example.litechat.contracts.ChatContract
 import com.example.litechat.interactors.ChatInteractor
 
-class ChatPresenter : ChatContract.CPresenter {
+class ChatPresenter(var view:ChatContract.CView) : ChatContract.CPresenter {
+    var chatInteractor =  ChatInteractor()
+    override fun setGroupMessage() {
 
-    /* var chatInteractor =  ChatInteractor()
-
-    override fun getMessageFromId() {
-
-    override fun getMessageFromId() {
-
-        chatInteractor.getPersonalChats()
-        chatInteractor.getGroupChats()
     }
-
-    override fun setMessage() {
-         }*/
-
 }

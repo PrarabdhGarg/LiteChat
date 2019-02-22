@@ -47,7 +47,7 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
             override fun onDataRecieved(number: String) {
                 val intent = Intent(context, ChatActivity::class.java)
                 Toast.makeText(context,number,Toast.LENGTH_LONG).show()
-                intent.putExtra("number",number)
+                intent.putExtra("string",number)
                 startActivity(intent)
             }
         })
@@ -66,13 +66,12 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
             }
         })
 
-
-      adapterForFragmentChat = AdapterForFragmentChat(chatNamesForFragment,context!!, listenerForProfile, listenerForChat)
-      view.findViewById<RecyclerView>(R.id.recyView_FragmentChat).adapter = adapterForFragmentChat
-
+            adapterForFragmentChat = AdapterForFragmentChat(chatNamesForFragment, context!!, listenerForProfile, listenerForChat)
+            view.findViewById<RecyclerView>(R.id.recyView_FragmentChat).adapter = adapterForFragmentChat
 
         return view
     }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         frag.getChats()
@@ -80,11 +79,12 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
     }
 
     override fun setGroupNames(groupChatNames: ArrayList<String>) {
+
         //ngroupChatNames=groupChatNames
         Log.d("QueryF",groupChatNames.toString())
         chatNamesForFragment.addAll(groupChatNames)
         Log.d("QueryF1",chatNamesForFragment.toString())
-        adapterForFragmentChat!!.notifyDataSetChanged()
+            adapterForFragmentChat!!.notifyDataSetChanged()
     }
 
     override fun setPersonalChatNames(personalChatNames: ArrayList<String>,personalChats:ArrayList<MessageList>) {

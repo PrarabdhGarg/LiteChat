@@ -47,7 +47,7 @@ class LoginActivityPresenter (loginView : LoginContract.LoginView): LoginContrac
                     Log.d("String" , UserProfileData.UserNumber)
                     UserProfileData.UserName = document.getString("name")
                     UserProfileData.UserCurrentActivity = document.getString("currentActivity")
-                    UserProfileData.UserImage = Uri.parse(document.getString("image"))
+//                    UserProfileData.UserImage = Uri.parse(document.getString("image"))
                     UserProfileData.UserAbout = document.getString("about")
                     preferances.edit().putString("CurrentUserNumber" , UserProfileData.UserNumber).apply()
                     Log.d("ProfexistComplete" , UserProfileData.UserName + UserProfileData.UserName + UserProfileData.UserCurrentActivity + UserProfileData.UserImage)
