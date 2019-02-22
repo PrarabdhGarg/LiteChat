@@ -70,9 +70,10 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
         return view
     }
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         frag.getChats()
+        super.onCreate(savedInstanceState)
     }
 
     override fun setGroupNames(groupChatNames: ArrayList<String>) {
