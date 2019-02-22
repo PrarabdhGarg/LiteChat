@@ -1,7 +1,9 @@
 package com.example.litechat.presenter
 
+import android.util.Log
 import com.example.litechat.contracts.AllChatsContractFrag
 import com.example.litechat.interactors.FragmentChatInteractor
+import com.example.litechat.model.AllChatDataModel
 import com.example.litechat.model.MessageList
 
 class FragmentChatPresenter(var view: AllChatsContractFrag.CFView):AllChatsContractFrag.CFPresenter {
@@ -29,8 +31,11 @@ class FragmentChatPresenter(var view: AllChatsContractFrag.CFView):AllChatsContr
                  view.setGroupNames(groupChatNames)
     }
 
-    override fun personalChatsDataRecieved(currentPersonalChatNames: ArrayList<String>) {
-        view.setPersonalChatNames(currentPersonalChatNames)
+    override fun personalChatsDataRecieved(currentPersonalChatNames: ArrayList<String>,allChatArrayListN1 :ArrayList<MessageList>) {
+        AllChatDataModel.allChatArrayListN1Static.addAll(allChatArrayListN1)
+        Log.d("Please",AllChatDataModel.allChatArrayListN1Static.size.toString())
+        Log.d("Please1",allChatArrayListN1.size.toString())
+        view.setPersonalChatNames(currentPersonalChatNames,allChatArrayListN1)
     }
 
     override fun getChats() {

@@ -47,7 +47,9 @@ class AdapterForFragmentChat(private var dataset :ArrayList<String>, private var
 
             override fun onClick(v: View?) {
                   // change with number
+                Log.d("Persoo",holder.textView!!.text.toString())
                listenerObjectTryChat.listener!!.onDataRecieved(holder.textView!!.text.toString())
+
                 // listener to send number for activity
             }
         })
