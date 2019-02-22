@@ -5,15 +5,9 @@ import com.example.litechat.interactors.FragmentChatInteractor
 import com.example.litechat.model.MessageList
 
 class FragmentChatPresenter(var view: AllChatsContractFrag.CFView):AllChatsContractFrag.CFPresenter {
-    override fun personalChatsDataRecievedN2(allChatArrayListN2: ArrayList<MessageList>) {
 
-    }
 
-    override fun contactsToBeShown(arr: Array<Pair<String, String>>){
 
-    }
-    /*lateinit var pm:Array<Pair<String,MutableMap<String,Any>>>
-    lateinit var group:Array<Pair<String,MutableMap<String,Any>>>*/
      var fragmentChatInteractor=FragmentChatInteractor(this)
 
     override fun setMessage() {
@@ -22,11 +16,21 @@ class FragmentChatPresenter(var view: AllChatsContractFrag.CFView):AllChatsContr
 
     // methods to set data in fragmentChat
     override fun personalChatsDataRecievedN1(allChatArrayListN1 :ArrayList<MessageList>) {
-              view.setContactstoFragmentChat()
+             /* view.setPersonalChatN1(allChatArrayListN1)*/
+    }
+
+    override fun personalChatsDataRecievedN2(allChatArrayListN2: ArrayList<MessageList>) {
+/*
+              view.setPersonalChatN2(allChatArrayListN2)
+*/
     }
 
     override fun groupChatsDataRecieved(groupChatNames:ArrayList<String>) {
                  view.setGroupNames(groupChatNames)
+    }
+
+    override fun personalChatsDataRecieved(currentPersonalChatNames: ArrayList<String>) {
+        view.setPersonalChatNames(currentPersonalChatNames)
     }
 
     override fun getChats() {

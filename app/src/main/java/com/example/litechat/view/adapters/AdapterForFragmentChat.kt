@@ -2,6 +2,7 @@ package com.example.litechat.view.adapters
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +13,7 @@ import com.example.litechat.ListenerObjectTry
 import com.example.litechat.R
 import com.example.litechat.model.DataChatModel
 
-class AdapterForFragmentChat(/*private var dataset :ArrayList<String>,*/ private var context: Context,
+class AdapterForFragmentChat(private var dataset :ArrayList<String>, private var context: Context,
                              private var listenerObjectTryImage: ListenerObjectTry,private var listenerObjectTryChat: ListenerObjectTry): RecyclerView.Adapter<AdapterForFragmentChat.MyViewHolder>() {
 
 //    private lateinit var dataset: ArrayList<String>
@@ -33,13 +34,13 @@ class AdapterForFragmentChat(/*private var dataset :ArrayList<String>,*/ private
 
 
     override fun getItemCount(): Int {
-        return DataChatModel.personalChatModelArray.size
+        return dataset.size
            }
 
     override fun onBindViewHolder(holder: AdapterForFragmentChat.MyViewHolder, position: Int) {
 
-        holder.textView.text = DataChatModel.personalChatModelArray.get(position).currentChats.first+" "+
-                DataChatModel.personalChatModelArray.get(position).currentChats.second
+        holder.textView.text = dataset[position]
+        Log.d("QueryF",dataset[position]+ " \n" +position.toString())
         Glide.with(context).load(R.drawable.profile).into(holder.imageView)
 
         holder.textView.setOnClickListener(object : View.OnClickListener{

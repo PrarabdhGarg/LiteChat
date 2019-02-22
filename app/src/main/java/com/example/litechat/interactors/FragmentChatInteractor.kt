@@ -14,22 +14,32 @@ class FragmentChatInteractor(p1: AllChatsContractFrag.CFPresenter) : AllChatsCon
     init {
         p2 = p1
     }
-    var allChatArrayListN1 =ArrayList<MessageList>()
-    var allChatArrayListN2 =ArrayList<MessageList>()
-    var messagesOfOnePersonN1 = ArrayList<MessageModel>()
-    var messagesOfOnePersonN2 = ArrayList<MessageModel>()
-    var messagesOfOneGroup = ArrayList<MessageModel>()
-    var allChatArrayListGroup =ArrayList<MessageList>()
-    var finalNumberKeys = ArrayList<String>()
-    lateinit var current: ArrayList<String>
-    var chatModelK: ChatModelK?= null
+    private var allChatArrayListN1 =ArrayList<MessageList>()
+    private var allChatArrayListN2 =ArrayList<MessageList>()
+    private var messagesOfOnePersonN1 = ArrayList<MessageModel>()
+    private var messagesOfOnePersonN2 = ArrayList<MessageModel>()
+    private var messagesOfOneGroup = ArrayList<MessageModel>()
+    private var allChatArrayListGroup =ArrayList<MessageList>()
 
 
-    override fun getPersonalChats()/*: ArrayList<ChatModelK> */ {
+    override fun getPersonalChats() {
 
 
         database = FirebaseFirestore.getInstance()
 
+        var currentPersonalChats=ArrayList<String>()
+        // get List of all current chats
+        database!!.collection("Users").whereEqualTo("number","9826936889").get()
+            .addOnSuccessListener { documents ->
+
+
+                for (doc in documents) {
+
+                    currentPersonalChats = doc["currentPersonalChats"] as ArrayList<String>
+                    Log.d("chatName", currentPersonalChats.toString())
+                }
+                p2.personalChatsDataRecieved(currentPersonalChats)
+            }
 // get all chats of cutrrent logged in user
         database!!.collection("Chats").whereEqualTo("number1", "9826936889").get().addOnSuccessListener { documents ->
 
@@ -55,8 +65,11 @@ class FragmentChatInteractor(p1: AllChatsContractFrag.CFPresenter) : AllChatsCon
                     Log.d("Query4", obj2!!.otherPerson.toString() + "\n" + obj2!!.allMessages.toString())
                     allChatArrayListN1.add(obj2)
                     Log.d("Query5", allChatArrayListN1.size.toString())
+                   // yha add krwana padega
                 }
             }
+            Log.d("QueryI", allChatArrayListN1.size.toString())
+            AllChatDataModel.allChatArrayListN1Static=allChatArrayListN1
             p2.personalChatsDataRecievedN1(allChatArrayListN1)
 
 
@@ -88,7 +101,7 @@ class FragmentChatInteractor(p1: AllChatsContractFrag.CFPresenter) : AllChatsCon
                     Log.d("Query10", allChatArrayListN2.size.toString())
                 }
             }
-
+            AllChatDataModel.allChatArrayListN2Static=allChatArrayListN2
             p2.personalChatsDataRecievedN2(allChatArrayListN2)
         }
 
@@ -143,10 +156,10 @@ class FragmentChatInteractor(p1: AllChatsContractFrag.CFPresenter) : AllChatsCon
 
                  }
 
-
+                 AllChatDataModel.allChatArrayListGroupStatic=allChatArrayListGroup
+                 p2.groupChatsDataRecieved(currentGroupChats)
              }
-                    AllChatDataModel.allChatArrayListGroupStatic=allChatArrayListGroup
-                    p2.groupChatsDataRecieved(currentGroupChats)
+
     }
 
 }
