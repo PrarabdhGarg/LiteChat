@@ -4,6 +4,7 @@ import com.example.litechat.model.ChatModelK
 
 interface ChatContract {
     interface CView{
+
      // fun displayMessage()
     }
 

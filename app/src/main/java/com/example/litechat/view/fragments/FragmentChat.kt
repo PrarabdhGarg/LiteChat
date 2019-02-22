@@ -28,6 +28,8 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
     private var personalChatNamesN1=ArrayList<String>()
     private var personalChatNamesN2=ArrayList<String>()
    */
+    private var personalChatsForActivity = ArrayList<MessageList>()
+
     private lateinit var listenerForChat: ListenerObjectTry
     private lateinit var listenerForProfile: ListenerObjectTry
     private var chatNamesForFragment = ArrayList<String>()
@@ -45,7 +47,7 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
             override fun onDataRecieved(number: String) {
                 val intent = Intent(context, ChatActivity::class.java)
                 Toast.makeText(context,number,Toast.LENGTH_LONG).show()
-                intent.putExtra("groupName",number)
+                intent.putExtra("number",number)
                 startActivity(intent)
             }
         })
@@ -85,8 +87,9 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
         adapterForFragmentChat!!.notifyDataSetChanged()
     }
 
-    override fun setPersonalChatNames(personalChatNames: ArrayList<String>) {
+    override fun setPersonalChatNames(personalChatNames: ArrayList<String>,personalChats:ArrayList<MessageList>) {
        chatNamesForFragment.addAll(personalChatNames)
+        personalChatsForActivity.addAll(personalChats)
         adapterForFragmentChat!!.notifyDataSetChanged()
     }
 
