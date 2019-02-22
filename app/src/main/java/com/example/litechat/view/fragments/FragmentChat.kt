@@ -27,6 +27,8 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
     private var personalChatNamesN1=ArrayList<String>()
     private var personalChatNamesN2=ArrayList<String>()
    */
+    private var personalChatsForActivity = ArrayList<MessageList>()
+
     private lateinit var listenerForChat: ListenerObjectTry
     private lateinit var listenerForProfile: ListenerObjectTry
     private var chatNamesForFragment = ArrayList<String>()
@@ -43,8 +45,8 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
 
             override fun onDataRecieved(number: String) {
                 val intent = Intent(context, ChatActivity::class.java)
-                Toast.makeText(context, number, Toast.LENGTH_LONG).show()
-                intent.putExtra("groupName", number)
+                Toast.makeText(context,number,Toast.LENGTH_LONG).show()
+                intent.putExtra("string",number)
                 startActivity(intent)
             }
         })
@@ -63,25 +65,31 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
             }
         })
 
+            adapterForFragmentChat = AdapterForFragmentChat(chatNamesForFragment, context!!, listenerForProfile, listenerForChat)
+            view.findViewById<RecyclerView>(R.id.recyView_FragmentChat).adapter = adapterForFragmentChat
 
-        adapterForFragmentChat =
-            AdapterForFragmentChat(chatNamesForFragment, context!!, listenerForProfile, listenerForChat)
-        view.findViewById<RecyclerView>(R.id.recyView_FragmentChat).adapter = adapterForFragmentChat
-
-        frag.getChats()
         return view
     }
 
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        frag.getChats()
+        super.onCreate(savedInstanceState)
+    }
+
     override fun setGroupNames(groupChatNames: ArrayList<String>) {
+
         //ngroupChatNames=groupChatNames
         Log.d("QueryF", groupChatNames.toString())
         chatNamesForFragment.addAll(groupChatNames)
-        Log.d("QueryF1", chatNamesForFragment.toString())
-        adapterForFragmentChat!!.notifyDataSetChanged()
+        Log.d("QueryF1",chatNamesForFragment.toString())
+            adapterForFragmentChat!!.notifyDataSetChanged()
     }
 
-    override fun setPersonalChatNames(personalChatNames: ArrayList<String>) {
-        chatNamesForFragment.addAll(personalChatNames)
+    override fun setPersonalChatNames(personalChatNames: ArrayList<String>,personalChats:ArrayList<MessageList>) {
+       chatNamesForFragment.addAll(personalChatNames)
+        personalChatsForActivity.addAll(personalChats)  
         adapterForFragmentChat!!.notifyDataSetChanged()
     }
 

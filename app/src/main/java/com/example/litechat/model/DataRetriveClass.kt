@@ -1,6 +1,7 @@
 package com.example.litechat.model
 
 import android.content.Context
+
 import android.util.Log
 import android.widget.Toast
 import com.example.litechat.contracts.HomeActivityContract
@@ -16,6 +17,7 @@ class DataRetriveClass : HomeActivityContract.Model {
 
     override fun roomGetData(applicationContext: Context): List<User> {
         TODO(reason = "not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
 
     /**

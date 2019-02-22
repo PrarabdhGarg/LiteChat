@@ -13,8 +13,7 @@
             android:id="@+id/myName"
             android:textSize="14sp"
             android:textColor="#000"
-            app:layout_constraintStart_toStartOf="@+id/myMessage" android:layout_marginTop="4dp"
-            app:layout_constraintTop_toTopOf="parent"/>
+            tools:layout_editor_absoluteY="4dp" tools:layout_editor_absoluteX="299dp"/>
     <TextView
             android:text="Message"
             android:layout_width="0dp"
