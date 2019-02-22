@@ -64,20 +64,24 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
             }
         })
 
+            adapterForFragmentChat = AdapterForFragmentChat(chatNamesForFragment, context!!, listenerForProfile, listenerForChat)
+            view.findViewById<RecyclerView>(R.id.recyView_FragmentChat).adapter = adapterForFragmentChat
 
-      adapterForFragmentChat = AdapterForFragmentChat(chatNamesForFragment,context!!, listenerForProfile, listenerForChat)
-      view.findViewById<RecyclerView>(R.id.recyView_FragmentChat).adapter = adapterForFragmentChat
-
-        frag.getChats()
         return view
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        frag.getChats()
+    }
+
     override fun setGroupNames(groupChatNames: ArrayList<String>) {
+
         //ngroupChatNames=groupChatNames
         Log.d("QueryF",groupChatNames.toString())
         chatNamesForFragment.addAll(groupChatNames)
         Log.d("QueryF1",chatNamesForFragment.toString())
-        adapterForFragmentChat!!.notifyDataSetChanged()
+            adapterForFragmentChat!!.notifyDataSetChanged()
     }
 
     override fun setPersonalChatNames(personalChatNames: ArrayList<String>) {

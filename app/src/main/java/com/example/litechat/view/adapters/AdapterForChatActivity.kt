@@ -2,31 +2,51 @@ package com.example.litechat.view.adapters
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.example.litechat.R
+import com.example.litechat.model.MessageModel
+import com.example.litechat.model.UserProfileData
 
-class AdapterForChatActivity(dataset :ArrayList<String>): RecyclerView.Adapter<AdapterForChatActivity.MyViewHolder>() {
+class AdapterForChatActivity(private var number:String,private var dataset:ArrayList<MessageModel>): RecyclerView.Adapter<AdapterForChatActivity.MyViewHolder>() {
 
-private lateinit var dataset: ArrayList<String>
-    class MyViewHolder(val textView: TextView): RecyclerView.ViewHolder(textView)
+    class MyViewHolder(val view: View): RecyclerView.ViewHolder(view){
+        var myName:TextView=view.findViewById(R.id.myName)
+        var mymessage:TextView=view.findViewById(R.id.myMessage)
+        var youName:TextView=view.findViewById(R.id.youName)
+        var youMessage:TextView=view.findViewById(R.id.youMessage)
+    }
 
-    override fun onCreateViewHolder(parent: ViewGroup, p1: Int): AdapterForChatActivity.MyViewHolder {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        val textView = LayoutInflater.from(parent.context)
-            .inflate(R.layout.my_text_view, parent, false) as TextView
-        // set the view's size, margins, paddings and layout parameters
+    override fun onCreateViewHolder(parent: ViewGroup, position: Int): AdapterForChatActivity.MyViewHolder {
+        var view:View?=null
+        //Here user no. is to be placed
+        if(dataset[position].sentBy.equals("9826936889"))
 
-        return MyViewHolder(textView)
+        {
+        view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.adapter_chat_me, parent, false) as View}
+       else{
+            view = LayoutInflater.from(parent.context)
+                .inflate(R.layout.adapter_chat_you, parent, false) as View
+        }
+        return MyViewHolder(view)
     } // create a new view
 
 
     override fun getItemCount(): Int {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return dataset.size
     }
 
     override fun onBindViewHolder(holder: AdapterForChatActivity.MyViewHolder, position: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        holder.textView.text = dataset[position]
+        if(dataset[position].sentBy.equals("9826936889")) {
+              holder.mymessage.setText(dataset[position].message)
+              holder.myName.setText("9826936889")
+        }
+        else
+        {
+            holder.youMessage.setText(dataset[position].message)
+            holder.youName.setText(dataset[position].sentBy)
+        }
     }
 }
