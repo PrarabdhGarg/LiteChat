@@ -8,5 +8,6 @@ data class UserDataModel(
     var CurrentChats : HashMap<String , String> = HashMap(),
     var CurrentActivity : String = "",
     var Image : String = "",
-    var CurrentGroupChats : HashMap<String , String> = HashMap()
+    var CurrentGroupChats : HashMap<String , String> = HashMap(),
+    var ProfileImage : String = ""
 )

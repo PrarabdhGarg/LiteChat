@@ -14,7 +14,9 @@ import kotlinx.android.synthetic.main.fragment_status.*
 import android.content.Intent
 import android.icu.lang.UCharacter.GraphemeClusterBreak.V
 import android.net.Uri
+import android.text.Editable
 import android.text.style.LineHeightSpan
+import com.bumptech.glide.Glide
 import com.example.litechat.model.UserDataModel
 import com.example.litechat.model.UserProfileData
 import com.example.litechat.presenter.StatusFragmentPresenter
@@ -37,7 +39,9 @@ class FragmentStatus: Fragment(){
     override fun onStart() {
         super.onStart()
         //Make and Call a function to get and display data
-        view!!.statusImageView.setImageURI(UserProfileData.UserImage)    //On starting the fragment, load the current image in the image view, whose Uri is stored locally
+        Glide.with(context!!).load(UserProfileData.UserImage).into(view!!.statusImageView)//On starting the fragment, load the current image in the image view, whose Uri is stored locally
+        view!!.currentActivityTextView.setText(UserProfileData.UserCurrentActivity)
+        stausFragmentPresenter!!.getInfoForRecyclerView()
         view!!.EditStatusImageView!!.setOnClickListener {
             Toast.makeText(context , "Clicked" , Toast.LENGTH_SHORT).show()
             view!!.EditStatusDoneImageView!!.visibility = View.VISIBLE

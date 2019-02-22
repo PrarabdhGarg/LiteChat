@@ -9,6 +9,8 @@ interface StatusContract{
     interface StatusPresenter{
         fun updateUserInfo(activity: String = "")
         fun updateStatusImage(uri : Uri)
+        fun getInfoForRecyclerView()
+        fun onStatusDataRecived(map : HashMap<String , String>)
     }
 
 }

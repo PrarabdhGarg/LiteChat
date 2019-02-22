@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.example.litechat.contracts.StatusContract
+import com.example.litechat.model.DataRetriveClass
 import com.example.litechat.model.UserDataModel
 import com.example.litechat.model.UserProfileData
 import com.google.firebase.firestore.FirebaseFirestore
@@ -54,15 +55,24 @@ class StatusFragmentPresenter(view : View) : StatusContract.StatusPresenter
     override fun updateStatusImage(uri: Uri) {
         var mStorageRef = FirebaseStorage.getInstance().reference
         var path = uri
-        Log.d("Mobile Number Check" , UserProfileData.UserNumber)
         mStorageRef.child(UserProfileData.UserNumber).child("StatusImage").putFile(path)
             .addOnSuccessListener {
-            Toast.makeText(currentView.context , "Upload Successful" , Toast.LENGTH_SHORT).show()
-            currentView.statusImageView.setImageURI(path)
+                UserProfileData.UserCurrentActivity = mStorageRef.child(UserProfileData.UserNumber).child("StatusImage").downloadUrl.toString()
+                Toast.makeText(currentView.context , "Upload Successful" , Toast.LENGTH_SHORT).show()
+                currentView.statusImageView.setImageURI(path)
         }
             .addOnFailureListener {
-            Toast.makeText(currentView.context , "Upload UnSuccessful" , Toast.LENGTH_SHORT).show()
-            Log.d("Finding Error" , it.toString())
+                Toast.makeText(currentView.context , "Upload UnSuccessful" , Toast.LENGTH_SHORT).show()
+                Log.d("Finding Error" , it.toString())
         }
     }
+
+    override fun getInfoForRecyclerView() {
+        DataRetriveClass().getCurrentActivitiesOfOtherUsers(this)
+    }
+
+    override fun onStatusDataRecived(map: HashMap<String, String>) {
+        Log.d("PresenterData" , map.size.toString())
+    }
+
 }

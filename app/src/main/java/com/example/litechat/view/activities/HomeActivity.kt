@@ -73,8 +73,8 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View
         }
         else{
 
-            var number = FirebaseAuth.getInstance().currentUser!!.phoneNumber
-            UserProfileData.UserNumber = number!!.substring(3)
+            var number = PreferenceManager.getDefaultSharedPreferences(applicationContext).getString("currentUserNumber" , "123456789")
+            //UserProfileData.UserNumber = number!!.substring(3)
             Log.d("HomeActivity" , "Else enterd in auth.getIstance $number")
             homeActivityPresenter.getUserDataOnLogin(number)
         }
@@ -123,24 +123,26 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View
         // as you specify a parent activity in AndroidManifest.xml.
         val id = item.itemId
 
-        if (id == R.id.action_profile) {
+        when (id) {
+            R.id.action_profile -> {
 
-            // start Activity for Profile
-            return true
-        }
-        else if (id==R.id.action_developers){
+                // start Activity for Profile
+                startActivity(Intent(this@HomeActivity, ProfileActivity::class.java))
+                return true
+            }
+            R.id.action_developers -> {
 
-            startActivity(Intent(this@HomeActivity, DeveloperActivity::class.java))
-            return true
-        }
-        else if (id == R.id.action_signOut)
-        {
-            FirebaseAuth.getInstance().signOut()
-            startActivity(Intent(this@HomeActivity , LoginActivity::class.java))
-            return true
+                startActivity(Intent(this@HomeActivity, DeveloperActivity::class.java))
+                return true
+            }
+            R.id.action_signOut -> {
+                FirebaseAuth.getInstance().signOut()
+                startActivity(Intent(this@HomeActivity , LoginActivity::class.java))
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
         }
 
-        return super.onOptionsItemSelected(item)
     }
 
 
@@ -185,7 +187,7 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View
             //val thumbnail: Bitmap = data!!.getParcelableExtra("data")
             val fullPhotoUri: Uri? = data!!.data
             Log.d("Image Search" , fullPhotoUri.toString())
-            UserProfileData.UserImage = fullPhotoUri
+            UserProfileData.UserImage = fullPhotoUri.toString()
             fragment!!.onNewStatusImageSelected(fullPhotoUri!!)
         }
     }

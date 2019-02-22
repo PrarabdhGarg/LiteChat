@@ -3,6 +3,8 @@ package com.example.litechat.contracts
 import android.content.ContentResolver
 import android.content.Context
 import com.example.litechat.model.contactsRoom.User
+import com.example.litechat.presenter.HomeActivityPresenter
+import com.example.litechat.presenter.StatusFragmentPresenter
 
 
 interface HomeActivityContract {
@@ -21,6 +23,7 @@ interface HomeActivityContract {
         fun roomGetData(applicationContext: Context): List<User>
         fun getUserDataFromFirestore(number : String)
         fun roomSetData(applicationContext: Context, userList: List<User>)
+        fun getCurrentActivitiesOfOtherUsers(presenter : StatusFragmentPresenter)
 
     }
 
