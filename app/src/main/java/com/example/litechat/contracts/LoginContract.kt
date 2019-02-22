@@ -25,6 +25,7 @@ interface LoginContract{
         fun onUserAccountFound()
         fun changeActivity()
         fun onLoginError()
+        fun getCurrentContext() : Context
 
     }
 

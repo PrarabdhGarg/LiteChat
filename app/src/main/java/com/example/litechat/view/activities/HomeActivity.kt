@@ -1,16 +1,13 @@
 package com.example.litechat.view.activities
 
 
-import android.Manifest
 import android.app.Activity
 import android.app.SearchManager
 import android.content.ContentResolver
 import android.content.Context
 
 import android.content.Intent
-import android.database.Cursor
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
+import android.content.SharedPreferences
 import android.net.Uri
 
 import android.support.design.widget.TabLayout
@@ -21,16 +18,11 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.os.Bundle
-import android.provider.MediaStore
+import android.preference.PreferenceManager
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.SearchView
-import android.widget.Toast
 import com.example.litechat.R
 import com.example.litechat.contracts.HomeActivityContract
 import com.example.litechat.model.ContactsModel
@@ -49,7 +41,7 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View
 {
     //function to pass context to HomeActivityPresenter
 
-    override fun passContextRoom(): Context = applicationContext
+    override fun passContext(): Context = applicationContext
 
     //function to pass contentResolver to HomeActivityPresenter
 
@@ -74,13 +66,18 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View
 
         //If user is already logged in, no need to open the LoginActivity again
 
-/*
+
         if(FirebaseAuth.getInstance().currentUser == null)
         {
             startActivity(Intent(this@HomeActivity , LoginActivity::class.java))
         }
-*/
+        else{
 
+            var number = FirebaseAuth.getInstance().currentUser!!.phoneNumber
+            UserProfileData.UserNumber = number!!.substring(3)
+            Log.d("HomeActivity" , "Else enterd in auth.getIstance $number")
+            homeActivityPresenter.getUserDataOnLogin(number)
+        }
 
 
         setSupportActionBar(toolbar)
@@ -98,9 +95,8 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
         }
-
+        Log.d("MobileOnCreate" , UserProfileData.UserNumber)
     }
-
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -113,13 +109,13 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View
     }
 
     override fun onStart() {
-        super.onStart()
+    super.onStart()
 
-     /*  if (homeActivityPresenter.passUserList().isEmpty()) {
+      if (homeActivityPresenter.passUserList().isEmpty()) {
 
-            homeActivityPresenter.getContacts()
-        }*/
-    }
+           homeActivityPresenter.getContacts()
+       }
+}
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle action bar item clicks here. The action bar will
@@ -182,6 +178,9 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
     {
         super.onActivityResult(requestCode, resultCode, data)
+        var preferances : SharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        preferances.getString("CurrentUserNumber" , "123456789")
+        Log.d("MobileNumberPrefer" , preferances.getString("CurrentUserNumber" , "123456789"))
         if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
             //val thumbnail: Bitmap = data!!.getParcelableExtra("data")
             val fullPhotoUri: Uri? = data!!.data

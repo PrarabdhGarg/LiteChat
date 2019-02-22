@@ -16,6 +16,7 @@ import android.icu.lang.UCharacter.GraphemeClusterBreak.V
 import android.net.Uri
 import android.text.style.LineHeightSpan
 import com.example.litechat.model.UserDataModel
+import com.example.litechat.model.UserProfileData
 import com.example.litechat.presenter.StatusFragmentPresenter
 import com.example.litechat.view.activities.HomeActivity
 import kotlinx.android.synthetic.main.fragment_status.view.*
@@ -24,12 +25,11 @@ import kotlinx.android.synthetic.main.fragment_status.view.*
 class FragmentStatus: Fragment(){
 
     var stausFragmentPresenter : StatusFragmentPresenter? = null
-    val REQUEST_IMAGE_GET = 1
+    val REQUEST_IMAGE_GET = 1   //Request code for getting image from the gallery is 1
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(com.example.litechat.R.layout.fragment_status, container, false)
-        //EditStatusImageView
         stausFragmentPresenter = StatusFragmentPresenter(view!!)
         return view
     }
@@ -37,9 +37,7 @@ class FragmentStatus: Fragment(){
     override fun onStart() {
         super.onStart()
         //Make and Call a function to get and display data
-
-
-
+        view!!.statusImageView.setImageURI(UserProfileData.UserImage)    //On starting the fragment, load the current image in the image view, whose Uri is stored locally
         view!!.EditStatusImageView!!.setOnClickListener {
             Toast.makeText(context , "Clicked" , Toast.LENGTH_SHORT).show()
             view!!.EditStatusDoneImageView!!.visibility = View.VISIBLE
@@ -61,16 +59,19 @@ class FragmentStatus: Fragment(){
             }
             activity!!.startActivityForResult(intent, REQUEST_IMAGE_GET)
         }
-
     }
+
+    /**
+     * This function is called from the parent Activity [HomeActivity] after it sucessfully gets the path(Uri) of the selected image
+     * It was necessary to call this function from the [HomeActivity] as the result of the intent to open the gallery can only be received
+     * in the parent Activity
+     * This function then calls a function in the [StatusFragmentPresenter] which changes the image displayed on the screen as well as
+     * adds the image to the Firebase Storage so that other people can also view the image
+     */
 
     fun onNewStatusImageSelected(reference : Uri)
     {
-        Toast.makeText(context , "Hello" , Toast.LENGTH_SHORT).show()
-        stausFragmentPresenter!!.updateStatusImage(reference , context!!)
-        /**Do
-         * Somthing in presenter
-         */
+        Toast.makeText(context , "Please wait while we update the photo" , Toast.LENGTH_SHORT).show()
+        stausFragmentPresenter!!.updateStatusImage(reference)
     }
-
 }

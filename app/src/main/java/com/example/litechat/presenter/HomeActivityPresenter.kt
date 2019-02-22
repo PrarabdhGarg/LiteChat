@@ -1,9 +1,13 @@
 package com.example.litechat.presenter
 
+import android.content.Context
 import android.provider.ContactsContract
 import android.util.Log
+import android.widget.Toast
 import com.example.litechat.contracts.HomeActivityContract
 import com.example.litechat.model.ContactDataModel
+import com.example.litechat.model.DataRetriveClass
+import com.example.litechat.model.UserProfileData
 import com.example.litechat.model.contactsRoom.User
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -11,6 +15,12 @@ class HomeActivityPresenter(viewPassed: HomeActivityContract.View, modelPassed: 
 
     private val view = viewPassed
     private val model = modelPassed
+
+    override fun getUserDataOnLogin(number: String) {
+
+        DataRetriveClass().getUserDataFromFirestore(number)
+        Toast.makeText(view.passContext() , UserProfileData.UserNumber , Toast.LENGTH_SHORT).show()
+    }
 
     override fun getContacts() {
 
@@ -46,7 +56,7 @@ class HomeActivityPresenter(viewPassed: HomeActivityContract.View, modelPassed: 
     }
 
     override fun passUserList(): List<User> {
-        return model.roomGetData(view.passContextRoom())
+        return model.roomGetData(view.passContext())
     }
 
     override fun getUsers() {
@@ -61,7 +71,7 @@ class HomeActivityPresenter(viewPassed: HomeActivityContract.View, modelPassed: 
             }
 
             compareUserContact()
-            model.roomSetData(view.passContextRoom(), ContactDataModel.contactAndUser)
+            model.roomSetData(view.passContext(), ContactDataModel.contactAndUser)
 
         }
     }
@@ -81,4 +91,5 @@ class HomeActivityPresenter(viewPassed: HomeActivityContract.View, modelPassed: 
             }
         }
     }
+
 }

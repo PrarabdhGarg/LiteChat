@@ -2,12 +2,16 @@ package com.example.litechat.presenter
 
 import android.app.Activity
 import android.content.Context
+import android.content.SharedPreferences
+import android.net.Uri
+import android.preference.PreferenceManager
 import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
 import com.example.litechat.contracts.LoginContract
 import com.example.litechat.model.UserDataModel
+import com.example.litechat.model.UserProfileData
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
@@ -21,31 +25,64 @@ class LoginActivityPresenter (loginView : LoginContract.LoginView): LoginContrac
 {
     var loginActivity = loginView
 
+    /**
+     * This function checks if the account of the user already exists in our database or not
+     * If the account exists, all the data gets read from firestore and gets stored in the static variables of [UserProfileData]
+     * The mobile number also gets stored in the [SharedPreferences], because every time an intent to the gallery or phone is made,
+     * the staic variables get destroyed, and we need some identifying parametre to get data again from the database
+     * Other information of users is not stored in [SharedPreferences] as the static variables are much easier to use throughout the app
+     */
+
     override fun checkAccountExists (number : String)
     {
-        var flag = false
+        var accountExixts = false
+        var preferances : SharedPreferences = PreferenceManager.getDefaultSharedPreferences(loginActivity.getCurrentContext())
         val database = FirebaseFirestore.getInstance()
         database.collection("Users").get().addOnSuccessListener { result ->
             for (document in result) {
                 if(document.id == number)
                 {
-                    flag = true
+                    accountExixts = true
+                    UserProfileData.UserNumber = document.getString("number")
+                    Log.d("String" , UserProfileData.UserNumber)
+                    UserProfileData.UserName = document.getString("name")
+                    UserProfileData.UserCurrentActivity = document.getString("currentActivity")
+                    UserProfileData.UserImage = Uri.parse(document.getString("image"))
+                    UserProfileData.UserAbout = document.getString("about")
+                    preferances.edit().putString("CurrentUserNumber" , UserProfileData.UserNumber).apply()
+                    Log.d("ProfexistComplete" , UserProfileData.UserName + UserProfileData.UserName + UserProfileData.UserCurrentActivity + UserProfileData.UserImage)
                     loginActivity.onUserAccountFound()
                 }
             }
-            if(flag == false)
+            if(accountExixts == false)
             {
                 loginActivity.onUserAccontNotFound()
             }
         }
     }
 
+
+    /**
+     * This function is used to add all the data of a new user to the database
+     */
+
     override fun addUserToFirebase(number : String, id : String, name : String)
     {
         val database = FirebaseFirestore.getInstance()
         val user = UserDataModel(Id = id , Name = name , Number = number)
+        UserProfileData.UserName = name
+        UserProfileData.UserNumber = number
         database.collection("Users").document(number.toString()).set(user)
     }
+
+    /**
+     * This function verifies that the number provided by the user is in the device or not
+     * This is an overloaded fuction, and this one is called if the account of the user already exists
+     * It sends an auto-generated verificatioon code to the entered mobile number, and then automatically
+     * detects the incoming messages.
+     * If the verificaton code matches, the mobile number is verified
+     * Still have to add the case where the user wants to use a different mobile number, so that the user can manually enter the verification code
+     */
 
     override fun verifyNumber(number : String, activity : Activity, context: Context, dialog: ProgressBar)
     {
@@ -73,6 +110,11 @@ class LoginActivityPresenter (loginView : LoginContract.LoginView): LoginContrac
         PhoneAuthProvider.getInstance()
             .verifyPhoneNumber("+91$number", 60, TimeUnit.SECONDS, activity, mCallbacks)
     }
+
+    /**
+     * This overloaded function is called for a new user
+     * It not only verifies the user mobile number, but also adds user information to the database
+     */
 
     override fun verifyNumber(number : String, activity : Activity, context: Context, dialog: ProgressBar, name: String)
     {
@@ -102,11 +144,17 @@ class LoginActivityPresenter (loginView : LoginContract.LoginView): LoginContrac
             .verifyPhoneNumber("+91$number", 60, TimeUnit.SECONDS, activity, mCallbacks)
     }
 
+    /**
+     * After verification of the mobile number of the user, this function does the task of signing in the user using the [PhoneAuthCredential]
+     * provided when the user's mobile number is successfully verified
+     */
 
     override fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential, context: Context) {
         var mAuth : FirebaseAuth = FirebaseAuth(FirebaseApp.getInstance())
         mAuth.signInWithCredential(credential).addOnSuccessListener {result ->
             Toast.makeText(context , result.user.toString() , Toast.LENGTH_SHORT).show()
+            Log.d("LoginActivityPresenter" , mAuth.currentUser!!.phoneNumber.toString())
+            UserProfileData.UserNumber = mAuth.currentUser!!.phoneNumber.toString().substring(4)
             loginActivity.changeActivity()
         }
             .addOnFailureListener { exception ->
@@ -114,5 +162,4 @@ class LoginActivityPresenter (loginView : LoginContract.LoginView): LoginContrac
                 loginActivity.onLoginError()
             }
     }
-
 }

@@ -7,8 +7,8 @@ import com.example.litechat.model.UserDataModel
 interface StatusContract{
 
     interface StatusPresenter{
-        fun updateUserInfo(activity: String = "", image: String = "")
-        fun updateStatusImage(uri : Uri , context: Context)
+        fun updateUserInfo(activity: String = "")
+        fun updateStatusImage(uri : Uri)
     }
 
 }
