@@ -2,6 +2,7 @@ package com.example.litechat.view.activities
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import com.example.litechat.R
 import com.example.litechat.contracts.ChatContract
 import com.example.litechat.model.AllChatDataModel
@@ -25,7 +26,7 @@ class ChatActivity : AppCompatActivity(),ChatContract.CView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
-        var string = intent.getStringExtra("groupName")
+        var string = intent.getStringExtra("string")
         try {
             val num = parseDouble(string)
         } catch (e: NumberFormatException) {
@@ -34,12 +35,14 @@ class ChatActivity : AppCompatActivity(),ChatContract.CView {
         if (!numeric)
         {
             var groupChat= AllChatDataModel.allChatArrayListGroupStatic.find { it.otherPerson==string}
+            Log.d("check",groupChat!!.allMessages.toString())
             groupDataset.addAll(groupChat!!.allMessages)
             AdapterForChatActivity= AdapterForChatActivity(string,groupDataset)
             recyclerView.apply {
                 adapter=AdapterForChatActivity
                 setHasFixedSize(true)
             }
+            groupDataset.clear()
         }
         else {
         var personalChat=AllChatDataModel.allChatArrayListN1Static.find { it.otherPerson==string }
@@ -50,15 +53,7 @@ class ChatActivity : AppCompatActivity(),ChatContract.CView {
                 setHasFixedSize(true)
             }
         }
-        /* chatPresenter.getMessageFromId()
 
-
-        mydataset.add("Hi")
-
-        AdapterForChatActivity = AdapterForChatActivity(mydataset)
-        recyclerView.apply {
-            adapter= AdapterForChatActivity
-             setHasFixedSize(true)*/
     }
 
 }

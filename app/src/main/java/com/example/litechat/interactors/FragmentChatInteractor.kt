@@ -121,8 +121,7 @@ class FragmentChatInteractor(p1: AllChatsContractFrag.CFPresenter) : AllChatsCon
                      Log.d("groupName", currentGroupChats.toString())
 
 
-                     for (i in 0 until currentGroupChats.size) {
-                         database!!.collection("Chats").whereEqualTo("name", currentGroupChats[i]).get()
+                         database!!.collection("Chats").whereEqualTo("name", "GroupName").get()
                              .addOnSuccessListener { documents ->
 
                                  for (doc in documents) {
@@ -157,7 +156,7 @@ class FragmentChatInteractor(p1: AllChatsContractFrag.CFPresenter) : AllChatsCon
                                          }
                                  }
                              }
-                     }
+
                      }
                      p2.groupChatsDataRecieved(currentGroupChats)
                  }

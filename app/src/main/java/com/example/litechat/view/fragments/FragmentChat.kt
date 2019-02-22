@@ -45,7 +45,7 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
             override fun onDataRecieved(number: String) {
                 val intent = Intent(context, ChatActivity::class.java)
                 Toast.makeText(context,number,Toast.LENGTH_LONG).show()
-                intent.putExtra("groupName",number)
+                intent.putExtra("string",number)
                 startActivity(intent)
             }
         })
