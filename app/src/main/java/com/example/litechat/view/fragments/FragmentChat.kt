@@ -87,9 +87,9 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
             adapterForFragmentChat!!.notifyDataSetChanged()
     }
 
-    override fun setPersonalChatNames(personalChatNames: ArrayList<String>,personalChats:ArrayList<MessageList>) {
+    override fun setPersonalChatNames(personalChatNames: ArrayList<String>) {
        chatNamesForFragment.addAll(personalChatNames)
-        personalChatsForActivity.addAll(personalChats)
+
         adapterForFragmentChat!!.notifyDataSetChanged()
     }
 
