@@ -94,9 +94,10 @@ class ChatInteractor(p1:ChatContract.CPresenter) : ChatContract.CInteractor {
                     }
 
 
-                    Log.d("Run3","passNewMessagetoPrentercallled")
+                    Log.d("FinalDebug17","passNewMessagetoPrentercallled ${AllChatDataModel.flag}")
 
                     if(AllChatDataModel.flag) {
+                        Log.d("FinalDebug16" , "Inside Snapshot Listener for displaying new message")
                         AllChatDataModel.flag=false
                         chatPresenter!!.passNewMessageToPresenter()
 

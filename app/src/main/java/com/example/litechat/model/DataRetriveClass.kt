@@ -54,6 +54,7 @@ class DataRetriveClass : HomeActivityContract.Model{
                         when(dc.type){
                             DocumentChange.Type.ADDED ->
                             {
+                                Log.d("FinalDebug18" , "${dc} \n")
                                 //AllChatDataModel.allChatArrayListPersonalStatic.clear()
                                 var objectChatPersonal :ChatObject= ChatObject()
                                 objectChatPersonal.otherNumber=dc.document["otherNumber"].toString()
@@ -69,6 +70,7 @@ class DataRetriveClass : HomeActivityContract.Model{
 
                             DocumentChange.Type.MODIFIED ->
                             {
+                                Log.d("FinalDebug19" , "${dc} \n")
                                 //AllChatDataModel.allChatArrayListPersonalStatic.clear()
                                 var objectChatPersonal :ChatObject= ChatObject()
                                 objectChatPersonal.otherNumber=dc.document["otherNumber"].toString()

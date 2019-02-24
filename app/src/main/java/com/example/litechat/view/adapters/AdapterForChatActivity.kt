@@ -29,7 +29,7 @@ class AdapterForChatActivity(private var dataset:ArrayList<MessageModel>): Recyc
 
 
     override fun getItemViewType(position: Int): Int {
-        if(dataset[position].sentBy.equals("9826936889"))
+        if(dataset[position].sentBy.equals(AllChatDataModel.userNumberIdPM))
 
         {
 
