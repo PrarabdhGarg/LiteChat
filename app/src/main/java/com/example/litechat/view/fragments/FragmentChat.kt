@@ -72,6 +72,7 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
             }
         })
             adapterForFragmentChat = AdapterForFragmentChat(chatNamesForFragment, context!!, listenerForProfile, listenerForChat)
+            Log.d("FinalDebug15" , adapterForFragmentChat.toString())
             view.findViewById<RecyclerView>(R.id.recyView_FragmentChat).adapter = adapterForFragmentChat
 
         return view
@@ -130,14 +131,11 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
     }
 
     override fun updateRecyclerViewForFirstTime() {
-        Log.d("Dataa","first time code start")
+        Log.d("Dataa","first time code start ${adapterForFragmentChat}")
         chatNamesForFragment.clear()
         chatNamesForFragment.addAll(AllChatDataModel.personalChatList)
         AllChatDataModel.personalChatList.clear()
-
         adapterForFragmentChat!!.notifyDataSetChanged()
 
-
     }
-
 }

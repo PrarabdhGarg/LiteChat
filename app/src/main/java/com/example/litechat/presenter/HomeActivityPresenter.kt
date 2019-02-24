@@ -79,10 +79,9 @@ class HomeActivityPresenter(viewPassed: HomeActivityContract.View, modelPassed: 
              {
                  if(AllChatDataModel.upadateFragmentChatFirstTime==1)
                  {  // to call only 1 time
-                     AllChatDataModel.upadateFragmentChatFirstTime=0;
+                     AllChatDataModel.upadateFragmentChatFirstTime=0
                      Log.d("FinalDebug7"," updateRecyclerViewForFirstTime() Size  ${AllChatDataModel.personalChatList.size}")
-                   view.getInstanceOfFragmentChat().updateRecyclerViewForFirstTime()
-
+                     view.getInstanceOfFragmentChat().updateRecyclerViewForFirstTime()
                  }
                  else
                  {
