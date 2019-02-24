@@ -6,16 +6,11 @@ import android.widget.Toast
 import com.example.litechat.contracts.ChatContract
 import com.example.litechat.model.AllChatDataModel
 import com.example.litechat.model.MessageModel
-import com.example.litechat.model.UserDataModel
-import com.example.litechat.model.UserProfileData
 import com.google.firebase.firestore.*
-import java.util.concurrent.ArrayBlockingQueue
 
 class ChatInteractor(p1:ChatContract.CPresenter) : ChatContract.CInteractor {
 
     private var database: FirebaseFirestore? = null
-    private lateinit var numberKeys: ArrayList<String>
-    private lateinit var groupKeys: ArrayList<String>
     private var chatPresenter:ChatContract.CPresenter?=null
 
     init {
@@ -24,31 +19,50 @@ class ChatInteractor(p1:ChatContract.CPresenter) : ChatContract.CInteractor {
     }
 
     override fun saveNewMessageToFirestore(messageModel: MessageModel,context: Context) {
-        // created on is hardcoded
-      /*  database!!.collection("Chats").whereEqualTo("createdOn", "1550871105").get().addOnSuccessListener { documents ->
 
-            for (doc in documents) {
-                doc.reference.collection("messages").add(messageModel)
-            }
-        }*/
 
-        // get document id from somewhere
-        database!!.collection("Chats").document("FK2fXmKyrmjVLhP4BfnA").collection("messages").add(messageModel).addOnSuccessListener { res->
+       // sets new message to firestore
+        database!!.collection("Chats").document(AllChatDataModel.documentPathId).collection("messages").add(messageModel).addOnSuccessListener { res->
 
-            Toast.makeText(context,"Message Sent Successfully",Toast.LENGTH_LONG).show()
+            Log.d("Saala","set on server ")
+            Toast.makeText(context,"Message Sent Successfully",Toast.LENGTH_SHORT).show()
         }
+
+        // sets last updated to  both the users
+        database!!.collection("Users").document(AllChatDataModel.userNumberIdPM).collection("currentPersonalChats")
+            .whereEqualTo("otherNumber",AllChatDataModel.otherUserNumber).get().addOnSuccessListener { documents ->
+
+                if(documents!=null)
+                {
+                    for (doc in documents )
+                    {
+                        doc.reference.update("lastUpdated",messageModel.sentOn)
+                    }
+                }
+        }
+
+        database!!.collection("Users").document(AllChatDataModel.otherUserNumber).collection("currentPersonalChats")
+            .whereEqualTo("otherNumber",AllChatDataModel.userNumberIdPM).get().addOnSuccessListener { documents ->
+
+                if(documents!=null)
+                {
+                    for (doc in documents )
+                    {
+                        doc.reference.update("lastUpdated",messageModel.sentOn)
+                    }
+                }
+            }
 
 
     }
+
+
     override fun getNewMessageFromFirestore() {
         Log.d("Run1","getNewMessageFromFirestore")
-        //prarbdh ka jugaad
-    //    Log.d("Upp",AllChatDataModel.flag.toString())
-      //  AllChatDataModel.flag=!(AllChatDataModel.flag)
-     //   Log.d("Uppd",AllChatDataModel.flag.toString())
 
-        //get document id from somewhere
-        database!!.collection("Chats").document("FK2fXmKyrmjVLhP4BfnA").collection("messages").orderBy("sentOn")
+
+        // get personal chats and use caching of firestore
+        database!!.collection("Chats").document(AllChatDataModel.documentPathId).collection("messages").orderBy("sentOn")
             .addSnapshotListener(MetadataChanges.INCLUDE,
                 EventListener<QuerySnapshot>{  snap , e ->
                     AllChatDataModel.flag = !snap!!.metadata.hasPendingWrites()
@@ -58,9 +72,7 @@ class ChatInteractor(p1:ChatContract.CPresenter) : ChatContract.CInteractor {
                         return@EventListener
 
                     }
-                 //   Log.d("Up", AllChatDataModel.flag.toString())
-                //    AllChatDataModel.flag=!(AllChatDataModel.flag)
-                   // Log.d("Upd", AllChatDataModel.flag.toString())
+
                     for(dc in snap!!.documentChanges){
 
                         when(dc.type){
@@ -83,13 +95,13 @@ class ChatInteractor(p1:ChatContract.CPresenter) : ChatContract.CInteractor {
 
 
                     Log.d("Run3","passNewMessagetoPrentercallled")
-                   // AllChatDataModel.flag = false
+
                     if(AllChatDataModel.flag) {
                         AllChatDataModel.flag=false
                         chatPresenter!!.passNewMessageToPresenter()
 
                     }
-                   // AllChatDataModel.flag=!(AllChatDataModel.flag)
+
                 })
         /*database!!.collection("Chats")
             .whereEqualTo("createdOn", "1550871105")

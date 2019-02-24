@@ -8,6 +8,10 @@ import com.example.litechat.model.contactsRoom.AppDatabse
 import com.example.litechat.model.contactsRoom.User
 
 class ContactsModel: HomeActivityContract.Model{
+    override fun retrievePersonalChatDataFromFirestore(presenter: HomeActivityContract.Presenter) {
+
+    }
+
     override fun getUserDataFromFirestore(number: String) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

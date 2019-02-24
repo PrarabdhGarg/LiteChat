@@ -10,6 +10,8 @@ class AllChatsContractFrag {
            fun setPersonalChatNames(personalChatNames:ArrayList<String>)
            fun setPersonalChatN1(personalChatNamesN1:ArrayList<MessageList>)
            fun setPersonalChatN2(personalChatNamesN2:ArrayList<MessageList>)
+            fun updateRecyclerViewForFirstTime()
+            fun updateRecyclerView()
     }
     interface CFInteractor{
 

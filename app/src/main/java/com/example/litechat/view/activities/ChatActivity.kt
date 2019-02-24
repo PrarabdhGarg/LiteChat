@@ -10,10 +10,7 @@ import com.example.litechat.R
 import com.example.litechat.contracts.ChatContract
 import com.example.litechat.model.AllChatDataModel
 
-import com.example.litechat.model.MessageList
-
 import com.example.litechat.model.MessageModel
-import com.example.litechat.model.UserProfileData
 import com.example.litechat.presenter.ChatPresenter
 import com.example.litechat.view.adapters.AdapterForChatActivity
 import kotlinx.android.synthetic.main.activity_chat.*
@@ -45,44 +42,47 @@ class ChatActivity : AppCompatActivity(),ChatContract.CView {
             setHasFixedSize(true)
         }
 
+
+         AllChatDataModel.otherUserNumber = intent.getStringExtra("string")
+         AllChatDataModel.documentPathId=intent.getStringExtra("documentPathId")
+         AllChatDataModel.lastUpdated=intent.getStringExtra("lastUpdated")
+        try
+        {
+             val num = parseDouble(AllChatDataModel.otherUserNumber)
+        }
+        catch (e: NumberFormatException)
+        {
+            numeric = false
+        }
+        if (!numeric)
+        {
+            var groupChat= AllChatDataModel.allChatArrayListGroupStatic.find { it.otherPerson==AllChatDataModel.otherUserNumber}
+            groupDataset.addAll(groupChat!!.allMessages)
+
+        }
+        else
+        {
+            // get previous chats and caching
+            chatPresenter.getNewOtherMessagesFromInteractor()
+        }
+
+        // handle when message is sent
         buttonSend.setOnClickListener(object : View.OnClickListener{
 
             @TargetApi(Build.VERSION_CODES.O)
             override fun onClick(v: View?) {
-                //AllChatDataModel.flag=true
-               var messageModel= MessageModel()
+                // also change last updated
+                Log.d("saala","meonclick")
+                var messageModel= MessageModel()
                 messageModel.message=editTextSend.text.toString()
-                messageModel.sentBy="9826936889"// sala ab bhi null h
+                messageModel.sentBy=AllChatDataModel.userNumberIdPM// sala ab bhi null h
                 messageModel.sentOn=Instant.now().epochSecond.toString()
+                editTextSend.setText("")
                 chatPresenter.passNewSetMessageFromViewtoPresenter(messageModel,applicationContext)
 
 
             }
         })
-         AllChatDataModel.numberID = intent.getStringExtra("string")
-        try {
-            val num = parseDouble(AllChatDataModel.numberID)
-        } catch (e: NumberFormatException) {
-            numeric = false
-        }
-        if (!numeric)
-        {
-            var groupChat= AllChatDataModel.allChatArrayListGroupStatic.find { it.otherPerson==AllChatDataModel.numberID}
-            groupDataset.addAll(groupChat!!.allMessages)
-
-        }
-        else {
-            //pass documentId in it
-
-          /* var personalChat=AllChatDataModel.allChatArrayListN1Static.find { it.otherPerson==AllChatDataModel.numberID }
-            Log.d("Run5",personalChat!!.allMessages.size.toString())
-            myDataset.clear()
-            myDataset.addAll(personalChat!!.allMessages)
-            Log.d("Run6",myDataset.size.toString())*/
-
-            chatPresenter.getNewOtherMessagesFromInteractor()
-        }
-
 
 
 
@@ -92,29 +92,24 @@ class ChatActivity : AppCompatActivity(),ChatContract.CView {
 
     }
 
-    override fun displayMessage() {
+    override fun displayMessage()
+    {
             Log.d("Run4","code of displayNewMessage")
-           // yh kch sochna padega sare clear krke add nhi krne h
-        myDataset.clear()
-        myDataset.addAll(AllChatDataModel.allChatArrayListPersonalStatic)
-        //   myDataset.add(AllChatDataModel.allChatArrayListPersonalStatic.last())
-           //AllChatDataModel.allChatArrayListN1Static.find { it.otherPerson==AllChatDataModel.numberID }!!.allMessages.add(AllChatDataModel.allChatArrayListPersonalStatic.last())
+          // claer previous messages from adapeter datset to avoid appending of messages
+           myDataset.clear()
+           myDataset.addAll(AllChatDataModel.allChatArrayListPersonalStatic)
+
            Log.d("Run7",myDataset.size.toString())
            adapterForChatActivity!!.notifyDataSetChanged()
        }
 
-    override fun onBackPressed() {
-      //  AllChatDataModel.flag=false
-       /* var objMessageList= MessageList()
-        objMessageList.otherPerson=AllChatDataModel.numberID
-        objMessageList.allMessages.addAll(AllChatDataModel.allChatArrayListPersonalStatic)
-        Log.d("Size1",objMessageList.allMessages.size.toString()+"\n"+AllChatDataModel.allChatArrayListPersonalStatic.size.toString())
-        Log.d("Size2","\n"+AllChatDataModel.allChatArrayListN1Static.size.toString())
-        AllChatDataModel.allChatArrayListN1Static.filter { it.otherPerson==AllChatDataModel.numberID }
-       AllChatDataModel.allChatArrayListN1Static. addAll()*/
+    override fun onBackPressed()
+    {
         AllChatDataModel.allChatArrayListPersonalStatic.clear()
+        AllChatDataModel.flagOnBackPressed = true
         super.onBackPressed()
     }
+
     }
 
 

@@ -14,6 +14,8 @@ import com.example.litechat.ListenerObjectTry
 import com.example.litechat.R
 import com.example.litechat.contracts.AllChatsContractFrag
 import com.example.litechat.contracts.ChatContract
+import com.example.litechat.model.AllChatDataModel
+import com.example.litechat.model.ChatObject
 import com.example.litechat.model.MessageList
 import com.example.litechat.presenter.FragmentChatPresenter
 import com.example.litechat.view.activities.ChatActivity
@@ -32,9 +34,10 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
 
     private lateinit var listenerForChat: ListenerObjectTry
     private lateinit var listenerForProfile: ListenerObjectTry
-    private var chatNamesForFragment = ArrayList<String>()
+    private var chatNamesForFragment = ArrayList<ChatObject>()
     private var frag = FragmentChatPresenter(this)
-    private var adapterForFragmentChat: AdapterForFragmentChat? = null
+    private  var adapterForFragmentChat: AdapterForFragmentChat? =null
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_chat, container, false)
@@ -44,10 +47,13 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
         listenerForProfile = ListenerObjectTry()
         listenerForChat.setCustomObjectListener(object : ListenerObjectTry.Listener {
 
-            override fun onDataRecieved(number: String) {
+            override fun onDataRecieved(number: String, chatDocumentId: String,lastUpdated:String) {
                 val intent = Intent(context, ChatActivity::class.java)
                 Toast.makeText(context,number,Toast.LENGTH_LONG).show()
+                intent.putExtra("documentPathId",chatDocumentId)
                 intent.putExtra("string",number)
+                intent.putExtra("lastUpdated",lastUpdated)
+                AllChatDataModel.personalChatList.clear()
                 startActivity(intent)
             }
         })
@@ -55,7 +61,7 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
 
         listenerForProfile.setCustomObjectListener(object : ListenerObjectTry.Listener {
 
-            override fun onDataRecieved(number: String) {
+            override fun onDataRecieved(number: String, chatDocumentId: String,lastUpdated:String) {
 
                 /** for opening profile
                  *  val intent = Intent(context,ChatActivity::class.java)
@@ -65,7 +71,6 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
 
             }
         })
-
             adapterForFragmentChat = AdapterForFragmentChat(chatNamesForFragment, context!!, listenerForProfile, listenerForChat)
             view.findViewById<RecyclerView>(R.id.recyView_FragmentChat).adapter = adapterForFragmentChat
 
@@ -74,23 +79,23 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        frag.getChats()
+      //  frag.getChats()
         super.onCreate(savedInstanceState)
     }
 
     override fun setGroupNames(groupChatNames: ArrayList<String>) {
 
-        //ngroupChatNames=groupChatNames
+       /* //ngroupChatNames=groupChatNames
         Log.d("QueryF",groupChatNames.toString())
         chatNamesForFragment.addAll(groupChatNames)
         Log.d("QueryF1",chatNamesForFragment.toString())
-            adapterForFragmentChat!!.notifyDataSetChanged()
+            adapterForFragmentChat!!.notifyDataSetChanged()*/
     }
 
     override fun setPersonalChatNames(personalChatNames: ArrayList<String>) {
-       chatNamesForFragment.addAll(personalChatNames)
+      /* chatNamesForFragment.addAll(personalChatNames)
 
-        adapterForFragmentChat!!.notifyDataSetChanged()
+        adapterForFragmentChat!!.notifyDataSetChanged()*/
     }
 
 
@@ -109,6 +114,29 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
 
 
     override fun setContactstoFragmentChat() {
+
+    }
+
+    override fun updateRecyclerView() {
+        Log.d("FinalDebug9", "upadte all start  size${AllChatDataModel.personalChatList}")
+        //chatNamesForFragment.clear()
+        //chatNamesForFragment.addAll(AllChatDataModel.personalChatList)
+        /*AllChatDataModel.personalChatList.clear()*/
+        Log.d("FinalDebug10", "upadte all start chatfor size${chatNamesForFragment.last()}")
+        //chatNamesForFragment.add(chatNamesForFragment.last())
+
+        adapterForFragmentChat!!.notifyDataSetChanged()
+
+    }
+
+    override fun updateRecyclerViewForFirstTime() {
+        Log.d("Dataa","first time code start")
+        chatNamesForFragment.clear()
+        chatNamesForFragment.addAll(AllChatDataModel.personalChatList)
+        AllChatDataModel.personalChatList.clear()
+
+        adapterForFragmentChat!!.notifyDataSetChanged()
+
 
     }
 

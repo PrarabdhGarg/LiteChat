@@ -85,6 +85,13 @@ class FragmentChatInteractor(p1: AllChatsContractFrag.CFPresenter) : AllChatsCon
         }
         /////////////////
 
+       /* arrayOf<Map<String, Any>>().forEach { map ->
+            val phoneNo = map["phoneNo"] as String
+            val chatId = map["chatId"] as String
+
+
+        }
+*/
         /*database!!.collection("Chats").whereEqualTo("number2", "9826936889").get().addOnSuccessListener { documents ->
 
                     for (doc in documents) {

@@ -3,7 +3,7 @@ package com.example.litechat
 class ListenerObjectTry {
 
     interface Listener {
-        fun onDataRecieved(number : String)
+        fun onDataRecieved(number : String, chatDocumentId: String, lastUpdated:String)
 
     }
 

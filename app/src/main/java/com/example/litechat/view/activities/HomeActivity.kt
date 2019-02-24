@@ -25,6 +25,7 @@ import android.view.MenuItem
 import android.widget.SearchView
 import com.example.litechat.R
 import com.example.litechat.contracts.HomeActivityContract
+import com.example.litechat.model.AllChatDataModel
 import com.example.litechat.model.ContactsModel
 import com.example.litechat.model.UserProfileData
 import com.example.litechat.presenter.HomeActivityPresenter
@@ -39,9 +40,18 @@ import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : AppCompatActivity(), HomeActivityContract.View
 {
+    override fun getInstanceOfFragmentChat(): FragmentChat {
+        return fragmentChat1!!
+    }
+
+    override fun isChatFragmentActive(): Boolean {
+        return  chatFragmentActive
+    }
     //function to pass context to HomeActivityPresenter
 
     override fun passContext(): Context = applicationContext
+
+
 
     //function to pass contentResolver to HomeActivityPresenter
 
@@ -57,17 +67,24 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View
      */
     private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
     private var fragment : FragmentStatus? = null
+    private var fragmentChat1 : FragmentChat? = null
     private val homeActivityPresenter = HomeActivityPresenter(this, ContactsModel())
+    private var chatFragmentActive= false
+
+    override fun getPersonalChats() {
+       // to be removed
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
+       homeActivityPresenter.getPersonalChatsFromFirestore()
         //If user is already logged in, no need to open the LoginActivity again
 
 
-        if(FirebaseAuth.getInstance().currentUser == null)
+      /*  if(FirebaseAuth.getInstance().currentUser == null)
         {
             startActivity(Intent(this@HomeActivity , LoginActivity::class.java))
         }
@@ -77,7 +94,7 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View
             UserProfileData.UserNumber = number!!.substring(3)
             Log.d("HomeActivity" , "Else enterd in auth.getIstance $number")
             homeActivityPresenter.getUserDataOnLogin(number)
-        }
+        }*/
 
 
         setSupportActionBar(toolbar)
@@ -110,12 +127,16 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View
 
     override fun onStart() {
     super.onStart()
-
+        AllChatDataModel.personalChatList.clear()
       /*if (homeActivityPresenter.passUserList().isEmpty()) {
 
            homeActivityPresenter.getContacts()
        }*/
-}
+
+       Log.d("FinalDebug1"," homeActivityPresenter.getPersonalChatsFromFirestore called")
+
+
+    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle action bar item clicks here. The action bar will
@@ -139,6 +160,11 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View
             startActivity(Intent(this@HomeActivity , LoginActivity::class.java))
             return true
         }
+        else if (id==R.id.action_newPersonalChat)
+        {
+           startActivity(Intent(this@HomeActivity,NewPersonalChatActivity::class.java))
+            return true
+        }
 
         return super.onOptionsItemSelected(item)
     }
@@ -154,14 +180,19 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
             val fragmentChat = FragmentChat()
+            fragmentChat1 = fragmentChat
             when(position){
                 0  -> {
+                    chatFragmentActive=true
+                    fragmentChat1 = fragmentChat
                     return fragmentChat }
 
                 1   -> { val fragmentContact= FragmentContact()
+                    chatFragmentActive=false
                     return fragmentContact}
 
                 2   ->{ val fragmentStatus= FragmentStatus()
+                    chatFragmentActive=false
                     fragment = fragmentStatus
                     return fragmentStatus }
             }
