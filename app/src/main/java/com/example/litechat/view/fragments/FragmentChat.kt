@@ -36,6 +36,7 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
     private var adapterForFragmentChat: AdapterForFragmentChat? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        Log.d("ViewPager" , "onCreateView of FragmentChat called")
         val view = inflater.inflate(R.layout.fragment_chat, container, false)
 
         // Listeners For calling ChatActivity on click event on RecyclerView
@@ -75,6 +76,7 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         frag.getChats()
+        Log.d("ViewPager" , "onCreate of FragmentChat called")
         super.onCreate(savedInstanceState)
     }
 
@@ -89,7 +91,7 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
 
     override fun setPersonalChatNames(personalChatNames: ArrayList<String>,personalChats:ArrayList<MessageList>) {
        chatNamesForFragment.addAll(personalChatNames)
-        personalChatsForActivity.addAll(personalChats)  
+        personalChatsForActivity.addAll(personalChats)
         adapterForFragmentChat!!.notifyDataSetChanged()
     }
 
@@ -109,6 +111,16 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
 
     override fun setContactstoFragmentChat() {
 
+    }
+
+    override fun onDestroy() {
+        Log.d("ViewPager" , "onDestroy of FragmentChat called")
+        super.onDestroy()
+    }
+
+    override fun onDestroyView() {
+        Log.d("ViewPager" , "onDestroyView of FragmentChat called")
+        super.onDestroyView()
     }
 
 }

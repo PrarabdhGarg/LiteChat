@@ -39,13 +39,14 @@ class DataRetriveClass : HomeActivityContract.Model {
 
 
     override fun getCurrentActivitiesOfOtherUsers(presenter: StatusFragmentPresenter) {
-        var maps: HashMap<String, String> = HashMap<String, String>()
+        var maps = ArrayList<Pair<String , String>>()
         FirebaseFirestore.getInstance().collection("Users").get()
             .addOnSuccessListener { documents ->
                 for (document in documents) {
                     if (document.id == UserProfileData.UserNumber)
                         continue
-                    maps[document.getString("name").toString()] = document.getString("image").toString()
+                    maps.add(Pair(document.data.getValue("name").toString() , document.data.get("profileImage").toString()))
+                    //Log.d("Status" , "${maps[i].first} =>  ${maps[i].second}")
                 }
                 presenter.onStatusDataRecived(maps)
             }

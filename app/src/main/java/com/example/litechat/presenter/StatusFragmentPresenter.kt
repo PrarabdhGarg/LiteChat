@@ -11,13 +11,14 @@ import com.example.litechat.contracts.StatusContract
 import com.example.litechat.model.DataRetriveClass
 import com.example.litechat.model.UserDataModel
 import com.example.litechat.model.UserProfileData
+import com.example.litechat.view.adapters.StatusAdapter
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.fragment_status.view.*
 import java.io.File
 
-class StatusFragmentPresenter(view : View) : StatusContract.StatusPresenter
+class StatusFragmentPresenter(view : StatusContract.View) : StatusContract.StatusPresenter
 {
 
     var currentView = view  //This variable stores the current instance of the view that is calling it
@@ -58,11 +59,11 @@ class StatusFragmentPresenter(view : View) : StatusContract.StatusPresenter
         mStorageRef.child(UserProfileData.UserNumber).child("StatusImage").putFile(path)
             .addOnSuccessListener {
                 UserProfileData.UserCurrentActivity = mStorageRef.child(UserProfileData.UserNumber).child("StatusImage").downloadUrl.toString()
-                Toast.makeText(currentView.context , "Upload Successful" , Toast.LENGTH_SHORT).show()
-                currentView.statusImageView.setImageURI(path)
+                Toast.makeText(currentView.getCurrentContext() , "Upload Successful" , Toast.LENGTH_SHORT).show()
+                currentView.setStatusImageView(path.toString())
         }
             .addOnFailureListener {
-                Toast.makeText(currentView.context , "Upload UnSuccessful" , Toast.LENGTH_SHORT).show()
+                Toast.makeText(currentView.getCurrentContext() , "Upload UnSuccessful" , Toast.LENGTH_SHORT).show()
                 Log.d("Finding Error" , it.toString())
         }
     }
@@ -71,8 +72,9 @@ class StatusFragmentPresenter(view : View) : StatusContract.StatusPresenter
         DataRetriveClass().getCurrentActivitiesOfOtherUsers(this)
     }
 
-    override fun onStatusDataRecived(map: HashMap<String, String>) {
+    override fun onStatusDataRecived(map: ArrayList<Pair<String, String>>) {
         Log.d("PresenterData" , map.size.toString())
+        currentView.onNewDataRecivedForRecyclerView(map)
     }
 
 }
