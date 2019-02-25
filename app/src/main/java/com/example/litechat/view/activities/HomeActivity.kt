@@ -3,17 +3,13 @@ package com.example.litechat.view.activities
 
 import android.app.Activity
 import android.app.SearchManager
-import android.content.ContentResolver
 import android.content.Context
-
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
-
 import android.support.design.widget.TabLayout
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
-
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
@@ -24,28 +20,19 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.SearchView
 import com.example.litechat.R
-import com.example.litechat.contracts.HomeActivityContract
-import com.example.litechat.model.ContactsModel
-import com.example.litechat.model.UserProfileData
+import com.example.litechat.model.*
+import com.example.litechat.model.contactsRoom.User
 import com.example.litechat.presenter.HomeActivityPresenter
 import com.example.litechat.view.fragments.FragmentChat
 import com.example.litechat.view.fragments.FragmentContact
 import com.example.litechat.view.fragments.FragmentStatus
 import com.google.firebase.auth.FirebaseAuth
-
-
 import kotlinx.android.synthetic.main.activity_home.*
+import java.util.ArrayList
 
 
-class HomeActivity : AppCompatActivity(), HomeActivityContract.View
+class HomeActivity : AppCompatActivity()
 {
-    //function to pass context to HomeActivityPresenter
-
-    override fun passContext(): Context = applicationContext
-
-    //function to pass contentResolver to HomeActivityPresenter
-
-    override fun passContentResolver(): ContentResolver = contentResolver
 
     /**
      * The [android.support.v4.view.PagerAdapter] that will provide
@@ -57,27 +44,27 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View
      */
     private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
     private var fragment : FragmentStatus? = null
-    private val homeActivityPresenter = HomeActivityPresenter(this, ContactsModel())
-
-
+    lateinit var homeActivityPresenter: HomeActivityPresenter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
+        homeActivityPresenter = HomeActivityPresenter(applicationContext)
+        ContentResolverData.contentResolverPassed = contentResolver
         //If user is already logged in, no need to open the LoginActivity again
 
 
-        if(FirebaseAuth.getInstance().currentUser == null)
-        {
-            startActivity(Intent(this@HomeActivity , LoginActivity::class.java))
-        }
-        else{
-
-            var number = FirebaseAuth.getInstance().currentUser!!.phoneNumber
-            UserProfileData.UserNumber = number!!.substring(3)
-            Log.d("HomeActivity" , "Else enterd in auth.getIstance $number")
-            homeActivityPresenter.getUserDataOnLogin(number)
-        }
+//        if(FirebaseAuth.getInstance().currentUser == null)
+//        {
+//            startActivity(Intent(this@HomeActivity , LoginActivity::class.java))
+//        }
+//        else{
+//
+//            var number = PreferenceManager.getDefaultSharedPreferences(applicationContext).getString("currentUserNumber" , "123456789")
+//            //UserProfileData.UserNumber = number!!.substring(3)
+//            Log.d("HomeActivity" , "Else enterd in auth.getIstance $number")
+//            homeActivityPresenter.getUserDataOnLogin(number)
+//        }
 
 
         setSupportActionBar(toolbar)
@@ -108,39 +95,33 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View
         return true
     }
 
-    override fun onStart() {
-    super.onStart()
-
-      /*if (homeActivityPresenter.passUserList().isEmpty()) {
-
-           homeActivityPresenter.getContacts()
-       }*/
-}
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         val id = item.itemId
 
-        if (id == R.id.action_profile) {
+        when (id) {
+            R.id.action_profile -> {
 
-            // start Activity for Profile
-            return true
-        }
-        else if (id==R.id.action_developers){
+                // start Activity for Profile
+                startActivity(Intent(this@HomeActivity, ProfileActivity::class.java))
+                return true
+            }
+            R.id.action_developers -> {
 
-            startActivity(Intent(this@HomeActivity, DeveloperActivity::class.java))
-            return true
-        }
-        else if (id == R.id.action_signOut)
-        {
-            FirebaseAuth.getInstance().signOut()
-            startActivity(Intent(this@HomeActivity , LoginActivity::class.java))
-            return true
+                startActivity(Intent(this@HomeActivity, DeveloperActivity::class.java))
+                return true
+            }
+            R.id.action_signOut -> {
+
+                FirebaseAuth.getInstance().signOut()
+                startActivity(Intent(this@HomeActivity , LoginActivity::class.java))
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
         }
 
-        return super.onOptionsItemSelected(item)
     }
 
 
@@ -161,9 +142,9 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View
                 1   -> { val fragmentContact= FragmentContact()
                     return fragmentContact}
 
-                2   ->{ val fragmentStatus= FragmentStatus()
-                    fragment = fragmentStatus
-                    return fragmentStatus }
+//                2   ->{ val fragmentStatus= FragmentStatus()
+//                    fragment = fragmentStatus
+//                    return fragmentStatus }
             }
 
             return   fragmentChat
@@ -185,7 +166,7 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View
             //val thumbnail: Bitmap = data!!.getParcelableExtra("data")
             val fullPhotoUri: Uri? = data!!.data
             Log.d("Image Search" , fullPhotoUri.toString())
-            UserProfileData.UserImage = fullPhotoUri
+            UserProfileData.UserImage = fullPhotoUri.toString()
             fragment!!.onNewStatusImageSelected(fullPhotoUri!!)
         }
     }
