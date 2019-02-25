@@ -11,14 +11,6 @@ import com.example.litechat.presenter.StatusFragmentPresenter
 import com.google.firebase.firestore.FirebaseFirestore
 
 class DataRetriveClass : HomeActivityContract.Model {
-    override fun roomSetData(applicationContext: Context, userList: List<User>) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun roomGetData(applicationContext: Context): List<User> {
-        TODO(reason = "not implemented") //To change body of created functions use File | Settings | File Templates.
-
-    }
 
     /**
      * This class should not be used currently as the structure of firestore is not yet finalized.

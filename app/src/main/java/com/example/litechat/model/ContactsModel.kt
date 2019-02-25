@@ -17,27 +17,4 @@ class ContactsModel: HomeActivityContract.Model{
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun roomSetData(applicationContext: Context, userList: List<User>) {
-        val db = Room.databaseBuilder(applicationContext, AppDatabse::class.java, "Contact_Database")
-            .allowMainThreadQueries().build()
-
-        for(item in userList){
-
-            db.userDao().insertContact(item)
-        }
-
-    }
-
-    override fun roomGetData(applicationContext: Context): List<User> {
-
-        val db = Room.databaseBuilder(applicationContext, AppDatabse::class.java, "Contact_Database")
-            .allowMainThreadQueries().build()
-
-        return  db.userDao().getContactList()
-
-    }
-
-
-
-
 }
