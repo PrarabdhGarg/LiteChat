@@ -5,7 +5,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".loginView.activities.LoginActivity">
+        tools:context=".view.activities.LoginActivity">
 
     <ProgressBar
             android:layout_width="wrap_content"
@@ -55,5 +55,18 @@
             android:inputType="text"
             app:layout_constraintTop_toBottomOf="@id/editTextNewNumber"
             app:layout_constraintBottom_toTopOf="@id/loginButton"/>
+
+    <!--<EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:id="@+id/editTextAbout"
+            android:hint="Enter Something About Yourself"
+            android:textAlignment="center"
+            android:inputType="text"
+            app:layout_constraintTop_toBottomOf="@id/editTextName"
+            app:layout_constraintBottom_toTopOf="@id/loginButton"/>-->
 
 </android.support.constraint.ConstraintLayout>

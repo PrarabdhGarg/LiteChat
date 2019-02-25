@@ -13,6 +13,7 @@ import android.view.WindowManager
 import android.widget.Toast
 import com.example.litechat.R
 import com.example.litechat.contracts.LoginContract
+import com.example.litechat.model.UserProfileData
 import com.example.litechat.presenter.LoginActivityPresenter
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
@@ -42,6 +43,8 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
         loginButton.setOnClickListener {
             when {
                 editTextName.visibility == View.VISIBLE -> {
+                    if (editTextName.text.isEmpty())
+                        editTextName.error = "Please Enter a non null name for your account"
                     onButtonPressedForSignUp()
                 }
 
@@ -93,12 +96,14 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
     override fun onFirstButtonPressed()
     {
         Log.d("LOGIN" , "onFirstPressed Callsed")
-        mobileNumber = editTextNewNumber.text.toString()
+
+        UserProfileData.UserNumber = editTextNumber.text.toString()
+
         ProgressBar!!.setVisibility (View.VISIBLE)
         window.setFlags(
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-        loginActivityPresenter!!.checkAccountExists(mobileNumber!!)
+        loginActivityPresenter!!.checkAccountExists(UserProfileData.UserNumber!!)
     }
 
     /**
@@ -111,12 +116,13 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
 
     override fun onButtonPressedForSignUp()
     {
-        userName = editTextName.text.toString()
+        UserProfileData.UserName = editTextName.text.toString()
+        //UserProfileData.UserAbout = editTextAbout.text.toString()
         ProgressBar!!.setVisibility(View.VISIBLE)
         window.setFlags(
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-        loginActivityPresenter!!.verifyNumber(mobileNumber!! , this , applicationContext , ProgressBar , userName!!)
+        loginActivityPresenter!!.verifyNumber(UserProfileData.UserNumber!! , this , applicationContext , ProgressBar , UserProfileData.UserName!!)
     }
 
     override fun onUserAccontNotFound() {
@@ -126,6 +132,7 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
         Log.d("TAG " , "New User")
         loginButton.text = "SignUp"
         editTextName.visibility = View.VISIBLE
+        //editTextAbout.visibility = View.VISIBLE
         ProgressBar!!.visibility = View.INVISIBLE
         window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
     }

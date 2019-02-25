@@ -47,7 +47,7 @@ class LoginActivityPresenter (loginView : LoginContract.LoginView): LoginContrac
                     Log.d("String" , UserProfileData.UserNumber)
                     UserProfileData.UserName = document.getString("name")
                     UserProfileData.UserCurrentActivity = document.getString("currentActivity")
-//                    UserProfileData.UserImage = Uri.parse(document.getString("image"))
+                    UserProfileData.UserImage = document.getString("image")
                     UserProfileData.UserAbout = document.getString("about")
                     preferances.edit().putString("CurrentUserNumber" , UserProfileData.UserNumber).apply()
                     Log.d("ProfexistComplete" , UserProfileData.UserName + UserProfileData.UserName + UserProfileData.UserCurrentActivity + UserProfileData.UserImage)
@@ -69,10 +69,10 @@ class LoginActivityPresenter (loginView : LoginContract.LoginView): LoginContrac
     override fun addUserToFirebase(number : String, id : String, name : String)
     {
         val database = FirebaseFirestore.getInstance()
-        val user = UserDataModel(Id = id , Name = name , Number = number)
+        val user = UserDataModel(Id = id , Name = name , Number = number , About = UserProfileData.UserAbout)
         UserProfileData.UserName = name
         UserProfileData.UserNumber = number
-        database.collection("Users").document(number.toString()).set(user)
+        database.collection("Users").document(number).set(user)
     }
 
     /**
@@ -154,7 +154,7 @@ class LoginActivityPresenter (loginView : LoginContract.LoginView): LoginContrac
         mAuth.signInWithCredential(credential).addOnSuccessListener {result ->
             Toast.makeText(context , result.user.toString() , Toast.LENGTH_SHORT).show()
             Log.d("LoginActivityPresenter" , mAuth.currentUser!!.phoneNumber.toString())
-            UserProfileData.UserNumber = mAuth.currentUser!!.phoneNumber.toString().substring(4)
+            UserProfileData.UserNumber = mAuth.currentUser!!.phoneNumber.toString().substring(3)
             loginActivity.changeActivity()
         }
             .addOnFailureListener { exception ->

@@ -3,17 +3,13 @@ package com.example.litechat.view.activities
 
 import android.app.Activity
 import android.app.SearchManager
-import android.content.ContentResolver
 import android.content.Context
-
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
-
 import android.support.design.widget.TabLayout
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
-
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
@@ -28,18 +24,20 @@ import com.example.litechat.contracts.HomeActivityContract
 import com.example.litechat.model.AllChatDataModel
 import com.example.litechat.model.ContactsModel
 import com.example.litechat.model.UserProfileData
+import com.example.litechat.model.*
+import com.example.litechat.model.contactsRoom.User
 import com.example.litechat.presenter.HomeActivityPresenter
 import com.example.litechat.view.fragments.FragmentChat
 import com.example.litechat.view.fragments.FragmentContact
 import com.example.litechat.view.fragments.FragmentStatus
 import com.google.firebase.auth.FirebaseAuth
-
-
 import kotlinx.android.synthetic.main.activity_home.*
+import java.util.ArrayList
 
 
-class HomeActivity : AppCompatActivity(), HomeActivityContract.View
+class HomeActivity : AppCompatActivity()
 {
+
     override fun getInstanceOfFragmentChat(): FragmentChat {
         return fragmentChat1!!
     }
@@ -55,8 +53,6 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View
 
     //function to pass contentResolver to HomeActivityPresenter
 
-    override fun passContentResolver(): ContentResolver = contentResolver
-
     /**
      * The [android.support.v4.view.PagerAdapter] that will provide
      * fragments for each of the sections. We use a
@@ -67,34 +63,37 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View
      */
     private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
     private var fragment : FragmentStatus? = null
+
     private var fragmentChat1 : FragmentChat? = null
-    private val homeActivityPresenter = HomeActivityPresenter(this, ContactsModel())
     private var chatFragmentActive= false
 
     override fun getPersonalChats() {
        // to be removed
     }
 
-
+    lateinit var homeActivityPresenter: HomeActivityPresenter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
-
+       homeActivityPresenter = HomeActivityPresenter(applicationContext)
        homeActivityPresenter.getPersonalChatsFromFirestore()
+       
+        ContentResolverData.contentResolverPassed = contentResolver
         //If user is already logged in, no need to open the LoginActivity again
 
 
-      /*  if(FirebaseAuth.getInstance().currentUser == null)
-        {
-            startActivity(Intent(this@HomeActivity , LoginActivity::class.java))
-        }
-        else{
+//        if(FirebaseAuth.getInstance().currentUser == null)
+//        {
+//            startActivity(Intent(this@HomeActivity , LoginActivity::class.java))
+//        }
+//        else{
+//
+//            var number = PreferenceManager.getDefaultSharedPreferences(applicationContext).getString("currentUserNumber" , "123456789")
+//            //UserProfileData.UserNumber = number!!.substring(3)
+//            Log.d("HomeActivity" , "Else enterd in auth.getIstance $number")
+//            homeActivityPresenter.getUserDataOnLogin(number)
+//        }
 
-            var number = FirebaseAuth.getInstance().currentUser!!.phoneNumber
-            UserProfileData.UserNumber = number!!.substring(3)
-            Log.d("HomeActivity" , "Else enterd in auth.getIstance $number")
-            homeActivityPresenter.getUserDataOnLogin(number)
-        }*/
 
 
         setSupportActionBar(toolbar)
@@ -125,18 +124,15 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View
         return true
     }
 
+
     override fun onStart() {
     super.onStart()
         AllChatDataModel.personalChatList.clear()
-      /*if (homeActivityPresenter.passUserList().isEmpty()) {
-
-           homeActivityPresenter.getContacts()
-       }*/
-
        Log.d("FinalDebug1"," homeActivityPresenter.getPersonalChatsFromFirestore called")
 
 
     }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle action bar item clicks here. The action bar will
@@ -144,24 +140,27 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View
         // as you specify a parent activity in AndroidManifest.xml.
         val id = item.itemId
 
-        if (id == R.id.action_profile) {
-           // startActivity(Intent(this@HomeActivity,ActivityChooseProfile::class.java))
-            //finish()
-            // start Activity for Profile
 
-           /* homeActivityPresenter.getPersonalChatsFromFirestore()*/
-            return true
-        }
-        else if (id==R.id.action_developers){
+        when (id) {
+            R.id.action_profile -> {
 
-            startActivity(Intent(this@HomeActivity, DeveloperActivity::class.java))
-            return true
-        }
-        else if (id == R.id.action_signOut)
-        {
-            FirebaseAuth.getInstance().signOut()
-            startActivity(Intent(this@HomeActivity , LoginActivity::class.java))
-            return true
+                // start Activity for Profile
+                startActivity(Intent(this@HomeActivity, ProfileActivity::class.java))
+                return true
+            }
+            R.id.action_developers -> {
+
+
+                startActivity(Intent(this@HomeActivity, DeveloperActivity::class.java))
+                return true
+            }
+            R.id.action_signOut -> {
+
+                FirebaseAuth.getInstance().signOut()
+                startActivity(Intent(this@HomeActivity , LoginActivity::class.java))
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
         }
         else if (id==R.id.action_newPersonalChat)
         {
@@ -175,7 +174,6 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View
         }
 
 
-        return super.onOptionsItemSelected(item)
     }
 
 
@@ -199,10 +197,12 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View
                     chatFragmentActive=false
                     return fragmentContact}
 
+
                 2   ->{ val fragmentStatus= FragmentStatus()
                     chatFragmentActive=false
                     fragment = fragmentStatus
                     return fragmentStatus }
+
             }
 
             return   fragmentChat
@@ -224,7 +224,7 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View
             //val thumbnail: Bitmap = data!!.getParcelableExtra("data")
             val fullPhotoUri: Uri? = data!!.data
             Log.d("Image Search" , fullPhotoUri.toString())
-            UserProfileData.UserImage = fullPhotoUri
+            UserProfileData.UserImage = fullPhotoUri.toString()
             fragment!!.onNewStatusImageSelected(fullPhotoUri!!)
         }
     }

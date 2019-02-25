@@ -79,6 +79,7 @@
             app:layout_constraintTop_toBottomOf="@id/OttherActivitesTextView"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
+            android:id="@+id/RecyclerStatus"
             android:padding="16dp"
             android:layout_height="0dp"
             app:layoutManager="android.support.v7.widget.GridLayoutManager"

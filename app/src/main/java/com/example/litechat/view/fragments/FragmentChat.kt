@@ -25,7 +25,6 @@ import kotlinx.android.synthetic.main.fragment_chat.*
 class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
 
 
-
     /*private var ngroupChatNames=ArrayList<String>()
     private var personalChatNamesN1=ArrayList<String>()
     private var personalChatNamesN2=ArrayList<String>()
@@ -40,6 +39,7 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        Log.d("ViewPager" , "onCreateView of FragmentChat called")
         val view = inflater.inflate(R.layout.fragment_chat, container, false)
 
         // Listeners For calling ChatActivity on click event on RecyclerView
@@ -79,16 +79,18 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
     }
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
-      //  frag.getChats()
+
+        Log.d("ViewPager" , "onCreate of FragmentChat called")
+
         super.onCreate(savedInstanceState)
     }
 
     override fun setGroupNames(groupChatNames: ArrayList<String>) {
 
-       /* //ngroupChatNames=groupChatNames
-        Log.d("QueryF",groupChatNames.toString())
-        chatNamesForFragment.addAll(groupChatNames)
+
+        /*chatNamesForFragment.addAll(groupChatNames)
         Log.d("QueryF1",chatNamesForFragment.toString())
             adapterForFragmentChat!!.notifyDataSetChanged()*/
     }
@@ -101,9 +103,9 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
 
 
     override fun setPersonalChatN1(personalChatNamesN1: ArrayList<MessageList>) {
-       /* chatNamesForFragment.addAll(personalChatNamesN1.)
-        adapterForFragmentChat.notifyDataSetChanged()
-        */
+        /* chatNamesForFragment.addAll(personalChatNamesN1.)
+         adapterForFragmentChat.notifyDataSetChanged()
+         */
     }
 
     override fun setPersonalChatN2(personalChatNamesN2: ArrayList<MessageList>) {
@@ -113,10 +115,10 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
     }
 
 
-
     override fun setContactstoFragmentChat() {
 
     }
+
 
     override fun updateRecyclerView() {
         Log.d("FinalDebug9", "upadte all start  size${AllChatDataModel.personalChatList}")
@@ -140,4 +142,15 @@ if(chatNamesForFragment.size==0){
         adapterForFragmentChat!!.notifyDataSetChanged()
 
     }
+
+    override fun onDestroy() {
+        Log.d("ViewPager" , "onDestroy of FragmentChat called")
+        super.onDestroy()
+    }
+
+    override fun onDestroyView() {
+        Log.d("ViewPager" , "onDestroyView of FragmentChat called")
+        super.onDestroyView()
+    }
+
 }

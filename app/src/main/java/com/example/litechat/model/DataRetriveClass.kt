@@ -6,6 +6,12 @@ import com.example.litechat.contracts.HomeActivityContract
 import com.example.litechat.model.contactsRoom.User
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.EventListener
+import android.util.Log
+import android.widget.Toast
+import com.example.litechat.contracts.HomeActivityContract
+import com.example.litechat.model.contactsRoom.User
+import com.example.litechat.presenter.HomeActivityPresenter
+import com.example.litechat.presenter.StatusFragmentPresenter
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.MetadataChanges
 import com.google.firebase.firestore.QuerySnapshot
@@ -13,13 +19,7 @@ import com.google.firebase.firestore.QuerySnapshot
 class DataRetriveClass : HomeActivityContract.Model{
 
     private val db = FirebaseFirestore.getInstance()
-    override fun roomGetData(applicationContext: Context): List<User> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun roomSetData(applicationContext: Context, userList: List<User>) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    
 
     /**
      * This class should not be used currently as the structure of firestore is not yet finalized.
@@ -30,6 +30,11 @@ class DataRetriveClass : HomeActivityContract.Model{
             .addOnSuccessListener {
                 UserProfileData.UserName = it.getString("name")
                 UserProfileData.UserNumber = it.getString("number")
+                UserProfileData.UserCurrentActivity = it.get("currentActivity").toString()
+                UserProfileData.UserAbout = it.getString("about").toString()
+                UserProfileData.UserImage = it.getString("image").toString()
+                UserProfileData.UserProfileImage = it.getString("profileImage").toString()
+                Log.d("UserData" , "Data Retrieved class successfully called")
             }
     }
 
@@ -100,4 +105,18 @@ class DataRetriveClass : HomeActivityContract.Model{
                 })
     }
 
+
+    override fun getCurrentActivitiesOfOtherUsers(presenter: StatusFragmentPresenter) {
+        var maps = ArrayList<Pair<String , String>>()
+        FirebaseFirestore.getInstance().collection("Users").get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    if (document.id == UserProfileData.UserNumber)
+                        continue
+                    maps.add(Pair(document.data.getValue("name").toString() , document.data.get("profileImage").toString()))
+                    //Log.d("Status" , "${maps[i].first} =>  ${maps[i].second}")
+                }
+                presenter.onStatusDataRecived(maps)
+            }
+    }
 }

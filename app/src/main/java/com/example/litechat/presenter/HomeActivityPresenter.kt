@@ -4,22 +4,24 @@ import android.content.Context
 import android.provider.ContactsContract
 import android.util.Log
 import android.widget.Toast
+import com.example.litechat.contracts.ContactFragContract
 import com.example.litechat.contracts.HomeActivityContract
 import com.example.litechat.model.AllChatDataModel
 import com.example.litechat.model.ContactDataModel
+import com.example.litechat.model.ContentResolverData
 import com.example.litechat.model.DataRetriveClass
 import com.example.litechat.model.UserProfileData
 import com.example.litechat.model.contactsRoom.User
 import com.google.firebase.firestore.FirebaseFirestore
 
-class HomeActivityPresenter(viewPassed: HomeActivityContract.View, modelPassed: HomeActivityContract.Model): HomeActivityContract.Presenter{
+class HomeActivityPresenter(contextPassed: Context): HomeActivityContract.Presenter{
 
-    private val view = viewPassed
-    private val model = modelPassed
+    private val context = contextPassed
 
     private  val dataRetrieveModel = DataRetriveClass()
 
     override fun getUserDataOnLogin(number: String) {
+
 
         dataRetrieveModel.getUserDataFromFirestore(number)
         Toast.makeText(view.passContext() , UserProfileData.UserNumber , Toast.LENGTH_SHORT).show()
@@ -130,6 +132,7 @@ class HomeActivityPresenter(viewPassed: HomeActivityContract.View, modelPassed: 
                 }
             }
         }
+
     }
 
 }
