@@ -97,7 +97,7 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
     {
         Log.d("LOGIN" , "onFirstPressed Callsed")
 
-        UserProfileData.UserNumber = editTextNumber.text.toString()
+        UserProfileData.UserNumber = editTextNewNumber.text.toString()
 
         ProgressBar!!.setVisibility (View.VISIBLE)
         window.setFlags(

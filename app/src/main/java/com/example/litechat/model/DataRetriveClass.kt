@@ -1,9 +1,6 @@
 package com.example.litechat.model
 
 import android.content.Context
-import android.util.Log
-import com.example.litechat.contracts.HomeActivityContract
-import com.example.litechat.model.contactsRoom.User
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.EventListener
 import android.util.Log

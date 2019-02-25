@@ -35,7 +35,7 @@ import kotlinx.android.synthetic.main.activity_home.*
 import java.util.ArrayList
 
 
-class HomeActivity : AppCompatActivity()
+class HomeActivity : AppCompatActivity(),HomeActivityContract.View
 {
 
     override fun getInstanceOfFragmentChat(): FragmentChat {
@@ -75,7 +75,7 @@ class HomeActivity : AppCompatActivity()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
-       homeActivityPresenter = HomeActivityPresenter(applicationContext)
+       homeActivityPresenter = HomeActivityPresenter(applicationContext , this)
        homeActivityPresenter.getPersonalChatsFromFirestore()
        
         ContentResolverData.contentResolverPassed = contentResolver
@@ -160,20 +160,18 @@ class HomeActivity : AppCompatActivity()
                 startActivity(Intent(this@HomeActivity , LoginActivity::class.java))
                 return true
             }
+
+            R.id.action_newPersonalChat -> {
+                startActivity(Intent(this@HomeActivity,NewPersonalChatActivity::class.java))
+                return true
+            }
+
+            R.id.action_newGroupChat -> {
+                startActivity(Intent(this@HomeActivity,NewGroupChatActivity::class.java))
+                return true
+            }
             else -> return super.onOptionsItemSelected(item)
         }
-        else if (id==R.id.action_newPersonalChat)
-        {
-           startActivity(Intent(this@HomeActivity,NewPersonalChatActivity::class.java))
-            return true
-        }
-        else if (id==R.id.action_newGroupChat)
-        {
-            startActivity(Intent(this@HomeActivity,NewGroupChatActivity::class.java))
-            return true
-        }
-
-
     }
 
 
@@ -198,10 +196,10 @@ class HomeActivity : AppCompatActivity()
                     return fragmentContact}
 
 
-                2   ->{ val fragmentStatus= FragmentStatus()
-                    chatFragmentActive=false
-                    fragment = fragmentStatus
-                    return fragmentStatus }
+//                2   ->{ val fragmentStatus= FragmentStatus()
+//                    chatFragmentActive=false
+//                    fragment = fragmentStatus
+//                    return fragmentStatus }
 
             }
 

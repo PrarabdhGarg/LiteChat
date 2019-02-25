@@ -66,29 +66,9 @@ class ChatActivity : AppCompatActivity(), ChatContract.CView {
         {
             numeric = false
         }
-       /* if (!numeric)
-        {
-<<<<<<< HEAD
-            var groupChat= AllChatDataModel.allChatArrayListGroupStatic.find { it.otherPerson==string}
-            Log.d("check",groupChat!!.allMessages.toString())
-            groupDataset.addAll(groupChat!!.allMessages)
-            adapterForChatActivity= AdapterForChatActivity(string,groupDataset)
-            recyclerView.apply {
-                adapter=adapterForChatActivity
-                setHasFixedSize(true)
-            }
-            groupDataset.clear()
-=======
-            var groupChat= AllChatDataModel.allChatArrayListGroupStatic.find { it.otherPerson==AllChatDataModel.otherUserNumber}
-            groupDataset.addAll(groupChat!!.allMessages)
 
->>>>>>> fcfb50c0c3ca85812a55c8708170a3eab7031f28
-        }
-        else
-        {*/
             // get previous chats and caching
             chatPresenter.getNewOtherMessagesFromInteractor()
-      //  }
 
         // handle when message is sent
         buttonSend.setOnClickListener(object : View.OnClickListener{

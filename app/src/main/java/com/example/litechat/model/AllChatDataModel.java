@@ -15,7 +15,7 @@ public class AllChatDataModel {
     public static boolean flag=false;
     public static boolean flagPersonalChat=false;
     public static boolean flagOnBackPressed = false;
-    public static String userNumberIdPM= "7898161474";//9340243498
+    public static String userNumberIdPM= "5677654569";//9340243498
     public static  String lastUpdated;
     public static  ArrayList<ChatObject> personalChatList = new ArrayList<>();
     public static ArrayList<String> groupNumbers=new ArrayList<>();
