@@ -54,17 +54,17 @@ class HomeActivity : AppCompatActivity()
         //If user is already logged in, no need to open the LoginActivity again
 
 
-//        if(FirebaseAuth.getInstance().currentUser == null)
-//        {
-//            startActivity(Intent(this@HomeActivity , LoginActivity::class.java))
-//        }
-//        else{
-//
-//            var number = PreferenceManager.getDefaultSharedPreferences(applicationContext).getString("currentUserNumber" , "123456789")
-//            //UserProfileData.UserNumber = number!!.substring(3)
-//            Log.d("HomeActivity" , "Else enterd in auth.getIstance $number")
-//            homeActivityPresenter.getUserDataOnLogin(number)
-//        }
+        if(FirebaseAuth.getInstance().currentUser == null)
+        {
+            startActivity(Intent(this@HomeActivity , LoginActivity::class.java))
+        }
+        else{
+
+            var number = PreferenceManager.getDefaultSharedPreferences(applicationContext).getString("currentUserNumber" , "123456789")
+            //UserProfileData.UserNumber = number!!.substring(3)
+            Log.d("HomeActivity" , "Else enterd in auth.getIstance $number")
+            homeActivityPresenter.getUserDataOnLogin(number)
+        }
 
 
         setSupportActionBar(toolbar)
