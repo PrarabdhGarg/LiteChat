@@ -75,7 +75,7 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        frag.getChats()
+        //frag.getChats()
         Log.d("ViewPager" , "onCreate of FragmentChat called")
         super.onCreate(savedInstanceState)
     }
