@@ -18,7 +18,6 @@ import com.example.litechat.presenter.LoginActivityPresenter
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.login_screen.*
-import java.security.AccessController.getContext
 
 class LoginActivity : AppCompatActivity() , LoginContract.LoginView
 {
@@ -49,9 +48,9 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
                     onButtonPressedForSignUp()
                 }
 
-                editTextNumber.text.isEmpty() -> editTextNumber.error = "Mobile Number is Compulsory"
+                editTextNewNumber.text.isEmpty() -> editTextNewNumber.error = "Mobile Number is Compulsory"
 
-                editTextNumber.text.toString().length != 10 -> editTextNumber.error = "Please Enter Valid Number"
+                editTextNewNumber.text.toString().length != 10 -> editTextNewNumber.error = "Please Enter Valid Number"
 
                 else -> {
                     onFirstButtonPressed()
@@ -97,7 +96,9 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
     override fun onFirstButtonPressed()
     {
         Log.d("LOGIN" , "onFirstPressed Callsed")
+
         UserProfileData.UserNumber = editTextNumber.text.toString()
+
         ProgressBar!!.setVisibility (View.VISIBLE)
         window.setFlags(
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,

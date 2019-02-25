@@ -9,6 +9,8 @@ import com.example.litechat.model.contactsRoom.User
 import com.example.litechat.presenter.StatusFragmentPresenter
 
 class ContactsModel: HomeActivityContract.Model{
+    
+    
     override fun getCurrentActivitiesOfOtherUsers(presenter: StatusFragmentPresenter) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

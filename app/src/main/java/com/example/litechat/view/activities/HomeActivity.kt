@@ -20,6 +20,10 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.SearchView
 import com.example.litechat.R
+import com.example.litechat.contracts.HomeActivityContract
+import com.example.litechat.model.AllChatDataModel
+import com.example.litechat.model.ContactsModel
+import com.example.litechat.model.UserProfileData
 import com.example.litechat.model.*
 import com.example.litechat.model.contactsRoom.User
 import com.example.litechat.presenter.HomeActivityPresenter
@@ -34,6 +38,21 @@ import java.util.ArrayList
 class HomeActivity : AppCompatActivity()
 {
 
+    override fun getInstanceOfFragmentChat(): FragmentChat {
+        return fragmentChat1!!
+    }
+
+    override fun isChatFragmentActive(): Boolean {
+        return  chatFragmentActive
+    }
+    //function to pass context to HomeActivityPresenter
+
+    override fun passContext(): Context = applicationContext
+
+
+
+    //function to pass contentResolver to HomeActivityPresenter
+
     /**
      * The [android.support.v4.view.PagerAdapter] that will provide
      * fragments for each of the sections. We use a
@@ -44,12 +63,21 @@ class HomeActivity : AppCompatActivity()
      */
     private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
     private var fragment : FragmentStatus? = null
+
+    private var fragmentChat1 : FragmentChat? = null
+    private var chatFragmentActive= false
+
+    override fun getPersonalChats() {
+       // to be removed
+    }
+
     lateinit var homeActivityPresenter: HomeActivityPresenter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
-
-        homeActivityPresenter = HomeActivityPresenter(applicationContext)
+       homeActivityPresenter = HomeActivityPresenter(applicationContext)
+       homeActivityPresenter.getPersonalChatsFromFirestore()
+       
         ContentResolverData.contentResolverPassed = contentResolver
         //If user is already logged in, no need to open the LoginActivity again
 
@@ -65,6 +93,7 @@ class HomeActivity : AppCompatActivity()
 //            Log.d("HomeActivity" , "Else enterd in auth.getIstance $number")
 //            homeActivityPresenter.getUserDataOnLogin(number)
 //        }
+
 
 
         setSupportActionBar(toolbar)
@@ -96,11 +125,21 @@ class HomeActivity : AppCompatActivity()
     }
 
 
+    override fun onStart() {
+    super.onStart()
+        AllChatDataModel.personalChatList.clear()
+       Log.d("FinalDebug1"," homeActivityPresenter.getPersonalChatsFromFirestore called")
+
+
+    }
+
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         val id = item.itemId
+
 
         when (id) {
             R.id.action_profile -> {
@@ -110,6 +149,7 @@ class HomeActivity : AppCompatActivity()
                 return true
             }
             R.id.action_developers -> {
+
 
                 startActivity(Intent(this@HomeActivity, DeveloperActivity::class.java))
                 return true
@@ -122,6 +162,17 @@ class HomeActivity : AppCompatActivity()
             }
             else -> return super.onOptionsItemSelected(item)
         }
+        else if (id==R.id.action_newPersonalChat)
+        {
+           startActivity(Intent(this@HomeActivity,NewPersonalChatActivity::class.java))
+            return true
+        }
+        else if (id==R.id.action_newGroupChat)
+        {
+            startActivity(Intent(this@HomeActivity,NewGroupChatActivity::class.java))
+            return true
+        }
+
 
     }
 
@@ -138,14 +189,20 @@ class HomeActivity : AppCompatActivity()
             val fragmentChat = FragmentChat()
             when(position){
                 0  -> {
+                    chatFragmentActive=true
+                    fragmentChat1 = fragmentChat
                     return fragmentChat }
 
                 1   -> { val fragmentContact= FragmentContact()
+                    chatFragmentActive=false
                     return fragmentContact}
 
-//                2   ->{ val fragmentStatus= FragmentStatus()
-//                    fragment = fragmentStatus
-//                    return fragmentStatus }
+
+                2   ->{ val fragmentStatus= FragmentStatus()
+                    chatFragmentActive=false
+                    fragment = fragmentStatus
+                    return fragmentStatus }
+
             }
 
             return   fragmentChat
