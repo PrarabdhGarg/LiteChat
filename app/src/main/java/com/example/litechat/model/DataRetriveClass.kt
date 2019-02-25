@@ -6,10 +6,7 @@ import com.example.litechat.contracts.HomeActivityContract
 import com.example.litechat.model.contactsRoom.User
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.EventListener
-import android.util.Log
 import android.widget.Toast
-import com.example.litechat.contracts.HomeActivityContract
-import com.example.litechat.model.contactsRoom.User
 import com.example.litechat.presenter.HomeActivityPresenter
 import com.example.litechat.presenter.StatusFragmentPresenter
 import com.google.firebase.firestore.FirebaseFirestore

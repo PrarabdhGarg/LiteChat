@@ -13,7 +13,8 @@ interface UserDao {
     @Query("SELECT * FROM Contacts")
     fun getContactList(): List<User>
 
-   /* @Query("SELECT * FROM Contacts where Number:$no")
-    fun getName(no: String): String */
+
+    @Query("SELECT Name FROM Contacts WHERE Number LIKE :no")
+    fun getName(no: String): String
 
 }

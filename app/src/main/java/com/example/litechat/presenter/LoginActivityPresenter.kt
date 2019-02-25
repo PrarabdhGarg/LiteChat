@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
 import com.example.litechat.contracts.LoginContract
+import com.example.litechat.model.AllChatDataModel
 import com.example.litechat.model.UserDataModel
 import com.example.litechat.model.UserProfileData
 import com.google.firebase.FirebaseApp
@@ -49,7 +50,7 @@ class LoginActivityPresenter (loginView : LoginContract.LoginView): LoginContrac
                     UserProfileData.UserCurrentActivity = document.getString("currentActivity")
                     UserProfileData.UserImage = document.getString("image")
                     UserProfileData.UserAbout = document.getString("about")
-                    preferances.edit().putString("CurrentUserNumber" , UserProfileData.UserNumber).apply()
+                    preferances.edit().putString("currentUserNumber" , UserProfileData.UserNumber).apply()
                     Log.d("ProfexistComplete" , UserProfileData.UserName + UserProfileData.UserName + UserProfileData.UserCurrentActivity + UserProfileData.UserImage)
                     loginActivity.onUserAccountFound()
                 }
@@ -92,6 +93,7 @@ class LoginActivityPresenter (loginView : LoginContract.LoginView): LoginContrac
                     Log.d("Verification", "SMS Verification Sucessful\n$p0")
                     dialog.visibility = View.INVISIBLE
                     signInWithPhoneAuthCredential(p0!! , context)
+                    AllChatDataModel.userNumberIdPM = number
                     Toast.makeText(context, "Verification Sucessfull", Toast.LENGTH_LONG).show()
                 }
 

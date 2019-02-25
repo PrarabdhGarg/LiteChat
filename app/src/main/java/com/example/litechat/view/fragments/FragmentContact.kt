@@ -1,9 +1,12 @@
 package com.example.litechat.view.fragments
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -33,10 +36,13 @@ class FragmentContact: Fragment(), ContactFragContract.View{
 
         contactPresenter = ContactFragPresenter(this,context!!)
 
-        if (contactPresenter.passUserList().isEmpty()) {
+        if (ContextCompat.checkSelfPermission(context!!, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
 
-            contactPresenter.getContacts()
+            if (contactPresenter.passUserList().isEmpty()) {
 
+                contactPresenter.getContacts()
+
+            }
         }
 
 

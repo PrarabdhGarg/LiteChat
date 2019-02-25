@@ -15,7 +15,7 @@ interface HomeActivityContract {
 
         fun getUserDataFromFirestore(number : String)
         fun getCurrentActivitiesOfOtherUsers(presenter : StatusFragmentPresenter)
-      
+        fun retrievePersonalChatDataFromFirestore(presenter: HomeActivityContract.Presenter)
     }
 
     interface Presenter{
