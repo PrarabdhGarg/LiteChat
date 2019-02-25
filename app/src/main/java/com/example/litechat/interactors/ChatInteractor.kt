@@ -12,6 +12,7 @@ class ChatInteractor(p1:ChatContract.CPresenter) : ChatContract.CInteractor {
 
     private var database: FirebaseFirestore? = null
     private var chatPresenter:ChatContract.CPresenter?=null
+    var listener : ListenerRegistration? = null
 
     init {
         chatPresenter=p1
@@ -62,10 +63,13 @@ class ChatInteractor(p1:ChatContract.CPresenter) : ChatContract.CInteractor {
 
 
         // get personal chats and use caching of firestore
-        database!!.collection("Chats").document(AllChatDataModel.documentPathId).collection("messages").orderBy("sentOn")
+        var y=database!!.collection("Chats").document(AllChatDataModel.documentPathId)
+            .collection("messages")
+
+          listener=  y.orderBy("sentOn")
             .addSnapshotListener(MetadataChanges.INCLUDE,
                 EventListener<QuerySnapshot>{  snap , e ->
-                    AllChatDataModel.flag = !snap!!.metadata.hasPendingWrites()
+                    AllChatDataModel.flag = snap!!.metadata.hasPendingWrites()
 
                     if(e!=null){
                         Log.d("Error", "listen:error", e)
@@ -96,7 +100,7 @@ class ChatInteractor(p1:ChatContract.CPresenter) : ChatContract.CInteractor {
 
                     Log.d("FinalDebug17","passNewMessagetoPrentercallled ${AllChatDataModel.flag}")
 
-                    if(AllChatDataModel.flag) {
+                    if(!AllChatDataModel.flag) {
                         Log.d("FinalDebug16" , "Inside Snapshot Listener for displaying new message")
                         AllChatDataModel.flag=false
                         chatPresenter!!.passNewMessageToPresenter()
@@ -104,6 +108,7 @@ class ChatInteractor(p1:ChatContract.CPresenter) : ChatContract.CInteractor {
                     }
 
                 })
+
         /*database!!.collection("Chats")
             .whereEqualTo("createdOn", "1550871105")
             .addSnapshotListener(MetadataChanges.INCLUDE, EventListener<QuerySnapshot> { snapshots, e ->
@@ -140,6 +145,10 @@ class ChatInteractor(p1:ChatContract.CPresenter) : ChatContract.CInteractor {
                 }
             })*/
 
+    }
+
+    override fun removeListener() {
+   listener!!.remove()
     }
 }
 

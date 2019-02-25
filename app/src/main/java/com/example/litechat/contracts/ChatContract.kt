@@ -17,6 +17,7 @@ interface ChatContract {
     interface CInteractor{
         fun saveNewMessageToFirestore(messageModel: MessageModel,context: Context)
         fun getNewMessageFromFirestore()
+        fun removeListener()
         // method returns personal chats to user
       //  fun getPersonalChats(): ArrayList<ChatModelK>
       // fun getGroupChats():  Array<Pair<String,MutableMap<String,Any>>>
@@ -28,5 +29,6 @@ interface ChatContract {
         fun passNewMessageToPresenter()
         fun passNewSetMessageFromViewtoPresenter(messageModel: MessageModel,context: Context)
         fun getNewMessageForView(messageModel: MessageModel)
+        fun notifyModelOfBackPressed()
     }
 }

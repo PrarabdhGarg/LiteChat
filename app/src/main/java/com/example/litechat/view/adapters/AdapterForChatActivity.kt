@@ -82,6 +82,6 @@ class AdapterForChatActivity(private var dataset:ArrayList<MessageModel>): Recyc
         {   Log.d("Positione",position.toString())
             var holderYou: MyViewHolderYou=holder as MyViewHolderYou
             holderYou.youMessage.text=(dataset[position].message)
-            holderYou.youName.text=(AllChatDataModel.otherUserNumber)
+            holderYou.youName.text=(dataset[position].sentBy)
         }
 }

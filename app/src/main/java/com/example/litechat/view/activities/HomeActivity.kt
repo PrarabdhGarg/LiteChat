@@ -145,8 +145,11 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View
         val id = item.itemId
 
         if (id == R.id.action_profile) {
-
+           // startActivity(Intent(this@HomeActivity,ActivityChooseProfile::class.java))
+            //finish()
             // start Activity for Profile
+
+           /* homeActivityPresenter.getPersonalChatsFromFirestore()*/
             return true
         }
         else if (id==R.id.action_developers){
@@ -165,6 +168,12 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View
            startActivity(Intent(this@HomeActivity,NewPersonalChatActivity::class.java))
             return true
         }
+        else if (id==R.id.action_newGroupChat)
+        {
+            startActivity(Intent(this@HomeActivity,NewGroupChatActivity::class.java))
+            return true
+        }
+
 
         return super.onOptionsItemSelected(item)
     }

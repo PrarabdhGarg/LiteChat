@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import com.example.litechat.R
+
 import com.example.litechat.contracts.ChatContract
 import com.example.litechat.model.AllChatDataModel
 
@@ -18,6 +18,9 @@ import java.lang.Double.parseDouble
 
 import java.lang.NumberFormatException
 import java.time.Instant
+import android.support.v7.widget.RecyclerView
+
+
 
 class ChatActivity : AppCompatActivity(),ChatContract.CView {
 
@@ -34,12 +37,15 @@ class ChatActivity : AppCompatActivity(),ChatContract.CView {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_chat)
+        setContentView(com.example.litechat.R.layout.activity_chat)
 
         adapterForChatActivity= AdapterForChatActivity(myDataset)
+
+
         recyclerView.apply {
             adapter=adapterForChatActivity
             setHasFixedSize(true)
+
         }
 
 
@@ -54,17 +60,17 @@ class ChatActivity : AppCompatActivity(),ChatContract.CView {
         {
             numeric = false
         }
-        if (!numeric)
+       /* if (!numeric)
         {
             var groupChat= AllChatDataModel.allChatArrayListGroupStatic.find { it.otherPerson==AllChatDataModel.otherUserNumber}
             groupDataset.addAll(groupChat!!.allMessages)
 
         }
         else
-        {
+        {*/
             // get previous chats and caching
             chatPresenter.getNewOtherMessagesFromInteractor()
-        }
+      //  }
 
         // handle when message is sent
         buttonSend.setOnClickListener(object : View.OnClickListener{
@@ -78,6 +84,7 @@ class ChatActivity : AppCompatActivity(),ChatContract.CView {
                 messageModel.sentBy=AllChatDataModel.userNumberIdPM// sala ab bhi null h
                 messageModel.sentOn=Instant.now().epochSecond.toString()
                 editTextSend.setText("")
+                buttonSend.isClickable=false;
                 chatPresenter.passNewSetMessageFromViewtoPresenter(messageModel,applicationContext)
 
 
@@ -101,12 +108,16 @@ class ChatActivity : AppCompatActivity(),ChatContract.CView {
 
            Log.d("Run7",myDataset.size.toString())
            adapterForChatActivity!!.notifyDataSetChanged()
+       if(myDataset.size>2)
+       {recyclerView.smoothScrollToPosition(myDataset.size-1)}
+           buttonSend.isClickable=true
        }
 
     override fun onBackPressed()
     {
         AllChatDataModel.allChatArrayListPersonalStatic.clear()
         AllChatDataModel.flagOnBackPressed = true
+        chatPresenter.notifyModelOfBackPressed()
         super.onBackPressed()
     }
 

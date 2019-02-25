@@ -123,9 +123,11 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
         //chatNamesForFragment.clear()
         //chatNamesForFragment.addAll(AllChatDataModel.personalChatList)
         /*AllChatDataModel.personalChatList.clear()*/
-        Log.d("FinalDebug10", "upadte all start chatfor size${chatNamesForFragment.last()}")
+     //   Log.d("FinalDebug10", "upadte all start chatfor size${chatNamesForFragment.last()}")
         //chatNamesForFragment.add(chatNamesForFragment.last())
-
+if(chatNamesForFragment.size==0){
+    chatNamesForFragment.addAll(AllChatDataModel.personalChatList)
+}
         adapterForFragmentChat!!.notifyDataSetChanged()
 
     }

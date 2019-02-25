@@ -29,4 +29,8 @@
           android:title="@string/action_newPersonalChat"
           android:orderInCategory="100"
           app:showAsAction="never"/>
+    <item android:id="@+id/action_newGroupChat"
+        android:title="@string/action_newGroupChat"
+        android:orderInCategory="100"
+        app:showAsAction="never"/>
 </menu>

@@ -43,13 +43,16 @@ class NewPersonalChatActivity : AppCompatActivity() {
                          //Method to check if current Personal  Chats exists or not
                          // in Current Logged in user
                        // loader start
-                      /*  db.collection("Users").document(AllChatDataModel.userNumberIdPM).collection("currentPersonalChats").
+                        db.collection("Users").document(AllChatDataModel.userNumberIdPM).collection("currentPersonalChats"). //
                          whereEqualTo("otherNumber",editTextNewNumber.text.toString().trim()).get().addOnSuccessListener { documents ->
                          // if chat between these two existed previously than open their chat
-                         if(documents != null )
+                            Log.d("New1","g")
+                         if(!documents.isEmpty )
                          {
+                             Log.d("New2",documents.toString())
                              for(doc in documents)
                              {
+                                 Log.d("New3",doc.toString())
                                  var currentPersonalChatData: ChatObject = doc.toObject(ChatObject::class.java)
                                  var intent = Intent(this@NewPersonalChatActivity, ChatActivity::class.java)
 
@@ -61,7 +64,8 @@ class NewPersonalChatActivity : AppCompatActivity() {
                              }// loser fnsh
                         }
                         else
-                        {*/
+                        { //
+                            Log.d("New4",documents.toString())
                              // if no previous chat exists than start a new chat by creating
                              // appropriate  fields in database
                             var newNumber=editTextNewNumber.text.toString().trim()
@@ -75,12 +79,14 @@ class NewPersonalChatActivity : AppCompatActivity() {
 
                                     if(result != null)
                                     {
+                                        Log.d("New5",result.toString())
                                          // if document created suceessfully
                                          for(doc in result)
                                          {
-                                        /* *
-                                          * Check all sucees listeners
-                                          * */
+//                                       /*  *
+                                             Log.d("New6",doc.toString())
+//                                          * Check all sucees listeners
+//                                          * */
                                              Toast.makeText(this@NewPersonalChatActivity, "Enter", Toast.LENGTH_LONG).show()
                                              Log.d("Enter", doc.id)
 
@@ -130,13 +136,13 @@ class NewPersonalChatActivity : AppCompatActivity() {
 
 
 
-                              /**
-                               * dlete childs if message not sent
-                               * */
+//                              /**
+//                               * dlete childs if message not sent
+//                               * */
 
 
-                          //  }
-                       // }
+                            }  //
+                        }    //
                     }
                }
 

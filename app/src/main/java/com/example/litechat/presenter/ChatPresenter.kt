@@ -10,6 +10,10 @@ import com.example.litechat.model.AllChatDataModel
 import com.example.litechat.model.MessageModel
 
 class ChatPresenter(var view:ChatContract.CView) : ChatContract.CPresenter {
+    override fun notifyModelOfBackPressed() {
+        chatInteractor.removeListener()
+    }
+
     private var chatInteractor= ChatInteractor(this)
 
     override fun getNewMessageForView(messageModel: MessageModel) {
