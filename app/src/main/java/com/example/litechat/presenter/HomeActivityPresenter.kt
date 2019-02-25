@@ -71,7 +71,7 @@ class HomeActivityPresenter(viewPassed: HomeActivityContract.View, modelPassed: 
             }
 
             compareUserContact()
-            model.roomSetData(view.passContext(), ContactDataModel.contactAndUser)
+
 
         }
     }
@@ -90,6 +90,7 @@ class HomeActivityPresenter(viewPassed: HomeActivityContract.View, modelPassed: 
                 }
             }
         }
+        model.roomSetData(view.passContext(), ContactDataModel.contactAndUser)
     }
 
 }

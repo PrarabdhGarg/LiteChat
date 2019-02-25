@@ -54,9 +54,9 @@
             android:textAlignment="center"
             android:inputType="text"
             app:layout_constraintTop_toBottomOf="@id/editTextNumber"
-            app:layout_constraintBottom_toTopOf="@id/editTextAbout"/>
+            app:layout_constraintBottom_toTopOf="@id/loginButton"/>
 
-    <EditText
+    <!--<EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="invisible"
@@ -67,6 +67,6 @@
             android:textAlignment="center"
             android:inputType="text"
             app:layout_constraintTop_toBottomOf="@id/editTextName"
-            app:layout_constraintBottom_toTopOf="@id/loginButton"/>
+            app:layout_constraintBottom_toTopOf="@id/loginButton"/>-->
 
 </android.support.constraint.ConstraintLayout>
