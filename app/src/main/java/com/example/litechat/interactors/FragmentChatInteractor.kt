@@ -175,7 +175,7 @@ class FragmentChatInteractor(p1: AllChatsContractFrag.CFPresenter) : AllChatsCon
                                          }
                                  }
                              }
-g
+
                      }
                      p2.groupChatsDataRecieved(currentGroupChats)
                  }
