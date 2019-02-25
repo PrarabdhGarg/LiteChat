@@ -12,10 +12,9 @@ import com.example.litechat.presenter.StatusFragmentPresenter
 interface HomeActivityContract {
   
     interface Model{
-        fun retrievePersonalChatDataFromFirestore(presenter: HomeActivityContract.Presenter)
         fun getUserDataFromFirestore(number : String)
         fun getCurrentActivitiesOfOtherUsers(presenter : StatusFragmentPresenter)
-      
+        fun retrievePersonalChatDataFromFirestore(presenter: HomeActivityContract.Presenter)
     }
 
     interface Presenter{

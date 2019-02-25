@@ -14,14 +14,15 @@ import com.example.litechat.model.UserProfileData
 import com.example.litechat.model.contactsRoom.User
 import com.google.firebase.firestore.FirebaseFirestore
 
-class HomeActivityPresenter(contextPassed: Context,val view: HomeActivityContract.View): HomeActivityContract.Presenter{
+
+class HomeActivityPresenter(contextPassed: Context , val view : HomeActivityContract.View): HomeActivityContract.Presenter{
+
 
     private val context = contextPassed
 
     private  val dataRetrieveModel = DataRetriveClass()
 
     override fun getUserDataOnLogin(number: String) {
-
 
         dataRetrieveModel.getUserDataFromFirestore(number)
         Toast.makeText(view.passContext() , UserProfileData.UserNumber , Toast.LENGTH_SHORT).show()
@@ -65,4 +66,5 @@ class HomeActivityPresenter(contextPassed: Context,val view: HomeActivityContrac
         }
 
     }
+
 }
