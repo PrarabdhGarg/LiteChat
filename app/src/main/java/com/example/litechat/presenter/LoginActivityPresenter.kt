@@ -69,10 +69,10 @@ class LoginActivityPresenter (loginView : LoginContract.LoginView): LoginContrac
     override fun addUserToFirebase(number : String, id : String, name : String)
     {
         val database = FirebaseFirestore.getInstance()
-        val user = UserDataModel(Id = id , Name = name , Number = number)
+        val user = UserDataModel(Id = id , Name = name , Number = number , About = UserProfileData.UserAbout)
         UserProfileData.UserName = name
         UserProfileData.UserNumber = number
-        database.collection("Users").document(number.toString()).set(user)
+        database.collection("Users").document(number).set(user)
     }
 
     /**

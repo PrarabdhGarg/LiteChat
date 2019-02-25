@@ -22,4 +22,5 @@ class HomeActivityPresenter(contextPassed: Context): HomeActivityContract.Presen
         DataRetriveClass().getUserDataFromFirestore(number)
         Toast.makeText( context, UserProfileData.UserNumber , Toast.LENGTH_SHORT).show()
     }
+
 }

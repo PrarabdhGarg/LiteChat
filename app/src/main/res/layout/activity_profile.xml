@@ -39,7 +39,7 @@
                     app:layout_constraintHeight_percent="0.09"
                     app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintLeft_toLeftOf="@id/guideline_2"
-                    android:src="@drawable/ic_plus"
+                    android:src="@drawable/ic_picture"
                     android:background="#0000ffff"
                     android:scaleType="fitXY"
                     app:layout_constraintTop_toTopOf="@id/guideline_1"
