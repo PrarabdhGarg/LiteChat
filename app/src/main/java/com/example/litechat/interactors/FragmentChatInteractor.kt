@@ -3,14 +3,10 @@ package com.example.litechat.interactors
 import android.util.Log
 import com.example.litechat.contracts.AllChatsContractFrag
 import com.example.litechat.model.*
-import com.example.litechat.model.AllChatDataModel.allChatArrayListGroupStatic
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.QuerySnapshot
 
 class FragmentChatInteractor(p1: AllChatsContractFrag.CFPresenter) : AllChatsContractFrag.CFInteractor {
-
     private var database: FirebaseFirestore? = null
-
     private lateinit var p2: AllChatsContractFrag.CFPresenter
 
     init {
