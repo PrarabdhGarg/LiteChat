@@ -30,15 +30,15 @@ class NewPersonalChatActivity : AppCompatActivity() {
         buttonNewPersonalChat.setOnClickListener(object : View.OnClickListener {
 
             @RequiresApi(Build.VERSION_CODES.O)
-            override fun onClick(v: View?)
+                   override fun onClick(v: View?)
             {
-                  // var newNumber= editTextNewNumber.text.toString().trim()
-                   if (editTextNewNumber.text.toString().trim().isEmpty())
-                   {
-                         Toast.makeText(this@NewPersonalChatActivity, "Enter A valid Mobile Number ", Toast.LENGTH_LONG)
+                // var newNumber= editTextNewNumber.text.toString().trim()
+                if (editTextNewNumber.text.toString().trim().isEmpty())
+                {
+                    Toast.makeText(this@NewPersonalChatActivity, "Enter A valid Mobile Number ", Toast.LENGTH_LONG)
                         .show()
-                   }
-                   else
+                }
+                else
                    {
                          //Method to check if current Personal  Chats exists or not
                          // in Current Logged in user

@@ -1,7 +1,9 @@
 package com.example.litechat.presenter
 
 import android.content.Context
+import android.os.Build
 import android.provider.ContactsContract
+import android.support.annotation.RequiresApi
 import android.util.Log
 import android.view.View
 import com.example.litechat.contracts.ContactFragContract
@@ -85,6 +87,15 @@ class ContactFragPresenter(viewPassed: ContactFragContract.View, contextPassed: 
             }
         }
         model.roomSetData(context, ContactDataModel.contactAndUser)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun startNewChatFromContact(number: String) {
+        model.startChatActivity(number,this)
+    }
+
+    override fun passDataForChatActivity(chatObject: ChatObject) {
+        view.startChatActivity(chatObject)
     }
 
 }
