@@ -7,9 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.example.litechat.R
+import com.example.litechat.model.AllChatDataModel
 import com.example.litechat.model.MessageModel
 
-class AdapterForChatActivity(private var number:String,private var dataset:ArrayList<MessageModel>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class AdapterForChatActivity(private var dataset:ArrayList<MessageModel>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     class MyViewHolderMe(val view: View): RecyclerView.ViewHolder(view){
 
@@ -28,7 +29,7 @@ class AdapterForChatActivity(private var number:String,private var dataset:Array
 
 
     override fun getItemViewType(position: Int): Int {
-        if(dataset[position].sentBy.equals("9826936889"))
+        if(dataset[position].sentBy.equals(AllChatDataModel.userNumberIdPM))
 
         {
 
@@ -75,12 +76,12 @@ class AdapterForChatActivity(private var number:String,private var dataset:Array
             Log.d("Position",position.toString())
              var holderMe: MyViewHolderMe= holder as MyViewHolderMe
               holderMe.myMessage.text=(dataset[position].message)
-              holderMe.myName.text=("9826936889")
+              holderMe.myName.text=(AllChatDataModel.userNumberIdPM)
         }
         else
         {   Log.d("Positione",position.toString())
             var holderYou: MyViewHolderYou=holder as MyViewHolderYou
             holderYou.youMessage.text=(dataset[position].message)
-            holderYou.youName.text=("9826936889")
+            holderYou.youName.text=(dataset[position].sentBy)
         }
 }

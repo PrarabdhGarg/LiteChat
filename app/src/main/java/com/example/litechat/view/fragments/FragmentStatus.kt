@@ -49,6 +49,7 @@ class FragmentStatus: Fragment() , StatusContract.View{
         super.onCreate(savedInstanceState)
     }
 
+
     override fun onStart() {
         super.onStart()
         Log.d("ViewPager" , "onStart of FragmentStatus Called")
@@ -56,7 +57,9 @@ class FragmentStatus: Fragment() , StatusContract.View{
         view!!.RecyclerStatus.adapter = StatusAdapter(context!! , maps)
         Glide.with(context!!).load(UserProfileData.UserImage).into(view!!.statusImageView)//On starting the fragment, load the current image in the image view, whose Uri is stored locally
         view!!.currentActivityTextView.setText(UserProfileData.UserCurrentActivity)
+
         stausFragmentPresenter!!.getInfoForRecyclerView()
+
         view!!.EditStatusImageView!!.setOnClickListener {
             Toast.makeText(context , "Clicked" , Toast.LENGTH_SHORT).show()
             view!!.EditStatusDoneImageView!!.visibility = View.VISIBLE

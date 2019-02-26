@@ -1,112 +1,154 @@
 package com.example.litechat.interactors
 
+import android.content.Context
+import android.util.Log
+import android.widget.Toast
 import com.example.litechat.contracts.ChatContract
-import com.example.litechat.model.UserDataModel
-import com.example.litechat.model.UserProfileData
-import com.google.firebase.firestore.FirebaseFirestore
-import java.util.concurrent.ArrayBlockingQueue
+import com.example.litechat.model.AllChatDataModel
+import com.example.litechat.model.MessageModel
+import com.google.firebase.firestore.*
 
-class ChatInteractor : ChatContract.CInteractor {
+class ChatInteractor(p1:ChatContract.CPresenter) : ChatContract.CInteractor {
 
     private var database: FirebaseFirestore? = null
-    private lateinit var numberKeys: ArrayList<String>
-    private lateinit var groupKeys: ArrayList<String>
-}
-//
-//    override fun getPersonalChats(): Array<Pair<String, MutableMap<String, Any>>> {
-//
-//
-//    }
+    private var chatPresenter:ChatContract.CPresenter?=null
+    var listener : ListenerRegistration? = null
 
-  /* private  var database: FirebaseFirestore?=null
-    private lateinit  var numberKeys :ArrayList<String>
-private lateinit var groupKeys:ArrayList<String>
+    init {
+        chatPresenter=p1
+        database= FirebaseFirestore.getInstance()
+    }
 
-    override fun getPersonalChats(): Array<Pair<String, MutableMap<String, Any>>> {
->>>>>>> 2616dcab4e0c95f8a07bba1668c4be926b2ac56a
-        lateinit var chats: Array<Pair<String, MutableMap<String, Any>>>
-        database = FirebaseFirestore.getInstance()
-        database!!.collection("Users").document(UserProfileData.UserNumber).get()
-            .addOnSuccessListener { result ->
+    override fun saveNewMessageToFirestore(messageModel: MessageModel,context: Context) {
 
 
-                var currentChats = result.get("currentChats") as Array<Pair<String, String>>
+       // sets new message to firestore
+        database!!.collection("Chats").document(AllChatDataModel.documentPathId).collection("messages").add(messageModel).addOnSuccessListener { res->
 
+            Log.d("Saala","set on server ")
+            Toast.makeText(context,"Message Sent Successfully",Toast.LENGTH_SHORT).show()
+        }
 
-                for (i in 0 until currentChats.size) {
-                    if (UserProfileData.UserNumber.toInt() > currentChats[i].first.toInt())
-                        numberKeys.add(currentChats[i].first + UserProfileData.UserNumber)
-                    else
-                        numberKeys.add(UserProfileData.UserNumber + currentChats[i].first)
+        // sets last updated to  both the users
+        database!!.collection("Users").document(AllChatDataModel.userNumberIdPM).collection("currentPersonalChats")
+            .whereEqualTo("otherNumber",AllChatDataModel.otherUserNumber).get().addOnSuccessListener { documents ->
 
-                }
-
-<<<<<<< HEAD
-=======
-
->>>>>>> 2616dcab4e0c95f8a07bba1668c4be926b2ac56a
-                for (i in 0 until numberKeys.size) {
-
-                    //lateinit var chatArray: Array<Pair<String,Array<Pair<String,String>>>>
-                    database!!.collection("Chats").document(numberKeys[i]).get().addOnSuccessListener { result ->
-
-                        chats[i] = Pair(numberKeys[i], result.data as MutableMap<String, Any>)
+                if(documents!=null)
+                {
+                    for (doc in documents )
+                    {
+                        doc.reference.update("lastUpdated",messageModel.sentOn)
                     }
                 }
+        }
 
-            }
-        return chats
-    }
+        database!!.collection("Users").document(AllChatDataModel.otherUserNumber).collection("currentPersonalChats")
+            .whereEqualTo("otherNumber",AllChatDataModel.userNumberIdPM).get().addOnSuccessListener { documents ->
 
-
-
-<<<<<<< HEAD
-        return chats
-
-
-    }
-
-
-
-    override fun getGroupChats(): Array<Pair<String, MutableMap<String, Any>>> {
-
-        lateinit var groupChats: Array<Pair<String, MutableMap<String, Any>>>
-
-=======
-    override fun getGroupChats(): Array<Pair<String, MutableMap<String, Any>>> {
-        lateinit var groupChats: Array<Pair<String,MutableMap<String,Any>>>
->>>>>>> 2616dcab4e0c95f8a07bba1668c4be926b2ac56a
-        database!!.collection("Users").document(UserProfileData.UserNumber).get()
-            .addOnSuccessListener { result ->
-
-                var currentGroupChats: Array<Pair<String, String>> =
-                    result.get("currentGroupChats") as Array<Pair<String, String>>
-
-                for (i in 0 until currentGroupChats.size) {
-                    groupKeys.add(currentGroupChats[i].first)
-
-                }
-
-                for (i in 0 until groupKeys.size) {
-
-<<<<<<< HEAD
-                    database!!.collection("Chats").document(groupKeys[i]).get().addOnSuccessListener { result ->
-=======
-                    database!!.collection("Chats").document(groupKeys[i]).get().addOnSuccessListener{result ->
->>>>>>> 2616dcab4e0c95f8a07bba1668c4be926b2ac56a
-
-                        groupChats[i] = Pair(groupKeys[i], result.data as MutableMap<String, Any>)
+                if(documents!=null)
+                {
+                    for (doc in documents )
+                    {
+                        doc.reference.update("lastUpdated",messageModel.sentOn)
                     }
                 }
             }
-        return groupChats
 
-<<<<<<< HEAD
+
     }
 
 
+    override fun getNewMessageFromFirestore() {
+        Log.d("Run1","getNewMessageFromFirestore")
+
+
+        // get personal chats and use caching of firestore
+        var y=database!!.collection("Chats").document(AllChatDataModel.documentPathId)
+            .collection("messages")
+
+          listener=  y.orderBy("sentOn")
+            .addSnapshotListener(MetadataChanges.INCLUDE,
+                EventListener<QuerySnapshot>{  snap , e ->
+                    AllChatDataModel.flag = snap!!.metadata.hasPendingWrites()
+
+                    if(e!=null){
+                        Log.d("Error", "listen:error", e)
+                        return@EventListener
+
+                    }
+
+                    for(dc in snap!!.documentChanges){
+
+                        when(dc.type){
+                            DocumentChange.Type.ADDED ->
+                            {
+                                //AllChatDataModel.allChatArrayListPersonalStatic.clear()
+                                var object1 :MessageModel= MessageModel()
+                                object1.sentOn=dc.document["sentOn"].toString()
+                                object1.sentBy=dc.document["sentBy"].toString()
+                                object1.message=dc.document["message"].toString()
+
+                                AllChatDataModel.allChatArrayListPersonalStatic.add(object1)
+
+                                Log.d("FireStoreSnap",  dc.document["message"].toString())
+                                Log.d("Size",AllChatDataModel.allChatArrayListPersonalStatic.size.toString())
+                            }
+
+                        }
+                    }
+
+
+                    Log.d("FinalDebug17","passNewMessagetoPrentercallled ${AllChatDataModel.flag}")
+
+                    if(!AllChatDataModel.flag) {
+                        Log.d("FinalDebug16" , "Inside Snapshot Listener for displaying new message")
+                        AllChatDataModel.flag=false
+                        chatPresenter!!.passNewMessageToPresenter()
+
+                    }
+
+                })
+
+        /*database!!.collection("Chats")
+            .whereEqualTo("createdOn", "1550871105")
+            .addSnapshotListener(MetadataChanges.INCLUDE, EventListener<QuerySnapshot> { snapshots, e ->
+                if (e != null) {
+                    Log.d("Error", "listen:error", e)
+                    return@EventListener
+                }
+                   Log.d("Changess", snapshots!!.metadata.toString())
+                for (dc in snapshots!!.documentChanges) {
+                    when (dc.type) {
+                        DocumentChange.Type.ADDED ->
+                        {
+                            dc.document.reference.collection("messages").addSnapshotListener(EventListener<QuerySnapshot>{ querySnapshots,e ->
+                                if(e!=null){
+                                    Log.d("Error2", "listen:error", e)
+                                    return@EventListener
+                                }
+                                for(daC in querySnapshots!!.documentChanges){
+                                    when(daC.type){
+                                        DocumentChange.Type.ADDED ->
+                                            Log.d("Chhanges", "New city: " + daC.document["message"])
+                                    }
+
+
+                                }
+                            })
+
+                            *//* Log.d("Changes", "New city: " + dc.document.data)*//*
+                        }
+
+                       *//* DocumentChange.Type.MODIFIED -> Log.d(TAG, "Modified city: " + dc.document.data)
+                        DocumentChange.Type.REMOVED -> Log.d(TAG, "Removed city: " + dc.document.data)*//*
+                    }
+                }
+            })*/
+
+    }
+
+    override fun removeListener() {
+   listener!!.remove()
+    }
 }
-=======
-     return groupChats
-    }
-*/
+

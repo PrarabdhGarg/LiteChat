@@ -17,8 +17,8 @@ import com.example.litechat.model.UserProfileData
 import com.example.litechat.presenter.LoginActivityPresenter
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.auth.User
 import kotlinx.android.synthetic.main.login_screen.*
-import java.security.AccessController.getContext
 
 class LoginActivity : AppCompatActivity() , LoginContract.LoginView
 {
@@ -34,7 +34,7 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login_screen)
 
-        requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE , Manifest.permission.READ_CONTACTS) , PERMISSIONS_REQUEST_READ_STORAGE)
+        requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE , Manifest.permission.READ_CONTACTS , Manifest.permission.CALL_PHONE) , PERMISSIONS_REQUEST_READ_STORAGE)
 
         FirebaseApp.initializeApp(baseContext)
         loginActivityPresenter = LoginActivityPresenter(this)
@@ -49,9 +49,9 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
                     onButtonPressedForSignUp()
                 }
 
-                editTextNumber.text.isEmpty() -> editTextNumber.error = "Mobile Number is Compulsory"
+                editTextNewNumber.text.isEmpty() -> editTextNewNumber.error = "Mobile Number is Compulsory"
 
-                editTextNumber.text.toString().length != 10 -> editTextNumber.error = "Please Enter Valid Number"
+                editTextNewNumber.text.toString().length != 10 -> editTextNewNumber.error = "Please Enter Valid Number"
 
                 else -> {
                     onFirstButtonPressed()
@@ -68,18 +68,7 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
      * This feature will only work for android devices with Api greater than 16(android 4.1) because of the [finishAffinity] method
      */
 
-    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
-    override fun onBackPressed() {
-        if (doubleBackToExitPressedOnce) {
-            finishAffinity()
-            super.onBackPressed()
-            return
-        }
 
-        this.doubleBackToExitPressedOnce = true
-        Toast.makeText(this , "Press Once More to Exit" , Toast.LENGTH_SHORT).show()
-        Handler().postDelayed(Runnable { doubleBackToExitPressedOnce = false }, 2000)
-    }
 
     override fun onDestroy() {
         loginActivityPresenter = null   //Set the instance of presenter to be null as soon as the activity gets destroyed
@@ -97,7 +86,9 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
     override fun onFirstButtonPressed()
     {
         Log.d("LOGIN" , "onFirstPressed Callsed")
-        UserProfileData.UserNumber = editTextNumber.text.toString()
+
+        UserProfileData.UserNumber = editTextNewNumber.text.toString()
+
         ProgressBar!!.setVisibility (View.VISIBLE)
         window.setFlags(
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
@@ -145,7 +136,8 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
         window.setFlags(
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-        loginActivityPresenter!!.verifyNumber(mobileNumber!! , this@LoginActivity , applicationContext , dialog = ProgressBar)
+        Log.d("Context" , "${applicationContext}")
+        loginActivityPresenter!!.verifyNumber(UserProfileData.UserNumber , this@LoginActivity , applicationContext , dialog = ProgressBar)
         window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
     }
 
@@ -161,5 +153,19 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
     {
         return applicationContext
     }
+
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
+    override fun onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            finishAffinity()
+            super.onBackPressed()
+            return
+        }
+
+        this.doubleBackToExitPressedOnce = true
+        Toast.makeText(this , "Press Once More to Exit" , Toast.LENGTH_SHORT).show()
+        Handler().postDelayed(Runnable { doubleBackToExitPressedOnce = false }, 2000)
+    }
+
 
 }

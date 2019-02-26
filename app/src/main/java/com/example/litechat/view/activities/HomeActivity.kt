@@ -20,6 +20,10 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.SearchView
 import com.example.litechat.R
+import com.example.litechat.contracts.HomeActivityContract
+import com.example.litechat.model.AllChatDataModel
+import com.example.litechat.model.ContactsModel
+import com.example.litechat.model.UserProfileData
 import com.example.litechat.model.*
 import com.example.litechat.model.contactsRoom.User
 import com.example.litechat.presenter.HomeActivityPresenter
@@ -31,8 +35,11 @@ import kotlinx.android.synthetic.main.activity_home.*
 import java.util.ArrayList
 
 
-class HomeActivity : AppCompatActivity()
+class HomeActivity : AppCompatActivity(),HomeActivityContract.View
 {
+
+
+    //function to pass contentResolver to HomeActivityPresenter
 
     /**
      * The [android.support.v4.view.PagerAdapter] that will provide
@@ -44,14 +51,24 @@ class HomeActivity : AppCompatActivity()
      */
     private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
     private var fragment : FragmentStatus? = null
+
+    private var fragmentChat1 : FragmentChat? = null
+    private var chatFragmentActive= false
+
+    override fun getPersonalChats() {
+       // to be removed
+    }
+
     lateinit var homeActivityPresenter: HomeActivityPresenter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+       homeActivityPresenter = HomeActivityPresenter(applicationContext , this)
 
-        homeActivityPresenter = HomeActivityPresenter(applicationContext)
+
+       
         ContentResolverData.contentResolverPassed = contentResolver
-        //If user is already logged in, no need to open the LoginActivity again
+       // If user is already logged in, no need to open the LoginActivity again
 
 
         if(FirebaseAuth.getInstance().currentUser == null)
@@ -61,15 +78,13 @@ class HomeActivity : AppCompatActivity()
         else{
 
             var number = PreferenceManager.getDefaultSharedPreferences(applicationContext).getString("currentUserNumber" , "123456789")
-            //UserProfileData.UserNumber = number!!.substring(3)
+            AllChatDataModel.userNumberIdPM = number
             Log.d("HomeActivity" , "Else enterd in auth.getIstance $number")
             homeActivityPresenter.getUserDataOnLogin(number)
+            homeActivityPresenter.getPersonalChatsFromFirestore()
         }
 
 
-        setSupportActionBar(toolbar)
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
         mSectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
 
         // Set up the ViewPager with the sections adapter.
@@ -77,6 +92,11 @@ class HomeActivity : AppCompatActivity()
 
         container.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabs))
         tabs.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(container))
+
+        setSupportActionBar(toolbar)
+        // Create the adapter that will return a fragment for each of the three
+        // primary sections of the activity.
+
 
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
@@ -96,11 +116,19 @@ class HomeActivity : AppCompatActivity()
     }
 
 
+    override fun onStart() {
+    super.onStart()
+        AllChatDataModel.personalChatList.clear()
+       Log.d("FinalDebug1"," homeActivityPresenter.getPersonalChatsFromFirestore called with ${AllChatDataModel.userNumberIdPM}")
+    }
+
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         val id = item.itemId
+
 
         when (id) {
             R.id.action_profile -> {
@@ -111,6 +139,7 @@ class HomeActivity : AppCompatActivity()
             }
             R.id.action_developers -> {
 
+
                 startActivity(Intent(this@HomeActivity, DeveloperActivity::class.java))
                 return true
             }
@@ -118,6 +147,16 @@ class HomeActivity : AppCompatActivity()
 
                 FirebaseAuth.getInstance().signOut()
                 startActivity(Intent(this@HomeActivity , LoginActivity::class.java))
+                return true
+            }
+
+            R.id.action_newPersonalChat -> {
+                startActivity(Intent(this@HomeActivity,NewPersonalChatActivity::class.java))
+                return true
+            }
+
+            R.id.action_newGroupChat -> {
+                startActivity(Intent(this@HomeActivity,NewGroupChatActivity::class.java))
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
@@ -138,14 +177,20 @@ class HomeActivity : AppCompatActivity()
             val fragmentChat = FragmentChat()
             when(position){
                 0  -> {
+                    chatFragmentActive=true
+                    fragmentChat1 = fragmentChat
                     return fragmentChat }
 
                 1   -> { val fragmentContact= FragmentContact()
+                    chatFragmentActive=false
                     return fragmentContact}
 
-//                2   ->{ val fragmentStatus= FragmentStatus()
-//                    fragment = fragmentStatus
-//                    return fragmentStatus }
+
+                2   ->{ val fragmentStatus= FragmentStatus()
+                    chatFragmentActive=false
+                    fragment = fragmentStatus
+                    return fragmentStatus }
+
             }
 
             return   fragmentChat
@@ -156,6 +201,20 @@ class HomeActivity : AppCompatActivity()
             return 3
         }
     }
+
+    override fun getInstanceOfFragmentChat(): FragmentChat {
+        return fragmentChat1!!
+    }
+
+    override fun isChatFragmentActive(): Boolean {
+        return  chatFragmentActive
+    }
+    //function to pass context to HomeActivityPresenter
+
+    override fun passContext(): Context = applicationContext
+
+
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
     {
@@ -170,6 +229,17 @@ class HomeActivity : AppCompatActivity()
             UserProfileData.UserImage = fullPhotoUri.toString()
             fragment!!.onNewStatusImageSelected(fullPhotoUri!!)
         }
+    }
+
+    override fun onResume() {
+        Log.d("Debug" , "On Resume of main activity called")
+        homeActivityPresenter.getPersonalChatsFromFirestore()
+        /*var number = PreferenceManager.getDefaultSharedPreferences(applicationContext).getString("currentUserNumber" , "123456789")
+        AllChatDataModel.userNumberIdPM = number
+        Log.d("HomeActivity" , "Else enterd in auth.getIstance $number")
+        homeActivityPresenter.getUserDataOnLogin(number)
+        homeActivityPresenter.getPersonalChatsFromFirestore()*/
+        super.onResume()
     }
 
 }
