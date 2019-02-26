@@ -94,25 +94,23 @@ class AdapterForChatActivity(private var dataset:ArrayList<MessageModel>,private
         val db = Room.databaseBuilder(context, AppDatabse::class.java, "Contact_Database")
             .allowMainThreadQueries().build()
         // if condition
-     //   Log.d("check",db.userDao().getName("91"+AllChatDataModel.otherUserNumber))
-        if(db.userDao().getName("91"+AllChatDataModel.otherUserNumber)!=null){
+   //   Log.e("check",db.userDao().getName(AllChatDataModel.otherUserNumber))
+         try {
+             db.userDao().getName(AllChatDataModel.otherUserNumber)
+                 name= db.userDao().getName(AllChatDataModel.otherUserNumber)
+             Log.d("debugadapchatnam",name)
+                 return name
+             }
 
-            name= db.userDao().getName("91"+AllChatDataModel.otherUserNumber)
-            return name
-        }
-        else if(db.userDao().getName("0"+AllChatDataModel.otherUserNumber)!=null){
-            name= db.userDao().getName("0"+AllChatDataModel.otherUserNumber)
-            return name
-        }
+         catch (e: Exception){
+             Log.d("debugAdapchat",e.toString())
+             return  number
+         }
 
-        else if(db.userDao().getName(AllChatDataModel.otherUserNumber)!=null){
-            name= db.userDao().getName(AllChatDataModel.otherUserNumber)
-            return name
-        }
-
-
-        return number
 
     }
 
-}
+
+
+    }
+

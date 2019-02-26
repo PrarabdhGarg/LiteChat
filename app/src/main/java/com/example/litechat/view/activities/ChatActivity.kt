@@ -70,7 +70,7 @@ class ChatActivity : AppCompatActivity(), ChatContract.CView {
         }
 
         if(numeric)
-        {   //  to show contact name of person chattig with
+        {   //  to show contact name of person chatting with
             textViewOtherUser.setText(searchContactName(AllChatDataModel.otherUserNumber))
         }
         else
@@ -109,23 +109,19 @@ class ChatActivity : AppCompatActivity(), ChatContract.CView {
              var name : String
         val db = Room.databaseBuilder(applicationContext, AppDatabse::class.java, "Contact_Database")
             .allowMainThreadQueries().build()
-        // if condition
-        if(db.userDao().getName("91"+AllChatDataModel.otherUserNumber)!=null){
-           name= db.userDao().getName("91"+AllChatDataModel.otherUserNumber)
-            return name
-        }
-        else if(db.userDao().getName("0"+AllChatDataModel.otherUserNumber)!=null){
-            name= db.userDao().getName("0"+AllChatDataModel.otherUserNumber)
+        try {
+
+            name= db.userDao().getName(AllChatDataModel.otherUserNumber)
+            Log.d("debug",name)
             return name
         }
 
-        else if(db.userDao().getName(AllChatDataModel.otherUserNumber)!=null){
-                name= db.userDao().getName(AllChatDataModel.otherUserNumber)
-                return name
-            }
+        catch (e: Exception){
+            Log.d("debug",e.toString())
+            return  number
+        }
 
 
-        return number
 
     }
 

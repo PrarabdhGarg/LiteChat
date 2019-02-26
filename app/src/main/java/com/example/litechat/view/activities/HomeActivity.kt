@@ -101,10 +101,11 @@ class HomeActivity : AppCompatActivity(),HomeActivityContract.View
 
         container.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabs))
         tabs.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(container))
-
         setSupportActionBar(toolbar)
+
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
+
 
 
         fab.setOnClickListener { view ->

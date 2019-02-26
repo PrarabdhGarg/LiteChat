@@ -39,11 +39,7 @@ class ContactAdapter(private val callListenerObject1: CallListenerObject, privat
         holder.names.setOnClickListener {
 
             ContactListData.userTapped = ContactListData.contacts[position]
-
             callListenerObject2.callListener!!.startCallIntent(ContactListData.contacts[position].mobileNumber)
-
-            Log.d("check", ContactListData.userTapped.toString())
-            //callListenerObject2.callListener!!.startCallIntent("Change Activity")
 
         }
         holder.call.setOnClickListener {

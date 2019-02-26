@@ -42,7 +42,8 @@ class ContactFragPresenter(viewPassed: ContactFragContract.View, contextPassed: 
 
                         val number = cursor2.getString(cursor2.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
                         val num = number.replace("[^0-9]".toRegex(),"")
-                        val userItem = User(num, name)
+                        val numb = num.takeLast(10)
+                        val userItem = User(numb, name)
                         ContactDataModel.contactList.add(userItem)
 
                     }
@@ -81,7 +82,7 @@ class ContactFragPresenter(viewPassed: ContactFragContract.View, contextPassed: 
 
             for (contact in ContactDataModel.contactList){
 
-                if (contact.mobileNumber == user ||  contact.mobileNumber == "0$user" || contact.mobileNumber == "91$user" ){
+                if (contact.mobileNumber == user /*||  contact.mobileNumber == "0$user" || contact.mobileNumber == "91$user"*/ ){
                     ContactDataModel.contactAndUser.add(contact)
                     Log.d("contact", contact.mobileNumber + contact.name)
                     break
@@ -94,7 +95,7 @@ class ContactFragPresenter(viewPassed: ContactFragContract.View, contextPassed: 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun startNewChatFromContact(number: String) {
           Log.d("check22",number.reversed().substring(0,10).reversed())
-        model.startChatActivity(number.reversed().substring(0,10).reversed(),this)
+        model.startChatActivity(number,this)
     }
 
     override fun passDataForChatActivity(chatObject: ChatObject) {
