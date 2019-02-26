@@ -10,7 +10,6 @@ import com.example.litechat.model.contactsRoom.AppDatabse
 import com.example.litechat.model.contactsRoom.User
 import com.example.litechat.view.activities.NewPersonalChatActivity
 import com.google.firebase.firestore.FirebaseFirestore
-import java.lang.Exception
 import java.time.Instant
 
 class ContactListModel : ContactFragContract.Model {
@@ -18,8 +17,10 @@ class ContactListModel : ContactFragContract.Model {
         Log.d("Context" , applicationContext.toString())
         val db = Room.databaseBuilder(applicationContext, AppDatabse::class.java, "Contact_Database")
             .allowMainThreadQueries().build()
-        var t : String = " "
+        var t = ""
+
         t = db.userDao().getName(number)
+
         if(t == null)
         {
             t = number

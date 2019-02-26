@@ -6,6 +6,8 @@ import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Color
+import android.graphics.Rect
 import android.net.Uri
 import android.support.design.widget.TabLayout
 import android.support.design.widget.Snackbar
@@ -21,8 +23,10 @@ import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 import android.widget.SearchView
+import android.widget.Toast
 import com.example.litechat.R
 import com.example.litechat.contracts.HomeActivityContract
+import com.example.litechat.listeners.BoomListener
 import com.example.litechat.model.AllChatDataModel
 import com.example.litechat.model.ContactsModel
 import com.example.litechat.model.UserProfileData
@@ -33,6 +37,7 @@ import com.example.litechat.view.fragments.FragmentChat
 import com.example.litechat.view.fragments.FragmentContact
 import com.example.litechat.view.fragments.FragmentStatus
 import com.google.firebase.auth.FirebaseAuth
+import com.nightonke.boommenu.BoomButtons.HamButton
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.activity_profile.view.*
 import kotlinx.android.synthetic.main.fragment_status.view.*
@@ -72,6 +77,7 @@ class HomeActivity : AppCompatActivity(),HomeActivityContract.View
     }
 
     lateinit var homeActivityPresenter: HomeActivityPresenter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -104,7 +110,6 @@ class HomeActivity : AppCompatActivity(),HomeActivityContract.View
 
         container.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabs))
         tabs.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(container))
-        setSupportActionBar(toolbar)
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.

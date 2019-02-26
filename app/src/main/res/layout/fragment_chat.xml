@@ -6,6 +6,19 @@
     android:layout_height="match_parent"
 android:background="@drawable/chat_gradient">
 
+    <com.nightonke.boommenu.BoomMenuButton
+            android:id="@+id/bmbChat"
+            android:layout_width="85dp"
+            android:layout_height="85dp"
+            app:bmb_buttonEnum="ham"
+            app:bmb_boomEnum="boomRandom"
+            app:bmb_piecePlaceEnum="piecePlace_ham_4"
+            app:bmb_buttonPlaceEnum="buttonPlace_ham_4"
+            app:bmb_normalColor="#2C1738"
+            android:visibility="visible" android:layout_marginEnd="32dp"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginRight="32dp"
+            android:layout_marginBottom="100dp"
+            app:layout_constraintBottom_toBottomOf="parent"/>
     <View
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -23,10 +36,12 @@ android:background="@drawable/chat_gradient">
             android:id="@+id/recyView_FragmentChat"
             tools:listitem="@layout/fragment_all_chat"
             android:background="@drawable/rounded"
+            app:layoutManager="android.support.v7.widget.LinearLayoutManager"
             app:layout_constraintTop_toTopOf="@+id/view2" app:layout_constraintBottom_toBottomOf="@+id/view2"
             app:layout_constraintEnd_toEndOf="@+id/view2" app:layout_constraintStart_toStartOf="@+id/view2"
             android:layout_marginTop="16dp" android:layout_marginLeft="8dp" android:layout_marginStart="8dp"
             android:layout_marginBottom="16dp" android:layout_marginEnd="8dp" android:layout_marginRight="8dp">
     </android.support.v7.widget.RecyclerView>
+
 </android.support.constraint.ConstraintLayout>
 

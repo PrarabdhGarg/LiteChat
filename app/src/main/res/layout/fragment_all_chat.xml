@@ -35,7 +35,7 @@
             android:textColor="@android:color/black"
             android:textAlignment="center"
             tools:text="Name"
-            android:textSize="24sp" android:layout_height="wrap_content"
+            android:textSize="20sp" android:layout_height="wrap_content"
             android:textAllCaps="false"
             app:layout_constraintStart_toEndOf="@+id/profileImage"
             android:layout_marginLeft="16dp" android:layout_marginStart="16dp"
@@ -43,6 +43,7 @@
             android:layout_marginTop="16dp" android:layout_marginBottom="24dp"
             android:layout_marginEnd="16dp" app:layout_constraintEnd_toStartOf="@+id/imageViewGreenDot"
             android:layout_marginRight="16dp"/>
+
     <ImageView
             android:layout_width="34dp"
             android:layout_height="35dp" tools:srcCompat="@tools:sample/avatars"

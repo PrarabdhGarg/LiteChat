@@ -1,7 +1,10 @@
 package com.example.litechat.view.fragments
 
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.Rect
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.widget.RecyclerView
@@ -14,16 +17,20 @@ import com.example.litechat.ListenerObjectTry
 import com.example.litechat.R
 import com.example.litechat.contracts.AllChatsContractFrag
 import com.example.litechat.contracts.ChatContract
+import com.example.litechat.listeners.BoomListener
 import com.example.litechat.model.AllChatDataModel
 import com.example.litechat.model.ChatObject
 import com.example.litechat.model.MessageList
+import com.example.litechat.model.UserProfileData
 import com.example.litechat.presenter.FragmentChatPresenter
-import com.example.litechat.view.activities.ChatActivity
-import com.example.litechat.view.activities.GroupInfoActivity
-import com.example.litechat.view.activities.ProfileActivity
+import com.example.litechat.view.activities.*
 import com.example.litechat.view.adapters.AdapterForFragmentChat
+import com.google.firebase.auth.FirebaseAuth
+import com.nightonke.boommenu.BoomButtons.HamButton
 import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.android.synthetic.main.fragment_chat.*
+import kotlinx.android.synthetic.main.fragment_chat.view.*
+import kotlinx.android.synthetic.main.fragment_status.view.*
 import java.lang.Double
 import java.lang.NumberFormatException
 
@@ -48,6 +55,64 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
         Log.d("ViewPager" , "onCreateView of FragmentChat called")
         val view = inflater.inflate(R.layout.fragment_chat, container, false)
 
+        val bmbListener1 = BoomListener()
+        bmbListener1.setCustomObjectListener(object: BoomListener.Boom{
+            override fun doThis() {
+                startActivity(Intent(activity, ProfileActivity::class.java))
+            }
+
+        })
+
+        val bmbListener2 = BoomListener()
+        bmbListener2.setCustomObjectListener(object: BoomListener.Boom{
+            override fun doThis() {
+                startActivity(Intent(activity, NewGroupChatActivity::class.java))
+            }
+
+        })
+
+        val bmbListener3 = BoomListener()
+        bmbListener3.setCustomObjectListener(object: BoomListener.Boom{
+            override fun doThis() {
+
+                startActivity(Intent(activity, DeveloperActivity::class.java))
+            }
+
+        })
+
+        val bmbListener4 = BoomListener()
+        bmbListener4.setCustomObjectListener(object: BoomListener.Boom{
+            override fun doThis() {
+                FirebaseAuth.getInstance().signOut()
+                PreferenceManager.getDefaultSharedPreferences(context).edit().putString("CurrentUserNumber" , "").apply()
+                UserProfileData.clearData()
+                startActivity(Intent(activity , LoginActivity::class.java))
+            }
+
+        })
+
+        val icons = arrayOf(R.drawable.ic_profile, R.drawable.ic_group, R.drawable.ic_dev, R.drawable.ic_logout)
+        val text = arrayOf("PROFILE", "NEW GROUP", "DEVELOPERS", "LOGOUT")
+        val bmbListener = arrayOf(bmbListener1, bmbListener2, bmbListener3, bmbListener4)
+        view.bmbChat.bringToFront()
+
+        for(i in 0 until view.bmbChat.buttonPlaceEnum.buttonNumber()){
+
+            val builder: HamButton.Builder = HamButton.Builder()
+                .normalImageRes(icons[i])
+                .normalText(text[i])
+                .pieceColor(Color.WHITE)
+                .shadowEffect(true)
+                .rippleEffect(true)
+                .textSize(24)
+                .textPadding(Rect(40,0,0,0))
+                .imagePadding(Rect(20,0,20,0))
+                .listener { index ->
+                    bmbListener[index].listener!!.doThis()
+                }
+
+            view.bmbChat.addBuilder(builder)
+        }
         // Listeners For calling ChatActivity on click event on RecyclerView
         listenerForChat = ListenerObjectTry()
         listenerForProfile = ListenerObjectTry()
@@ -107,6 +172,8 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
         Log.d("ViewPager" , "onCreate of FragmentChat called")
         AllChatDataModel.upadateFragmentChatFirstTime = 1
         super.onCreate(savedInstanceState)
+
+
     }
 
     override fun setGroupNames(groupChatNames: ArrayList<String>) {

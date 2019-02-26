@@ -9,8 +9,12 @@
 android:background="@drawable/pm_gradient">
 
     <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+              android:textAlignment="center"
+              android:padding="8dp"
               android:id="@+id/textViewOtherUser" app:layout_constraintTop_toTopOf="parent"
-              app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"/>
+              app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
+              android:textSize="24sp" tools:text="Group Name" android:textColor="#FFFFFF" android:textAllCaps="false"
+    />
     <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
