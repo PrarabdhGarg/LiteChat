@@ -58,7 +58,7 @@ class StatusFragmentPresenter(view : StatusContract.View) : StatusContract.Statu
         var path = uri
         mStorageRef.child(UserProfileData.UserNumber).child("StatusImage").putFile(path)
             .addOnSuccessListener {
-                UserProfileData.UserCurrentActivity = mStorageRef.child(UserProfileData.UserNumber).child("StatusImage").downloadUrl.toString()
+                UserProfileData.UserImage = mStorageRef.child(UserProfileData.UserNumber).child("StatusImage").downloadUrl.toString()
                 Toast.makeText(currentView.getCurrentContext() , "Upload Successful" , Toast.LENGTH_SHORT).show()
                 currentView.setStatusImageView(path.toString())
         }

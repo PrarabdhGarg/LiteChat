@@ -49,6 +49,7 @@ class FragmentStatus: Fragment() , StatusContract.View{
         super.onCreate(savedInstanceState)
     }
 
+
     override fun onStart() {
         super.onStart()
         Log.d("ViewPager" , "onStart of FragmentStatus Called")

@@ -3,16 +3,16 @@ package com.example.litechat.interactors
 import android.util.Log
 import com.example.litechat.contracts.AllChatsContractFrag
 import com.example.litechat.model.*
+import com.google.firebase.firestore.FirebaseFirestore
+
 import com.example.litechat.model.AllChatDataModel.allChatArrayListGroupStatic
 import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import java.time.Instant
 
+
 class FragmentChatInteractor(p1: AllChatsContractFrag.CFPresenter) : AllChatsContractFrag.CFInteractor {
-
     private var database: FirebaseFirestore? = null
-
     private lateinit var p2: AllChatsContractFrag.CFPresenter
 
     init {
@@ -139,8 +139,7 @@ class FragmentChatInteractor(p1: AllChatsContractFrag.CFPresenter) : AllChatsCon
                      Log.d("groupName", currentGroupChats.toString())
 
 
-                     for (i in 0 until currentGroupChats.size) {
-                         database!!.collection("Chats").whereEqualTo("name", currentGroupChats[i]).get()
+                         database!!.collection("Chats").whereEqualTo("name", "GroupName").get()
                              .addOnSuccessListener { documents ->
 
                                  for (doc in documents) {
@@ -176,7 +175,6 @@ class FragmentChatInteractor(p1: AllChatsContractFrag.CFPresenter) : AllChatsCon
                                  }
                              }
 
-                     }
                      }
                      p2.groupChatsDataRecieved(currentGroupChats)
                  }

@@ -34,7 +34,7 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login_screen)
 
-        requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE , Manifest.permission.READ_CONTACTS) , PERMISSIONS_REQUEST_READ_STORAGE)
+        requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE , Manifest.permission.READ_CONTACTS , Manifest.permission.CALL_PHONE) , PERMISSIONS_REQUEST_READ_STORAGE)
 
         FirebaseApp.initializeApp(baseContext)
         loginActivityPresenter = LoginActivityPresenter(this)

@@ -14,7 +14,9 @@ import com.example.litechat.model.UserProfileData
 import com.example.litechat.model.contactsRoom.User
 import com.google.firebase.firestore.FirebaseFirestore
 
+
 class HomeActivityPresenter(contextPassed: Context , val view : HomeActivityContract.View): HomeActivityContract.Presenter{
+
 
     private val context = contextPassed
 
@@ -64,6 +66,5 @@ class HomeActivityPresenter(contextPassed: Context , val view : HomeActivityCont
         }
 
     }
-
 
 }

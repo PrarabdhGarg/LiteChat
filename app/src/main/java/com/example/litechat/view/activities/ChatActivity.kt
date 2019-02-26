@@ -5,7 +5,13 @@ import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+
+import kotlinx.android.synthetic.main.activity_chat.*
+
+import com.example.litechat.R
+
 import android.view.View
+import java.lang.Double.parseDouble
 
 import com.example.litechat.contracts.ChatContract
 import com.example.litechat.model.AllChatDataModel
@@ -22,7 +28,7 @@ import android.support.v7.widget.RecyclerView
 
 
 
-class ChatActivity : AppCompatActivity(),ChatContract.CView {
+class ChatActivity : AppCompatActivity(), ChatContract.CView {
 
 
 
@@ -60,17 +66,9 @@ class ChatActivity : AppCompatActivity(),ChatContract.CView {
         {
             numeric = false
         }
-       /* if (!numeric)
-        {
-            var groupChat= AllChatDataModel.allChatArrayListGroupStatic.find { it.otherPerson==AllChatDataModel.otherUserNumber}
-            groupDataset.addAll(groupChat!!.allMessages)
 
-        }
-        else
-        {*/
             // get previous chats and caching
             chatPresenter.getNewOtherMessagesFromInteractor()
-      //  }
 
         // handle when message is sent
         buttonSend.setOnClickListener(object : View.OnClickListener{
@@ -90,8 +88,6 @@ class ChatActivity : AppCompatActivity(),ChatContract.CView {
 
             }
         })
-
-
 
 
     }
