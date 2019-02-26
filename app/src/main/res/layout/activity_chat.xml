@@ -16,7 +16,7 @@
             app:layout_constraintTop_toTopOf="parent"
 
             android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/editTextSend"/>
+            app:layout_constraintBottom_toTopOf="@+id/editTextSend" android:layout_marginTop="64dp"/>
 
     <EditText
             android:id="@+id/editTextSend"
@@ -45,5 +45,17 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"/>
+    <TextView
+            android:text="other user"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:id="@+id/textViewOtherUser" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginLeft="8dp"
+            android:textSize="18sp"
+            android:gravity="center"
+            android:textAlignment="gravity"
+            android:layout_marginStart="8dp" app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/recyclerView" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="8dp" android:layout_marginRight="8dp"/>
 
 </android.support.constraint.ConstraintLayout>

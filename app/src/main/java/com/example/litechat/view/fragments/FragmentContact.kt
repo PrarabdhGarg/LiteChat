@@ -6,8 +6,11 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+
 import android.os.AsyncTask
+import android.os.Build
 import android.os.Bundle
+import android.support.annotation.RequiresApi
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v4.content.ContextCompat
@@ -20,6 +23,7 @@ import android.view.ViewGroup
 import com.example.litechat.R
 import com.example.litechat.contracts.ContactFragContract
 import com.example.litechat.listeners.CallListenerObject
+import com.example.litechat.model.ChatObject
 import com.example.litechat.model.ContactListData
 import com.example.litechat.model.contactsRoom.User
 import com.example.litechat.presenter.ContactFragPresenter
@@ -35,6 +39,15 @@ class FragmentContact : Fragment(), ContactFragContract.View {
     lateinit var contactPresenter: ContactFragPresenter
     lateinit var activitySet: FragmentActivity
     lateinit var task : AsyncTask<Void , Void , Void>
+
+    override fun startChatActivity(chatObject: ChatObject) {
+        var intent = Intent(context, ChatActivity::class.java)
+        intent.putExtra("documentPathId",chatObject.chatDocumentId)
+        intent.putExtra("string", chatObject.otherNumber)
+        intent.putExtra("lastUpdated",chatObject.lastUpdated)
+        startActivity(intent)
+    }
+
 
     inner class getingContacts(val contactPresenter: ContactFragPresenter) : AsyncTask<Void, Void, Void>() {
 
@@ -79,9 +92,11 @@ class FragmentContact : Fragment(), ContactFragContract.View {
         val callingListener2 = CallListenerObject()
         callingListener2.setListener(object : CallListenerObject.CallListener {
 
+            @RequiresApi(Build.VERSION_CODES.O)
             override fun startCallIntent(number: String) {
 
-                startActivity(Intent(context, ChatActivity::class.java))
+              contactPresenter.startNewChatFromContact(number)
+                Log.d("Context",context.toString())
 
             }
         })

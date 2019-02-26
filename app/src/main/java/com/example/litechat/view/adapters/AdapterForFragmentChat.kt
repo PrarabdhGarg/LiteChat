@@ -28,6 +28,8 @@ class AdapterForFragmentChat(private var dataset :ArrayList<ChatObject>, private
 
         var textView: TextView =view.findViewById(R.id.chatName)
         var imageView: ImageView=view.findViewById(R.id.profileImage)
+        var greenDot: ImageView=view.findViewById(R.id.imageViewGreenDot)
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, p1: Int): AdapterForFragmentChat.MyViewHolder {
@@ -52,7 +54,8 @@ class AdapterForFragmentChat(private var dataset :ArrayList<ChatObject>, private
         if (AllChatDataModel.personalChatList.size!=0 && (AllChatDataModel.personalChatList.find { it.chatDocumentId==dataset[position].chatDocumentId }!=null))
         {
             Log.d("FinalDebuf12","AllChatDataModel.personalChatList.size:${AllChatDataModel.personalChatList.size}\n${AllChatDataModel.personalChatList.contains(dataset[position])}")
-            Glide.with(context).load(R.drawable.ic_checked).into(holder.imageView)
+            holder.greenDot.visibility=View.VISIBLE
+           /* Glide.with(context).load(R.drawable.ic_checked).into(holder.imageView)*/
         }
 
         holder.textView.setOnClickListener(object : View.OnClickListener{
@@ -72,9 +75,11 @@ class AdapterForFragmentChat(private var dataset :ArrayList<ChatObject>, private
                     t.removeAt(i)
                 AllChatDataModel.personalChatList.addAll(t)
                 Log.d("Debug13" , AllChatDataModel.personalChatList.size.toString())
-                Glide.with(context).load(R.drawable.profile).into(holder.imageView)
+             //   Glide.with(context).load(R.drawable.profile).into(holder.imageView)
+               holder.greenDot.visibility=View.INVISIBLE
                 Log.d("Dataa","first tigrme")
                 Log.d("Persoo",holder.textView!!.text.toString())
+                //AllChatDataModel.otherUserNumber=dataset[position].otherNumber
                listenerObjectTryChat.listener!!.onDataRecieved(dataset[position].otherNumber,dataset[position].chatDocumentId,dataset[position].lastUpdated)
 
                 // listener to send number for activity

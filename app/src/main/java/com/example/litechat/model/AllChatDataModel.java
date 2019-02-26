@@ -11,6 +11,7 @@ public class AllChatDataModel {
     public static ArrayList<MessageList> allChatArrayListN2Static=new ArrayList<>() ;
     public static ArrayList<MessageModel> allChatArrayListPersonalStatic=new ArrayList<>() ;
     public static  String otherUserNumber;
+    public static  String currentlyChattingWith;
     public static String documentPathId;
     public static boolean flag=false;
     public static boolean flagPersonalChat=false;

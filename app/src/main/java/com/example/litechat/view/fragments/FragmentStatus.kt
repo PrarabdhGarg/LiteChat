@@ -23,6 +23,7 @@ import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.example.litechat.R
 import com.example.litechat.contracts.StatusContract
+import com.example.litechat.model.ContactListModel
 import com.example.litechat.model.UserDataModel
 import com.example.litechat.model.UserProfileData
 import com.example.litechat.presenter.StatusFragmentPresenter

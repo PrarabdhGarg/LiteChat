@@ -24,14 +24,38 @@ class ProfileActivity : AppCompatActivity() {
     var number : String? = null
     final var REQUEST_IMAGE_GET = 1
     var ref : StorageReference? = null
+    var mobileNUmber = ""
+    var about = " "
+    var username = " "
+    var image = " "
+
+    constructor()
+    {
+        mobileNUmber = UserProfileData.UserNumber
+        about = UserProfileData.UserAbout
+        image = UserProfileData.UserProfileImage
+        username = UserProfileData.UserName
+    }
+
+    constructor(number: String)
+    {
+        mobileNUmber = number
+        FirebaseFirestore.getInstance().collection("Users").document(mobileNUmber).get().addOnSuccessListener {
+            about = it.data!!.get("about").toString()
+            username = it.data!!.get("name").toString()
+            image = it.data!!.get("profileImage").toString()
+        }
+        ProfileImageButtonChange.visibility = View.INVISIBLE
+        EditAboutButton.visibility = View.GONE
+    }
 
     @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
-        AboutTextView.text = UserProfileData.UserAbout.toString()
-        NameTextView.text = UserProfileData.UserName.toString()
-        Glide.with(applicationContext).load(UserProfileData.UserProfileImage).into(ProfileImageView).onLoadStarted(getDrawable(R.drawable.profile))
+        AboutTextView.text = about
+        NameTextView.text = username
+        Glide.with(applicationContext).load(image).into(ProfileImageView).onLoadStarted(getDrawable(R.drawable.profile))
 
         ProfileImageButtonChange.setOnClickListener {
             val intent = Intent(Intent.ACTION_GET_CONTENT).apply {

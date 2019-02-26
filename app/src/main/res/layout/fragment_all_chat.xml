@@ -21,6 +21,16 @@
             android:id="@+id/chatName" android:layout_marginTop="8dp"
             app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toEndOf="@+id/profileImage"
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp" android:layout_marginRight="8dp"/>
+    <ImageView
+            android:layout_width="52dp"
+            android:layout_height="match_parent"
+            tools:srcCompat="@drawable/ic_checked"
+            android:id="@+id/imageViewGreenDot"
+            android:visibility="invisible"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="@+id/chatName"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"/>
 
 
 </android.support.constraint.ConstraintLayout>

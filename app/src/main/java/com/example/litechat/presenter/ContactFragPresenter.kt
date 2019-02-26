@@ -1,12 +1,16 @@
 package com.example.litechat.presenter
 
+import android.arch.persistence.room.Room
 import android.content.Context
+import android.os.Build
 import android.provider.ContactsContract
+import android.support.annotation.RequiresApi
 import android.util.Log
 import android.view.View
 import com.example.litechat.contracts.ContactFragContract
 import com.example.litechat.listeners.CallListenerObject
 import com.example.litechat.model.*
+import com.example.litechat.model.contactsRoom.AppDatabse
 import com.example.litechat.model.contactsRoom.User
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.ArrayList
@@ -43,6 +47,7 @@ class ContactFragPresenter(viewPassed: ContactFragContract.View, contextPassed: 
                         val numb = num.takeLast(10)
                         val userItem = User(numb, name)
                         Log.d("ContactsAddition" , userItem.toString())
+
                         ContactDataModel.contactList.add(userItem)
                     }
                     cursor2.close()
@@ -80,7 +85,7 @@ class ContactFragPresenter(viewPassed: ContactFragContract.View, contextPassed: 
 
             for (contact in ContactDataModel.contactList){
 
-                if (contact.mobileNumber == user ||  contact.mobileNumber == "0$user" || contact.mobileNumber == "91$user" ){
+                if (contact.mobileNumber == user /*||  contact.mobileNumber == "0$user" || contact.mobileNumber == "91$user"*/ ){
                     ContactDataModel.contactAndUser.add(contact)
                     Log.d("contact", contact.mobileNumber + contact.name)
                     break
@@ -89,6 +94,21 @@ class ContactFragPresenter(viewPassed: ContactFragContract.View, contextPassed: 
         }
         model.roomDeleteData(context)
         model.roomSetData(context, ContactDataModel.contactAndUser)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun startNewChatFromContact(number: String) {
+          Log.d("check22",number.reversed().substring(0,10).reversed())
+        model.startChatActivity(number,this)
+    }
+
+    override fun passDataForChatActivity(chatObject: ChatObject) {
+
+        val db = Room.databaseBuilder(context, AppDatabse::class.java, "Contact_Database")
+            .allowMainThreadQueries().build()
+        // if condition
+       AllChatDataModel.currentlyChattingWith=db.userDao().getName(chatObject.otherNumber)
+        view.startChatActivity(chatObject)
     }
 
 }
