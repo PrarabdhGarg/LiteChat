@@ -92,7 +92,7 @@ class DataRetriveClass : HomeActivityContract.Model{
                     Log.d("Run3","passNewMessagetoPrentercallled")
 
                     if(AllChatDataModel.flagPersonalChat) {
-                        AllChatDataModel.flagPersonalChat=false
+                        AllChatDataModel.flagPersonalChat=true
                         Log.d("FinalDebug5", " persona presenter.sortPersonalChatList() ${AllChatDataModel.personalChatList.size}")
                         presenter.sortPersonalChatList()
 

@@ -72,6 +72,7 @@ class AdapterForFragmentChat(private var dataset :ArrayList<ChatObject>, private
                 Glide.with(context).load(R.drawable.profile).into(holder.imageView)
                 Log.d("Dataa","first tigrme")
                 Log.d("Persoo",holder.textView!!.text.toString())
+                AllChatDataModel.otherUserNumber=dataset[position].otherNumber
                listenerObjectTryChat.listener!!.onDataRecieved(dataset[position].otherNumber,dataset[position].chatDocumentId,dataset[position].lastUpdated)
 
                 // listener to send number for activity

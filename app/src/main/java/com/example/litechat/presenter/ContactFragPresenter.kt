@@ -1,5 +1,6 @@
 package com.example.litechat.presenter
 
+import android.arch.persistence.room.Room
 import android.content.Context
 import android.os.Build
 import android.provider.ContactsContract
@@ -9,6 +10,7 @@ import android.view.View
 import com.example.litechat.contracts.ContactFragContract
 import com.example.litechat.listeners.CallListenerObject
 import com.example.litechat.model.*
+import com.example.litechat.model.contactsRoom.AppDatabse
 import com.example.litechat.model.contactsRoom.User
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.ArrayList
@@ -91,10 +93,16 @@ class ContactFragPresenter(viewPassed: ContactFragContract.View, contextPassed: 
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun startNewChatFromContact(number: String) {
-        model.startChatActivity(number,this)
+          Log.d("check22",number.reversed().substring(0,10).reversed())
+        model.startChatActivity(number.reversed().substring(0,10).reversed(),this)
     }
 
     override fun passDataForChatActivity(chatObject: ChatObject) {
+
+        val db = Room.databaseBuilder(context, AppDatabse::class.java, "Contact_Database")
+            .allowMainThreadQueries().build()
+        // if condition
+       AllChatDataModel.currentlyChattingWith=db.userDao().getName(chatObject.otherNumber)
         view.startChatActivity(chatObject)
     }
 

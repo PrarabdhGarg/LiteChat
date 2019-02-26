@@ -69,7 +69,7 @@ class ChatInteractor(p1:ChatContract.CPresenter) : ChatContract.CInteractor {
           listener=  y.orderBy("sentOn")
             .addSnapshotListener(MetadataChanges.INCLUDE,
                 EventListener<QuerySnapshot>{  snap , e ->
-                    AllChatDataModel.flag = snap!!.metadata.hasPendingWrites()
+                    AllChatDataModel.flag = !snap!!.metadata.hasPendingWrites()
 
                     if(e!=null){
                         Log.d("Error", "listen:error", e)
@@ -100,7 +100,7 @@ class ChatInteractor(p1:ChatContract.CPresenter) : ChatContract.CInteractor {
 
                     Log.d("FinalDebug17","passNewMessagetoPrentercallled ${AllChatDataModel.flag}")
 
-                    if(!AllChatDataModel.flag) {
+                    if(AllChatDataModel.flag) {
                         Log.d("FinalDebug16" , "Inside Snapshot Listener for displaying new message")
                         AllChatDataModel.flag=false
                         chatPresenter!!.passNewMessageToPresenter()

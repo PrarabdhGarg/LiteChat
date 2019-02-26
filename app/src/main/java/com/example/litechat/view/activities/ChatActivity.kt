@@ -1,6 +1,7 @@
 package com.example.litechat.view.activities
 
 import android.annotation.TargetApi
+import android.arch.persistence.room.Room
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -25,7 +26,7 @@ import java.lang.Double.parseDouble
 import java.lang.NumberFormatException
 import java.time.Instant
 import android.support.v7.widget.RecyclerView
-
+import com.example.litechat.model.contactsRoom.AppDatabse
 
 
 class ChatActivity : AppCompatActivity(), ChatContract.CView {
@@ -45,7 +46,7 @@ class ChatActivity : AppCompatActivity(), ChatContract.CView {
         super.onCreate(savedInstanceState)
         setContentView(com.example.litechat.R.layout.activity_chat)
 
-        adapterForChatActivity= AdapterForChatActivity(myDataset)
+        adapterForChatActivity= AdapterForChatActivity(myDataset,applicationContext)
 
 
         recyclerView.apply {
@@ -58,14 +59,26 @@ class ChatActivity : AppCompatActivity(), ChatContract.CView {
          AllChatDataModel.otherUserNumber = intent.getStringExtra("string")
          AllChatDataModel.documentPathId=intent.getStringExtra("documentPathId")
          AllChatDataModel.lastUpdated=intent.getStringExtra("lastUpdated")
+
         try
         {
-             val num = parseDouble(AllChatDataModel.otherUserNumber)
+            val num = parseDouble(AllChatDataModel.otherUserNumber)
         }
         catch (e: NumberFormatException)
         {
             numeric = false
         }
+
+        if(numeric)
+        {   //  to show contact name of person chattig with
+            textViewOtherUser.setText(searchContactName(AllChatDataModel.otherUserNumber))
+        }
+        else
+        {
+            textViewOtherUser.setText(AllChatDataModel.otherUserNumber)
+        }
+
+
 
             // get previous chats and caching
             chatPresenter.getNewOtherMessagesFromInteractor()
@@ -91,6 +104,31 @@ class ChatActivity : AppCompatActivity(), ChatContract.CView {
 
 
     }
+
+    private fun searchContactName(number: String): String {
+             var name : String
+        val db = Room.databaseBuilder(applicationContext, AppDatabse::class.java, "Contact_Database")
+            .allowMainThreadQueries().build()
+        // if condition
+        if(db.userDao().getName("91"+AllChatDataModel.otherUserNumber)!=null){
+           name= db.userDao().getName("91"+AllChatDataModel.otherUserNumber)
+            return name
+        }
+        else if(db.userDao().getName("0"+AllChatDataModel.otherUserNumber)!=null){
+            name= db.userDao().getName("0"+AllChatDataModel.otherUserNumber)
+            return name
+        }
+
+        else if(db.userDao().getName(AllChatDataModel.otherUserNumber)!=null){
+                name= db.userDao().getName(AllChatDataModel.otherUserNumber)
+                return name
+            }
+
+
+        return number
+
+    }
+
     override fun getOtherMessagesFromPresenter() {
 
     }

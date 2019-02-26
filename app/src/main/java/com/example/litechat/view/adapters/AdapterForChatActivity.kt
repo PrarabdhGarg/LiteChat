@@ -1,5 +1,7 @@
 package com.example.litechat.view.adapters
 
+import android.arch.persistence.room.Room
+import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,8 +11,10 @@ import android.widget.TextView
 import com.example.litechat.R
 import com.example.litechat.model.AllChatDataModel
 import com.example.litechat.model.MessageModel
+import com.example.litechat.model.UserProfileData
+import com.example.litechat.model.contactsRoom.AppDatabse
 
-class AdapterForChatActivity(private var dataset:ArrayList<MessageModel>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class AdapterForChatActivity(private var dataset:ArrayList<MessageModel>,private var context:Context): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     class MyViewHolderMe(val view: View): RecyclerView.ViewHolder(view){
 
@@ -76,12 +80,39 @@ class AdapterForChatActivity(private var dataset:ArrayList<MessageModel>): Recyc
             Log.d("Position",position.toString())
              var holderMe: MyViewHolderMe= holder as MyViewHolderMe
               holderMe.myMessage.text=(dataset[position].message)
-              holderMe.myName.text=(AllChatDataModel.userNumberIdPM)
+              holderMe.myName.text=(UserProfileData.UserName)
         }
         else
         {   Log.d("Positione",position.toString())
             var holderYou: MyViewHolderYou=holder as MyViewHolderYou
             holderYou.youMessage.text=(dataset[position].message)
-            holderYou.youName.text=(dataset[position].sentBy)
+            holderYou.youName.text=(searchContactName(dataset[position].sentBy))
         }
+
+    private fun searchContactName(number: String): String {
+        var name : String
+        val db = Room.databaseBuilder(context, AppDatabse::class.java, "Contact_Database")
+            .allowMainThreadQueries().build()
+        // if condition
+     //   Log.d("check",db.userDao().getName("91"+AllChatDataModel.otherUserNumber))
+        if(db.userDao().getName("91"+AllChatDataModel.otherUserNumber)!=null){
+
+            name= db.userDao().getName("91"+AllChatDataModel.otherUserNumber)
+            return name
+        }
+        else if(db.userDao().getName("0"+AllChatDataModel.otherUserNumber)!=null){
+            name= db.userDao().getName("0"+AllChatDataModel.otherUserNumber)
+            return name
+        }
+
+        else if(db.userDao().getName(AllChatDataModel.otherUserNumber)!=null){
+            name= db.userDao().getName(AllChatDataModel.otherUserNumber)
+            return name
+        }
+
+
+        return number
+
+    }
+
 }
