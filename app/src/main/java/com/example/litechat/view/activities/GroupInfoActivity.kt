@@ -31,3 +31,4 @@ class GroupInfoActivity : AppCompatActivity() {
         recyclerViewGroupinfo.adapter=adapter
     }
 }
+

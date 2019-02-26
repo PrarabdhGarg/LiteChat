@@ -5,7 +5,10 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".view.activities.LoginActivity">
+        android:id="@+id/login_layout"
+        tools:context=".view.activities.LoginActivity"
+        android:background="@drawable/animation_list"
+>
 
     <ProgressBar
             android:layout_width="wrap_content"
@@ -17,57 +20,46 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:visibility="invisible"
-            android:indeterminate="true"/>
+            android:indeterminate="true"
+    />
 
     <Button
-            android:text="Continue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:text="VERIFY"
+            android:layout_width="263dp"
+            android:layout_height="62dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             android:id="@+id/loginButton"
-            app:layout_constraintTop_toBottomOf="@+id/editTextNewNumber"/>
+            android:layout_marginBottom="100dp"
+            android:background="@drawable/rounded" android:textSize="30sp" android:textColor="#8CA6DB"/>
 
     <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
             android:id="@+id/editTextNewNumber"
             android:hint="Enter PhoneNumber"
-            android:maxLength="10"
             android:textAlignment="center"
             android:inputType="phone"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/editTextName"/>
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginLeft="90dp" android:layout_marginStart="90dp" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="90dp" android:layout_marginRight="90dp"
+            app:layout_constraintHorizontal_bias="1.0" android:layout_marginBottom="20dp"
+            app:layout_constraintBottom_toTopOf="@+id/editTextName"/>
 
 
     <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:visibility="invisible"
-            android:maxLength="256"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
             android:id="@+id/editTextName"
             android:hint="Enter Your Name"
             android:textAlignment="center"
             android:inputType="text"
-            app:layout_constraintTop_toBottomOf="@id/editTextNewNumber"
-            app:layout_constraintBottom_toTopOf="@id/loginButton"/>
-
-    <!--<EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="invisible"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            android:id="@+id/editTextAbout"
-            android:hint="Enter Something About Yourself"
-            android:textAlignment="center"
-            android:inputType="text"
-            app:layout_constraintTop_toBottomOf="@id/editTextName"
-            app:layout_constraintBottom_toTopOf="@id/loginButton"/>-->
+            android:textSize="24sp"
+            app:layout_constraintBottom_toTopOf="@+id/loginButton" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="90dp" android:layout_marginRight="90dp"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="90dp"
+            android:layout_marginStart="90dp" android:layout_marginBottom="150dp"/>
 
 </android.support.constraint.ConstraintLayout>

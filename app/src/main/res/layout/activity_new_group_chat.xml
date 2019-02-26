@@ -35,4 +35,5 @@
             app:layout_constraintBottom_toTopOf="@+id/buttong">
 
     </android.support.v7.widget.RecyclerView>
+
 </android.support.constraint.ConstraintLayout>

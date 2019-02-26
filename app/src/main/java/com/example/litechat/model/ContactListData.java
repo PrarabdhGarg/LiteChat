@@ -9,3 +9,4 @@ public class ContactListData {
     public static User userTapped;
     public static ArrayList<User> groupContacts=new ArrayList<>();
 }
+

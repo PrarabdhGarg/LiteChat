@@ -2,11 +2,13 @@ package com.example.litechat.view.activities
 
 import android.Manifest
 import android.content.Context
+import android.graphics.drawable.AnimationDrawable
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.support.annotation.RequiresApi
+import android.support.constraint.ConstraintLayout
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
@@ -36,12 +38,19 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
 
         requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE , Manifest.permission.READ_CONTACTS , Manifest.permission.CALL_PHONE) , PERMISSIONS_REQUEST_READ_STORAGE)
 
+        val constraintLayout = findViewById<ConstraintLayout>(R.id.login_layout)
+        val animationDrawable = constraintLayout.background as AnimationDrawable
+        animationDrawable.setEnterFadeDuration(2000)
+        animationDrawable.setExitFadeDuration(4000)
+
         FirebaseApp.initializeApp(baseContext)
         loginActivityPresenter = LoginActivityPresenter(this)
         firebaseAuth = FirebaseAuth.getInstance()
         ProgressBar!!.visibility=View.INVISIBLE
 
         loginButton.setOnClickListener {
+
+            animationDrawable.start()
             AllChatDataModel.upadateFragmentChatFirstTime=1
             when {
                 editTextName.visibility == View.VISIBLE -> {
@@ -90,7 +99,7 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
 
         UserProfileData.UserNumber = editTextNewNumber.text.toString()
 
-        ProgressBar!!.setVisibility (View.VISIBLE)
+        //ProgressBar!!.setVisibility (View.VISIBLE)
         window.setFlags(
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
@@ -170,3 +179,4 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
 
 
 }
+

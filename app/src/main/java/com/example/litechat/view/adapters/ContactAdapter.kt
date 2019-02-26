@@ -49,6 +49,4 @@ class ContactAdapter(private val callListenerObject1: CallListenerObject, privat
         }
     }
 
-
-
 }

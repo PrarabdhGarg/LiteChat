@@ -94,5 +94,4 @@ class AdapterForChatActivity(private var dataset:ArrayList<MessageModel>,private
     }
 
 
-    }
-
+}

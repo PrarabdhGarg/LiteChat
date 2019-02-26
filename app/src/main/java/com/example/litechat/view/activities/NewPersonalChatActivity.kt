@@ -157,3 +157,4 @@ class NewPersonalChatActivity : AppCompatActivity() {
 
      }
 }
+

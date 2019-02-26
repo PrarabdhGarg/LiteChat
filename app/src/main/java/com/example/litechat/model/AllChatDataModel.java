@@ -32,3 +32,4 @@ public class AllChatDataModel {
     public static  int upadateFragmentChatFirstTime=1;
 
 }
+

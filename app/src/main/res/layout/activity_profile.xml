@@ -5,7 +5,8 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".view.activities.ProfileActivity">
+        tools:context=".view.activities.ProfileActivity"
+        android:background="#000">
 
 
     <android.support.v7.widget.CardView
@@ -35,16 +36,15 @@
 
             <ImageButton
                     android:layout_width="0dp"
+                    android:id="@+id/ProfileImageButtonChange"
                     app:layout_constraintHeight_default="percent"
                     app:layout_constraintHeight_percent="0.09"
                     app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintLeft_toLeftOf="@id/guideline_2"
-                    android:src="@drawable/ic_picture"
-                    android:id="@+id/ProfileImageButtonChange"
                     android:background="#0000ffff"
                     android:scaleType="fitXY"
                     app:layout_constraintTop_toTopOf="@id/guideline_1"
-                    android:layout_height="0dp"/>
+                    android:layout_height="0dp" android:src="@drawable/ic_picture"/>
 
             <TextView
                     android:layout_width="wrap_content"
@@ -90,7 +90,7 @@
                         android:textAlignment="center"
                         android:text="Edit Information"
                         android:layout_height="wrap_content"/>
-                
+
                 <ImageView
                         android:layout_width="wrap_content"
                         android:id="@+id/editImage"
@@ -127,25 +127,21 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     app:layout_constraintGuide_percent="0.15"/>
-
             <ProgressBar
+                    style="?android:attr/progressBarStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    style="@style/Widget.AppCompat.ProgressBar"
                     android:id="@+id/ProgressBarProfile"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     android:visibility="invisible"
-                    android:indeterminate="true"
-            />
-
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toTopOf="@+id/ProfileImageView" android:layout_marginBottom="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent" android:layout_marginEnd="8dp"
+                    app:layout_constraintEnd_toEndOf="parent" android:layout_marginRight="8dp"
+                    android:layout_marginStart="8dp" app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginLeft="8dp"/>
 
         </android.support.constraint.ConstraintLayout>
 
 
-
     </android.support.v7.widget.CardView>
-
 </android.support.constraint.ConstraintLayout>

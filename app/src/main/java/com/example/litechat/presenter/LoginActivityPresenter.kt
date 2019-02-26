@@ -165,4 +165,5 @@ class LoginActivityPresenter (loginView : LoginContract.LoginView): LoginContrac
                 loginActivity.onLoginError()
             }
     }
+
 }

@@ -31,4 +31,5 @@ interface ContactFragContract {
     interface View{
         fun startChatActivity(chatObject: ChatObject)
     }
+
 }

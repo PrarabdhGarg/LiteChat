@@ -15,5 +15,4 @@ class ListenerObjectTry {
         this.listener = listener
     }
 
-
 }

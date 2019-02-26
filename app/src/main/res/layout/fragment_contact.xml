@@ -1,11 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                             xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent">
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:layout_width="match_parent" android:layout_height="match_parent"
+                                             android:background="@drawable/contact_gradient">
+    <com.nightonke.boommenu.BoomMenuButton
+            android:id="@+id/bmbContact"
+            android:layout_width="85dp"
+            android:layout_height="85dp"
+            app:bmb_buttonEnum="ham"
+            app:bmb_boomEnum="boomRandom"
+            app:bmb_piecePlaceEnum="piecePlace_ham_4"
+            app:bmb_buttonPlaceEnum="buttonPlace_ham_4"
+            app:bmb_normalColor="#222F4B"
+            android:layout_marginBottom="80dp" app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginEnd="32dp" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginRight="32dp"
+            android:visibility="visible"/>
+    <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:id="@+id/view2"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="24dp" app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="24dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="24dp"
+            android:layout_marginRight="24dp" app:layout_constraintStart_toStartOf="parent"
+            android:background="@drawable/rounded" android:layout_marginLeft="24dp" android:layout_marginStart="24dp"/>
+
     <android.support.v7.widget.RecyclerView
             android:layout_width="0dp"
-            android:layout_height="0dp" app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="8dp" app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp" android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="parent" android:id="@+id/contactRecycler"/>
+            android:layout_height="0dp"
+            android:id="@+id/contactRecycler"
+            tools:listitem="@layout/contacts_list"
+            android:background="@drawable/rounded"
+            app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+            app:layout_constraintTop_toTopOf="@+id/view2" app:layout_constraintBottom_toBottomOf="@+id/view2"
+            app:layout_constraintEnd_toEndOf="@+id/view2" app:layout_constraintStart_toStartOf="@+id/view2"
+            android:layout_marginTop="16dp" android:layout_marginLeft="8dp" android:layout_marginStart="8dp"
+            android:layout_marginBottom="16dp" android:layout_marginEnd="8dp" android:layout_marginRight="8dp">
+    </android.support.v7.widget.RecyclerView>
+
 </android.support.constraint.ConstraintLayout>

@@ -150,9 +150,6 @@ class ChatActivity : AppCompatActivity(), ChatContract.CView {
         chatPresenter.notifyModelOfBackPressed()
         super.onBackPressed()
     }
-
-    }
-
-
+ }
 
 

@@ -68,5 +68,4 @@ class HomeActivityPresenter(contextPassed: Context , val view : HomeActivityCont
         }
 
     }
-
 }

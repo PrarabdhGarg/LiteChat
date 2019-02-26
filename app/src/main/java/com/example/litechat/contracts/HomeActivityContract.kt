@@ -32,5 +32,4 @@ interface HomeActivityContract {
         fun getInstanceOfFragmentChat() : FragmentChat
 
     }
-
 }

@@ -4,9 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.EventListener
-import android.widget.Toast
 import com.example.litechat.contracts.HomeActivityContract
-import com.example.litechat.presenter.HomeActivityPresenter
 import com.example.litechat.presenter.StatusFragmentPresenter
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.MetadataChanges
@@ -15,8 +13,6 @@ import com.google.firebase.firestore.QuerySnapshot
 class DataRetriveClass : HomeActivityContract.Model{
 
     private val db = FirebaseFirestore.getInstance()
-    
-
     /**
      * This class should not be used currently as the structure of firestore is not yet finalized.
      */
@@ -116,4 +112,5 @@ class DataRetriveClass : HomeActivityContract.Model{
                 presenter.onStatusDataRecived(maps)
             }
     }
+
 }

@@ -7,4 +7,5 @@ data class UserDataModel(
     var CurrentActivity : String = "",
     var Image : String = "",
     var ProfileImage : String = ""
+
 )
