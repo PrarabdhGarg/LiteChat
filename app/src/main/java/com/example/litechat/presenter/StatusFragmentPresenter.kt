@@ -74,7 +74,7 @@ class StatusFragmentPresenter(view : StatusContract.View) : StatusContract.Statu
     }
 
     override fun getInfoForRecyclerView() {
-        DataRetriveClass().getCurrentActivitiesOfOtherUsers(this)
+        DataRetriveClass().getCurrentActivitiesOfOtherUsers(this , currentView!!.getCurrentContext())
     }
 
     override fun onStatusDataRecived(map: ArrayList<Pair<String, String>>) {

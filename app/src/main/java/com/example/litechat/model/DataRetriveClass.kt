@@ -102,14 +102,15 @@ class DataRetriveClass : HomeActivityContract.Model{
     }
 
 
-    override fun getCurrentActivitiesOfOtherUsers(presenter: StatusFragmentPresenter) {
+    override fun getCurrentActivitiesOfOtherUsers(presenter: StatusFragmentPresenter , context: Context) {
         var maps = ArrayList<Pair<String , String>>()
+        var model = ContactListModel()
         FirebaseFirestore.getInstance().collection("Users").get()
             .addOnSuccessListener { documents ->
                 for (document in documents) {
                     if (document.id == UserProfileData.UserNumber)
                         continue
-                    maps.add(Pair(document.data.getValue("name").toString() , document.data.get("profileImage").toString()))
+                    maps.add(Pair(model.roomGetName(context , document.data.get("number").toString()) , document.data.get("profileImage").toString()))
                     //Log.d("Status" , "${maps[i].first} =>  ${maps[i].second}")
                 }
                 presenter.onStatusDataRecived(maps)

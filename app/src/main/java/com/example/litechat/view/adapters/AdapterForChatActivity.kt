@@ -10,9 +10,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.example.litechat.R
 import com.example.litechat.model.AllChatDataModel
+import com.example.litechat.model.ContactListModel
 import com.example.litechat.model.MessageModel
 import com.example.litechat.model.UserProfileData
 import com.example.litechat.model.contactsRoom.AppDatabse
+import java.lang.Exception
 
 class AdapterForChatActivity(private var dataset:ArrayList<MessageModel>,private var context:Context): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -75,41 +77,21 @@ class AdapterForChatActivity(private var dataset:ArrayList<MessageModel>,private
     }
 
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) =
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if(holder.itemViewType==0) {
             Log.d("Position",position.toString())
-             var holderMe: MyViewHolderMe= holder as MyViewHolderMe
-              holderMe.myMessage.text=(dataset[position].message)
-              holderMe.myName.text=(UserProfileData.UserName)
+            var holderMe: MyViewHolderMe= holder as MyViewHolderMe
+            holderMe.myMessage.text=(dataset[position].message)
+            holderMe.myName.text=(UserProfileData.UserName)
         }
         else
         {   Log.d("Positione",position.toString())
             var holderYou: MyViewHolderYou=holder as MyViewHolderYou
             holderYou.youMessage.text=(dataset[position].message)
-            holderYou.youName.text=(searchContactName(dataset[position].sentBy))
+            holderYou.youName.text=(ContactListModel().roomGetName(context , dataset[position].sentBy.toString()))
+            Log.e("NumberCheck" ,dataset[position].sentBy.toString())
         }
-
-    private fun searchContactName(number: String): String {
-        var name : String
-        val db = Room.databaseBuilder(context, AppDatabse::class.java, "Contact_Database")
-            .allowMainThreadQueries().build()
-        // if condition
-   //   Log.e("check",db.userDao().getName(AllChatDataModel.otherUserNumber))
-         try {
-             db.userDao().getName(AllChatDataModel.otherUserNumber)
-                 name= db.userDao().getName(AllChatDataModel.otherUserNumber)
-             Log.d("debugadapchatnam",name)
-                 return name
-             }
-
-         catch (e: Exception){
-             Log.d("debugAdapchat",e.toString())
-             return  number
-         }
-
-
     }
-
 
 
     }

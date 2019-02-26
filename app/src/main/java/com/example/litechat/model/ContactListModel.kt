@@ -10,9 +10,28 @@ import com.example.litechat.model.contactsRoom.AppDatabse
 import com.example.litechat.model.contactsRoom.User
 import com.example.litechat.view.activities.NewPersonalChatActivity
 import com.google.firebase.firestore.FirebaseFirestore
+import java.lang.Exception
 import java.time.Instant
 
 class ContactListModel : ContactFragContract.Model {
+    override fun roomGetName(applicationContext: Context, number: String) : String {
+        Log.d("Context" , applicationContext.toString())
+        val db = Room.databaseBuilder(applicationContext, AppDatabse::class.java, "Contact_Database")
+            .allowMainThreadQueries().build()
+        var t : String = " "
+        t = db.userDao().getName(number)
+        if(t == null)
+        {
+            t = number
+        }
+        return t
+    }
+
+    override fun roomDeleteData(applicationContext: Context) {
+        val db = Room.databaseBuilder(applicationContext, AppDatabse::class.java, "Contact_Database")
+            .allowMainThreadQueries().build()
+        db.userDao().deleteAllData()
+    }
 
 
     override fun roomSetData(applicationContext: Context, userList: List<User>) {

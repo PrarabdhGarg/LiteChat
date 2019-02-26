@@ -13,7 +13,7 @@ interface HomeActivityContract {
   
     interface Model{
         fun getUserDataFromFirestore(number : String)
-        fun getCurrentActivitiesOfOtherUsers(presenter : StatusFragmentPresenter)
+        fun getCurrentActivitiesOfOtherUsers(presenter : StatusFragmentPresenter , context: Context)
         fun retrievePersonalChatDataFromFirestore(presenter: HomeActivityContract.Presenter)
     }
 
