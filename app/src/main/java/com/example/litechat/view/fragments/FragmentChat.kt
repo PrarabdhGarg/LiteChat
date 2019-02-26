@@ -19,6 +19,7 @@ import com.example.litechat.model.ChatObject
 import com.example.litechat.model.MessageList
 import com.example.litechat.presenter.FragmentChatPresenter
 import com.example.litechat.view.activities.ChatActivity
+import com.example.litechat.view.activities.GroupInfoActivity
 import com.example.litechat.view.activities.ProfileActivity
 import com.example.litechat.view.adapters.AdapterForFragmentChat
 import kotlinx.android.synthetic.main.activity_chat.*
@@ -79,12 +80,14 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
 
                 if(numeric)
                 {   //  to show contact name of person chatting with
-                    var intent = Intent(context,ProfileActivity::class.java)
-
+                    var intent = Intent(context,ProfileActivity(number)::class.java)
+                    startActivity(intent)
                 }
                 else
                 {
-                    textViewOtherUser.setText(AllChatDataModel.otherUserNumber)
+                    var intent=Intent(context,GroupInfoActivity::class.java)
+                    intent.putExtra("documentPathId",chatDocumentId)
+                    startActivity(intent)
                 }
 
 

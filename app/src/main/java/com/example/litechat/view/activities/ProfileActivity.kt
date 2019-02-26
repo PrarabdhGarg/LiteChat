@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
+import android.os.AsyncTask
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -19,7 +20,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import kotlinx.android.synthetic.main.activity_profile.*
 
-class ProfileActivity : AppCompatActivity() {
+class ProfileActivity (): AppCompatActivity() {
 
     var number : String? = null
     final var REQUEST_IMAGE_GET = 1
@@ -28,30 +29,30 @@ class ProfileActivity : AppCompatActivity() {
     var about = " "
     var username = " "
     var image = " "
+    var flag = true
 
-    constructor()
+  init
     {
+        Log.d("Constructor" , "Constructor2")
         mobileNUmber = UserProfileData.UserNumber
         about = UserProfileData.UserAbout
         image = UserProfileData.UserProfileImage
         username = UserProfileData.UserName
     }
 
-    constructor(number: String)
-    {
+    constructor(number: String) : this() {
         mobileNUmber = number
-        FirebaseFirestore.getInstance().collection("Users").document(mobileNUmber).get().addOnSuccessListener {
-            about = it.data!!.get("about").toString()
-            username = it.data!!.get("name").toString()
-            image = it.data!!.get("profileImage").toString()
-        }
-        ProfileImageButtonChange.visibility = View.INVISIBLE
-        EditAboutButton.visibility = View.GONE
+        Log.d("Constructor" , "Constructor")
+        flag = false
+        getOtherUserData().execute()
     }
 
-    @SuppressLint("CheckResult")
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onStart() {
+        if(!flag)
+        {
+            ProfileImageButtonChange.visibility = View.INVISIBLE
+            EditAboutButton.visibility = View.GONE
+        }
         setContentView(R.layout.activity_profile)
         AboutTextView.text = about
         NameTextView.text = username
@@ -63,7 +64,12 @@ class ProfileActivity : AppCompatActivity() {
             }
             startActivityForResult(intent, REQUEST_IMAGE_GET)
         }
+        super.onStart()
+    }
 
+    @SuppressLint("CheckResult")
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
     }
 
 
@@ -115,6 +121,36 @@ class ProfileActivity : AppCompatActivity() {
         Log.d("FirebaseStorage" , "${UserProfileData.UserProfileImage}")
         window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
         ProgressBarProfile.visibility = View.INVISIBLE
+    }
+
+    inner class getOtherUserData() : AsyncTask<Void , Void , Void>()
+    {
+        override fun doInBackground(vararg params: Void?): Void? {
+            FirebaseFirestore.getInstance().collection("Users").document(mobileNUmber).get().addOnSuccessListener {
+                about = it.data!!.get("about").toString()
+                username = it.data!!.get("name").toString()
+                image = it.data!!.get("profileImage").toString()
+            }
+            return null
+        }
+
+        override fun onPostExecute(result: Void?) {
+            updateView()
+            super.onPostExecute(result)
+        }
+
+    }
+
+    fun updateView()
+    {
+        if(!flag)
+        {
+            ProfileImageButtonChange.visibility = View.INVISIBLE
+            EditAboutButton.visibility = View.GONE
+        }
+        AboutTextView.text = about
+        NameTextView.text = username
+        Glide.with(applicationContext).load(image).into(ProfileImageView).onLoadStarted(getDrawable(R.drawable.profile))
     }
 
 }
