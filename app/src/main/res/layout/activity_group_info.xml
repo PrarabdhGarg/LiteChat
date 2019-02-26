@@ -8,24 +8,29 @@
         tools:context=".view.activities.GroupInfoActivity">
 
     <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="274dp"
-            tools:srcCompat="@tools:sample/backgrounds/scenic"
-            tools:layout_editor_absoluteY="0dp"
-            tools:layout_editor_absoluteX="0dp"
-            android:id="@+id/groupImage"/>
+        android:id="@+id/groupImage"
+        android:layout_width="wrap_content"
+        android:layout_height="274dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
     <TextView
-            android:text="Group Name"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:padding="16dp"
-            android:textSize="20sp"
-            android:gravity="center"
-            android:id="@+id/groupName"
-            app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@+id/groupImage"/>
+        android:id="@+id/groupName"
+        android:layout_width="match_parent"
+        android:layout_height="59dp"
+        android:gravity="center"
+        android:padding="16dp"
+        android:text="Group Name"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/groupImage" />
     <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:id="@+id/recyclerViewGroupinfo"
             app:layout_constraintTop_toBottomOf="@+id/groupName"
+            app:layoutManager="android.support.v7.widget.LinearLayoutManager"
             app:layout_constraintStart_toStartOf="parent"/>
+
 </android.support.constraint.ConstraintLayout>

@@ -2,6 +2,7 @@ package com.example.litechat.view.adapters
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,7 +39,7 @@ class ContactAdapter(private val callListenerObject1: CallListenerObject, privat
         holder.names.setOnClickListener {
 
             ContactListData.userTapped = ContactListData.contacts[position]
-            callListenerObject2.callListener!!.startCallIntent("Change Activity")
+            callListenerObject2.callListener!!.startCallIntent(ContactListData.contacts[position].mobileNumber)
 
         }
         holder.call.setOnClickListener {
@@ -47,7 +48,5 @@ class ContactAdapter(private val callListenerObject1: CallListenerObject, privat
 
         }
     }
-
-
 
 }

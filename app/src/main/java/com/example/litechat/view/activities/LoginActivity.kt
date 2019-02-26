@@ -13,6 +13,7 @@ import android.view.WindowManager
 import android.widget.Toast
 import com.example.litechat.R
 import com.example.litechat.contracts.LoginContract
+import com.example.litechat.model.AllChatDataModel
 import com.example.litechat.model.UserProfileData
 import com.example.litechat.presenter.LoginActivityPresenter
 import com.google.firebase.FirebaseApp
@@ -33,7 +34,7 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login_screen)
 
-        requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE , Manifest.permission.READ_CONTACTS) , PERMISSIONS_REQUEST_READ_STORAGE)
+        requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE , Manifest.permission.READ_CONTACTS , Manifest.permission.CALL_PHONE) , PERMISSIONS_REQUEST_READ_STORAGE)
 
         FirebaseApp.initializeApp(baseContext)
         loginActivityPresenter = LoginActivityPresenter(this)
@@ -41,6 +42,7 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
         ProgressBar!!.visibility=View.INVISIBLE
 
         loginButton.setOnClickListener {
+            AllChatDataModel.upadateFragmentChatFirstTime=1
             when {
                 editTextName.visibility == View.VISIBLE -> {
                     if (editTextName.text.isEmpty())
@@ -67,18 +69,7 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
      * This feature will only work for android devices with Api greater than 16(android 4.1) because of the [finishAffinity] method
      */
 
-    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
-    override fun onBackPressed() {
-        if (doubleBackToExitPressedOnce) {
-            finishAffinity()
-            super.onBackPressed()
-            return
-        }
 
-        this.doubleBackToExitPressedOnce = true
-        Toast.makeText(this , "Press Once More to Exit" , Toast.LENGTH_SHORT).show()
-        Handler().postDelayed(Runnable { doubleBackToExitPressedOnce = false }, 2000)
-    }
 
     override fun onDestroy() {
         loginActivityPresenter = null   //Set the instance of presenter to be null as soon as the activity gets destroyed
@@ -97,7 +88,7 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
     {
         Log.d("LOGIN" , "onFirstPressed Callsed")
 
-        UserProfileData.UserNumber = editTextNumber.text.toString()
+        UserProfileData.UserNumber = editTextNewNumber.text.toString()
 
         ProgressBar!!.setVisibility (View.VISIBLE)
         window.setFlags(
@@ -146,7 +137,8 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
         window.setFlags(
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-        loginActivityPresenter!!.verifyNumber(mobileNumber!! , this@LoginActivity , applicationContext , dialog = ProgressBar)
+        Log.d("Context" , "${applicationContext}")
+        loginActivityPresenter!!.verifyNumber(UserProfileData.UserNumber , this@LoginActivity , applicationContext , dialog = ProgressBar)
         window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
     }
 
@@ -163,4 +155,19 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
         return applicationContext
     }
 
+    @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
+    override fun onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            finishAffinity()
+            super.onBackPressed()
+            return
+        }
+
+        this.doubleBackToExitPressedOnce = true
+        Toast.makeText(this , "Press Once More to Exit" , Toast.LENGTH_SHORT).show()
+        Handler().postDelayed(Runnable { doubleBackToExitPressedOnce = false }, 2000)
+    }
+
+
 }
+

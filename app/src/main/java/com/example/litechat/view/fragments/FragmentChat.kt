@@ -19,8 +19,13 @@ import com.example.litechat.model.ChatObject
 import com.example.litechat.model.MessageList
 import com.example.litechat.presenter.FragmentChatPresenter
 import com.example.litechat.view.activities.ChatActivity
+import com.example.litechat.view.activities.GroupInfoActivity
+import com.example.litechat.view.activities.ProfileActivity
 import com.example.litechat.view.adapters.AdapterForFragmentChat
+import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.android.synthetic.main.fragment_chat.*
+import java.lang.Double
+import java.lang.NumberFormatException
 
 class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
 
@@ -35,6 +40,7 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
     private lateinit var listenerForProfile: ListenerObjectTry
     private var chatNamesForFragment = ArrayList<ChatObject>()
     private var frag = FragmentChatPresenter(this)
+    private var numeric=true
     private  var adapterForFragmentChat: AdapterForFragmentChat? =null
 
 
@@ -63,11 +69,27 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
 
             override fun onDataRecieved(number: String, chatDocumentId: String,lastUpdated:String) {
 
-                /** for opening profile
-                 *  val intent = Intent(context,ChatActivity::class.java)
-                intent.putExtra("Number","9826936889")
-                startActivity(intent)
-                 * */
+                try
+                {
+                    val num = Double.parseDouble(number)
+                }
+                catch (e: NumberFormatException)
+                {
+                    numeric = false
+                }
+
+                if(numeric)
+                {   //  to show contact name of person chatting with
+                    var intent = Intent(context,ProfileActivity(number)::class.java)
+                    startActivity(intent)
+                }
+                else
+                {
+                    var intent=Intent(context,GroupInfoActivity::class.java)
+                    intent.putExtra("documentPathId",chatDocumentId)
+                    startActivity(intent)
+                }
+
 
             }
         })
@@ -83,7 +105,7 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         Log.d("ViewPager" , "onCreate of FragmentChat called")
-
+        AllChatDataModel.upadateFragmentChatFirstTime = 1
         super.onCreate(savedInstanceState)
     }
 
@@ -125,11 +147,11 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
         //chatNamesForFragment.clear()
         //chatNamesForFragment.addAll(AllChatDataModel.personalChatList)
         /*AllChatDataModel.personalChatList.clear()*/
-     //   Log.d("FinalDebug10", "upadte all start chatfor size${chatNamesForFragment.last()}")
+        //Log.d("FinalDebug10", "upadte all start chatfor size${chatNamesForFragment.last()}")
         //chatNamesForFragment.add(chatNamesForFragment.last())
-if(chatNamesForFragment.size==0){
-    chatNamesForFragment.addAll(AllChatDataModel.personalChatList)
-}
+        if(chatNamesForFragment.size==0){
+            chatNamesForFragment.addAll(AllChatDataModel.personalChatList)
+        }
         adapterForFragmentChat!!.notifyDataSetChanged()
 
     }
@@ -139,6 +161,7 @@ if(chatNamesForFragment.size==0){
         chatNamesForFragment.clear()
         chatNamesForFragment.addAll(AllChatDataModel.personalChatList)
         AllChatDataModel.personalChatList.clear()
+        Log.d("Debug 13" , AllChatDataModel.personalChatList.size.toString())
         adapterForFragmentChat!!.notifyDataSetChanged()
 
     }

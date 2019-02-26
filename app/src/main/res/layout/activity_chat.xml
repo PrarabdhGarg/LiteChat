@@ -8,15 +8,18 @@
         tools:context=".view.activities.ChatActivity"
 android:background="@drawable/pm_gradient">
 
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+              android:id="@+id/textViewOtherUser" app:layout_constraintTop_toTopOf="parent"
+              app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"/>
     <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layoutManager="android.support.v7.widget.LinearLayoutManager"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/editTextSend"/>
+            app:layout_constraintBottom_toTopOf="@+id/editTextSend"
+            app:layout_constraintTop_toBottomOf="@+id/textViewOtherUser"/>
 
     <EditText
             android:id="@+id/editTextSend"
@@ -48,5 +51,6 @@ android:background="@drawable/pm_gradient">
             android:layout_marginRight="8dp"
             android:background="@drawable/send_button"
             android:src="@drawable/ic_send_button_icon"/>
+
 
 </android.support.constraint.ConstraintLayout>

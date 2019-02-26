@@ -52,5 +52,4 @@
             android:layout_marginRight="16dp" app:layout_constraintStart_toEndOf="@+id/chatName"
             android:visibility="invisible"/>
 
-
 </android.support.constraint.ConstraintLayout>

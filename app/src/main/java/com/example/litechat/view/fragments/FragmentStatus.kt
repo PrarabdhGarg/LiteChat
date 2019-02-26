@@ -18,10 +18,12 @@ import android.net.Uri
 import android.text.Editable
 import android.text.style.LineHeightSpan
 import android.util.Log
+import android.view.WindowManager
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.example.litechat.R
 import com.example.litechat.contracts.StatusContract
+import com.example.litechat.model.ContactListModel
 import com.example.litechat.model.UserDataModel
 import com.example.litechat.model.UserProfileData
 import com.example.litechat.presenter.StatusFragmentPresenter
@@ -49,6 +51,7 @@ class FragmentStatus: Fragment() , StatusContract.View{
         super.onCreate(savedInstanceState)
     }
 
+
     override fun onStart() {
         super.onStart()
         Log.d("ViewPager" , "onStart of FragmentStatus Called")
@@ -56,7 +59,9 @@ class FragmentStatus: Fragment() , StatusContract.View{
         view!!.RecyclerStatus.adapter = StatusAdapter(context!! , maps)
         Glide.with(context!!).load(UserProfileData.UserImage).into(view!!.statusImageView)//On starting the fragment, load the current image in the image view, whose Uri is stored locally
         view!!.currentActivityTextView.setText(UserProfileData.UserCurrentActivity)
+
         stausFragmentPresenter!!.getInfoForRecyclerView()
+
         view!!.EditStatusImageView!!.setOnClickListener {
             Toast.makeText(context , "Clicked" , Toast.LENGTH_SHORT).show()
             view!!.EditStatusDoneImageView!!.visibility = View.VISIBLE
@@ -99,6 +104,7 @@ class FragmentStatus: Fragment() , StatusContract.View{
 
     override fun setStatusImageView(path: String) {
         view!!.statusImageView.setImageURI(Uri.parse(path))
+        view!!.ProgressBarStatus.visibility = View.INVISIBLE
     }
 
 }

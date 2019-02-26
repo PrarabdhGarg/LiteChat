@@ -11,11 +11,12 @@ public class AllChatDataModel {
     public static ArrayList<MessageList> allChatArrayListN2Static=new ArrayList<>() ;
     public static ArrayList<MessageModel> allChatArrayListPersonalStatic=new ArrayList<>() ;
     public static  String otherUserNumber;
+    public static  String currentlyChattingWith;
     public static String documentPathId;
     public static boolean flag=false;
     public static boolean flagPersonalChat=false;
     public static boolean flagOnBackPressed = false;
-    public static String userNumberIdPM= "7898161474";//9340243498
+    public static String userNumberIdPM= " ";//9340243498
     public static  String lastUpdated;
     public static  ArrayList<ChatObject> personalChatList = new ArrayList<>();
     public static ArrayList<String> groupNumbers=new ArrayList<>();
@@ -29,5 +30,5 @@ public class AllChatDataModel {
     public static  int  chatScreenStatus=2;
     public static  int upadateFragmentChatFirstTime=1;
 
-
 }
+

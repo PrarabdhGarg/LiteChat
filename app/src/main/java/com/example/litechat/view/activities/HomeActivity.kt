@@ -18,6 +18,8 @@ import android.preference.PreferenceManager
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.view.WindowManager
 import android.widget.SearchView
 import com.example.litechat.R
 import com.example.litechat.contracts.HomeActivityContract
@@ -32,23 +34,22 @@ import com.example.litechat.view.fragments.FragmentContact
 import com.example.litechat.view.fragments.FragmentStatus
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_home.*
+import kotlinx.android.synthetic.main.activity_profile.view.*
+import kotlinx.android.synthetic.main.fragment_status.view.*
 import java.util.ArrayList
 
 
-class HomeActivity : AppCompatActivity()
+class HomeActivity : AppCompatActivity(),HomeActivityContract.View
 {
-
-    override fun getInstanceOfFragmentChat(): FragmentChat {
-        return fragmentChat1!!
-    }
+    override fun passContext(): Context = applicationContext
 
     override fun isChatFragmentActive(): Boolean {
         return  chatFragmentActive
     }
-    //function to pass context to HomeActivityPresenter
 
-    override fun passContext(): Context = applicationContext
-
+    override fun getInstanceOfFragmentChat(): FragmentChat {
+        return fragmentChat1!!
+    }
 
 
     //function to pass contentResolver to HomeActivityPresenter
@@ -63,7 +64,6 @@ class HomeActivity : AppCompatActivity()
      */
     private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
     private var fragment : FragmentStatus? = null
-
     private var fragmentChat1 : FragmentChat? = null
     private var chatFragmentActive= false
 
@@ -75,30 +75,28 @@ class HomeActivity : AppCompatActivity()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
-       homeActivityPresenter = HomeActivityPresenter(applicationContext)
-       homeActivityPresenter.getPersonalChatsFromFirestore()
-       
+       homeActivityPresenter = HomeActivityPresenter(applicationContext , this)
+
+       AllChatDataModel.upadateFragmentChatFirstTime = 1
         ContentResolverData.contentResolverPassed = contentResolver
-        //If user is already logged in, no need to open the LoginActivity again
+       // If user is already logged in, no need to open the LoginActivity again
 
 
-//        if(FirebaseAuth.getInstance().currentUser == null)
-//        {
-//            startActivity(Intent(this@HomeActivity , LoginActivity::class.java))
-//        }
-//        else{
-//
-//            var number = PreferenceManager.getDefaultSharedPreferences(applicationContext).getString("currentUserNumber" , "123456789")
-//            //UserProfileData.UserNumber = number!!.substring(3)
-//            Log.d("HomeActivity" , "Else enterd in auth.getIstance $number")
-//            homeActivityPresenter.getUserDataOnLogin(number)
-//        }
+        if(FirebaseAuth.getInstance().currentUser == null)
+        {
+            startActivity(Intent(this@HomeActivity , LoginActivity::class.java))
+        }
+        else{
+
+            var number = PreferenceManager.getDefaultSharedPreferences(applicationContext).getString("currentUserNumber" , "123456789")
+            Log.d("HomeActivity" , "Else enterd in auth.getIstance $number")
+            UserProfileData.UserNumber = number
+            AllChatDataModel.userNumberIdPM = number
+            homeActivityPresenter.getUserDataOnLogin(number)
+            homeActivityPresenter.getPersonalChatsFromFirestore()
+        }
 
 
-
-        setSupportActionBar(toolbar)
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
         mSectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
 
         // Set up the ViewPager with the sections adapter.
@@ -106,11 +104,11 @@ class HomeActivity : AppCompatActivity()
 
         container.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabs))
         tabs.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(container))
+        setSupportActionBar(toolbar)
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }
+        // Create the adapter that will return a fragment for each of the three
+        // primary sections of the activity.
+
         Log.d("MobileOnCreate" , UserProfileData.UserNumber)
     }
 
@@ -128,9 +126,9 @@ class HomeActivity : AppCompatActivity()
     override fun onStart() {
     super.onStart()
         AllChatDataModel.personalChatList.clear()
-       Log.d("FinalDebug1"," homeActivityPresenter.getPersonalChatsFromFirestore called")
-
-
+        homeActivityPresenter.getPersonalChatsFromFirestore()
+        AllChatDataModel.userNumberIdPM = UserProfileData.UserNumber
+       Log.d("FinalDebug1"," homeActivityPresenter.getPersonalChatsFromFirestore called with ${AllChatDataModel.userNumberIdPM}")
     }
 
 
@@ -157,24 +155,28 @@ class HomeActivity : AppCompatActivity()
             R.id.action_signOut -> {
 
                 FirebaseAuth.getInstance().signOut()
+                PreferenceManager.getDefaultSharedPreferences(applicationContext).edit().putString("CurrentUserNumber" , "").apply()
+                UserProfileData.clearData()
                 startActivity(Intent(this@HomeActivity , LoginActivity::class.java))
+                return true
+            }
+
+            R.id.action_newPersonalChat -> {
+                Log.d("AllChatNumber" , AllChatDataModel.userNumberIdPM)
+                startActivity(Intent(this@HomeActivity,NewPersonalChatActivity::class.java))
+                return true
+            }
+
+
+            R.id.action_newGroupChat -> {
+                Log.d("AllChatNumber" , AllChatDataModel.userNumberIdPM)
+                startActivity(Intent(this@HomeActivity,NewGroupChatActivity::class.java))
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
         }
-        else if (id==R.id.action_newPersonalChat)
-        {
-           startActivity(Intent(this@HomeActivity,NewPersonalChatActivity::class.java))
-            return true
-        }
-        else if (id==R.id.action_newGroupChat)
-        {
-            startActivity(Intent(this@HomeActivity,NewGroupChatActivity::class.java))
-            return true
         }
 
-
-    }
 
 
     /**
@@ -220,6 +222,7 @@ class HomeActivity : AppCompatActivity()
         var preferances : SharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         preferances.getString("CurrentUserNumber" , "123456789")
         Log.d("MobileNumberPrefer" , preferances.getString("CurrentUserNumber" , "123456789"))
+        fragment!!.view!!.ProgressBarStatus.visibility = View.VISIBLE
         if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
             //val thumbnail: Bitmap = data!!.getParcelableExtra("data")
             val fullPhotoUri: Uri? = data!!.data
@@ -229,4 +232,18 @@ class HomeActivity : AppCompatActivity()
         }
     }
 
+    override fun onResume() {
+        AllChatDataModel.upadateFragmentChatFirstTime=1
+        Log.d("Debug" , "On Resume of main activity called with user ${UserProfileData.UserNumber}")
+        homeActivityPresenter.getPersonalChatsFromFirestore()
+        Log.d("Checking" , UserProfileData.UserNumber+"   " + AllChatDataModel.userNumberIdPM)
+        /*var number = PreferenceManager.getDefaultSharedPreferences(applicationContext).getString("currentUserNumber" , "123456789")
+        AllChatDataModel.userNumberIdPM = number
+        Log.d("HomeActivity" , "Else enterd in auth.getIstance $number")
+        homeActivityPresenter.getUserDataOnLogin(number)
+        homeActivityPresenter.getPersonalChatsFromFirestore()*/
+        super.onResume()
+    }
+
 }
+

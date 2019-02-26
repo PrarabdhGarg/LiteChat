@@ -6,20 +6,9 @@
     android:layout_height="match_parent"
     tools:context=".view.activities.NewGroupChatActivity">
 
-    <Button
-        android:id="@+id/buttong"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="108dp"
-        android:layout_marginEnd="194dp"
-        android:layout_marginRight="194dp"
-        android:text="Button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/num3" />
-
     <EditText
         android:id="@+id/num1"
-        android:layout_width="wrap_content"
+        android:layout_width="286dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="75dp"
         android:layout_marginEnd="113dp"
@@ -30,29 +19,24 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/num2"
+    <Button
+        android:id="@+id/buttong"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"
-        android:layout_marginEnd="113dp"
-        android:layout_marginRight="113dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
+        android:layout_marginTop="187dp"
+        android:layout_marginEnd="183dp"
+        android:layout_marginRight="183dp"
+        android:text="Button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/num1" />
+        app:layout_constraintTop_toBottomOf="@+id/recyclerView2" />
 
-    <EditText
-        android:id="@+id/num3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="39dp"
-        android:layout_marginEnd="114dp"
-        android:layout_marginRight="114dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView2"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/num2" />
+        app:layout_constraintTop_toBottomOf="@+id/num1">
+
+    </android.support.v7.widget.RecyclerView>
 </android.support.constraint.ConstraintLayout>

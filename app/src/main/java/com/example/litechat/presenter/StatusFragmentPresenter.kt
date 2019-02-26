@@ -7,6 +7,7 @@ import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import com.bumptech.glide.Glide
 import com.example.litechat.contracts.StatusContract
 import com.example.litechat.model.DataRetriveClass
 import com.example.litechat.model.UserDataModel
@@ -58,7 +59,11 @@ class StatusFragmentPresenter(view : StatusContract.View) : StatusContract.Statu
         var path = uri
         mStorageRef.child(UserProfileData.UserNumber).child("StatusImage").putFile(path)
             .addOnSuccessListener {
-                UserProfileData.UserCurrentActivity = mStorageRef.child(UserProfileData.UserNumber).child("StatusImage").downloadUrl.toString()
+                mStorageRef.child(UserProfileData.UserNumber).child("StatusImage").downloadUrl.addOnSuccessListener {
+                    UserProfileData.UserImage = it.toString()
+                    Log.d("ProfileImage" , UserProfileData.UserImage)
+                    FirebaseFirestore.getInstance().collection("Users").document(UserProfileData.UserNumber).update("image" , UserProfileData.UserImage)
+                }
                 Toast.makeText(currentView.getCurrentContext() , "Upload Successful" , Toast.LENGTH_SHORT).show()
                 currentView.setStatusImageView(path.toString())
         }
@@ -69,7 +74,7 @@ class StatusFragmentPresenter(view : StatusContract.View) : StatusContract.Statu
     }
 
     override fun getInfoForRecyclerView() {
-        DataRetriveClass().getCurrentActivitiesOfOtherUsers(this)
+        DataRetriveClass().getCurrentActivitiesOfOtherUsers(this , currentView!!.getCurrentContext())
     }
 
     override fun onStatusDataRecived(map: ArrayList<Pair<String, String>>) {

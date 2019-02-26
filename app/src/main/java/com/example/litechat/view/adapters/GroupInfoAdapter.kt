@@ -9,9 +9,9 @@ import android.widget.TextView
 import com.example.litechat.R
 import kotlinx.android.synthetic.main.group_member_name.view.*
 
-class GroupInfoAdapter(var memlist:List<String>): RecyclerView.Adapter<GroupInfoAdapter.GroupInfoHolder>() {
-    inner class GroupInfoHolder(val view: View):RecyclerView.ViewHolder(view){
-        internal var memName: TextView = view.findViewById(R.id.memberName);
+class GroupInfoAdapter(var memlist:ArrayList<String>): RecyclerView.Adapter<GroupInfoAdapter.GroupInfoHolder>() {
+   class GroupInfoHolder(val view: View):RecyclerView.ViewHolder(view){
+         var memName: TextView = view.findViewById(R.id.memberName);
     }
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): GroupInfoHolder {
         val view:View=LayoutInflater.from(p0.context).inflate(R.layout.group_member_name,p0,false)
@@ -19,13 +19,10 @@ class GroupInfoAdapter(var memlist:List<String>): RecyclerView.Adapter<GroupInfo
     }
 
     override fun getItemCount(): Int {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return memlist.size
     }
 
     override fun onBindViewHolder(p0: GroupInfoHolder, p1: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+       p0.memName.setText(memlist.get(p1))
     }
-
-
-
 }

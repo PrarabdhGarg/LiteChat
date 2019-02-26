@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
 
     
     
@@ -18,12 +19,12 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="GoogleAppIndexingWarning">
-
         <activity android:name=".view.activities.NewGroupChatActivity"></activity>
         <activity android:name=".view.activities.ActivityChooseProfile" />
         <activity android:name=".view.activities.NewPersonalChatActivity" />
         <activity android:name=".view.activities.ChatActivity" />
         <activity android:name=".view.activities.GroupInfoActivity" />
+      
       <activity android:name=".view.activities.ProfileActivity">
         </activity>
         
@@ -47,5 +48,4 @@
             </intent-filter>
         </activity>
     </application>
-
 </manifest>

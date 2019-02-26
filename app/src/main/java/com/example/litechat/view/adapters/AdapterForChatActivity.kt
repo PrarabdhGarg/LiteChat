@@ -1,5 +1,7 @@
 package com.example.litechat.view.adapters
 
+import android.arch.persistence.room.Room
+import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,11 +10,16 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.example.litechat.R
 import com.example.litechat.model.AllChatDataModel
+import com.example.litechat.model.ContactListModel
 import com.example.litechat.model.MessageModel
+import com.example.litechat.model.UserProfileData
+import com.example.litechat.model.contactsRoom.AppDatabse
+import java.lang.Exception
 
-class AdapterForChatActivity(private var dataset:ArrayList<MessageModel>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class AdapterForChatActivity(private var dataset:ArrayList<MessageModel>,private var context:Context): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     class MyViewHolderMe(val view: View): RecyclerView.ViewHolder(view){
+
 
         var myName:TextView=view.findViewById(R.id.myName)
         var myMessage:TextView=view.findViewById(R.id.myMessage)
@@ -32,8 +39,6 @@ class AdapterForChatActivity(private var dataset:ArrayList<MessageModel>): Recyc
         if(dataset[position].sentBy.equals(AllChatDataModel.userNumberIdPM))
 
         {
-
-
             return 0
         }
         else{
@@ -71,17 +76,22 @@ class AdapterForChatActivity(private var dataset:ArrayList<MessageModel>): Recyc
         return dataset.size
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) =
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if(holder.itemViewType==0) {
             Log.d("Position",position.toString())
-             var holderMe: MyViewHolderMe= holder as MyViewHolderMe
-              holderMe.myMessage.text=(dataset[position].message)
-              holderMe.myName.text=(AllChatDataModel.userNumberIdPM)
+            var holderMe: MyViewHolderMe= holder as MyViewHolderMe
+            holderMe.myMessage.text=(dataset[position].message)
+            holderMe.myName.text=(UserProfileData.UserName)
         }
         else
         {   Log.d("Positione",position.toString())
             var holderYou: MyViewHolderYou=holder as MyViewHolderYou
             holderYou.youMessage.text=(dataset[position].message)
-            holderYou.youName.text=(dataset[position].sentBy)
+            holderYou.youName.text=(ContactListModel().roomGetName(context , dataset[position].sentBy.toString()))
+            Log.e("NumberCheck" ,dataset[position].sentBy.toString())
         }
+    }
+
+
 }
