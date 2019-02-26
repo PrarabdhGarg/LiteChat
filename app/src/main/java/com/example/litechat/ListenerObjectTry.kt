@@ -5,6 +5,7 @@ class ListenerObjectTry {
     interface Listener {
         fun onDataRecieved(number : String, chatDocumentId: String, lastUpdated:String)
 
+
     }
 
     var listener: Listener? = null
