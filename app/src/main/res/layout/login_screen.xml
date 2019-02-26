@@ -17,8 +17,7 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:visibility="invisible"
-            android:indeterminate="true"
-    />
+            android:indeterminate="true"/>
 
     <Button
             android:text="Continue"
@@ -37,6 +36,7 @@
             app:layout_constraintRight_toRightOf="parent"
             android:id="@+id/editTextNewNumber"
             android:hint="Enter PhoneNumber"
+            android:maxLength="10"
             android:textAlignment="center"
             android:inputType="phone"
             app:layout_constraintTop_toTopOf="parent"
@@ -47,6 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="invisible"
+            android:maxLength="256"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             android:id="@+id/editTextName"

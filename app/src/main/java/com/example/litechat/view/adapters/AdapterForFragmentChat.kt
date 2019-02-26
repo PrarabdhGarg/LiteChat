@@ -58,13 +58,16 @@ class AdapterForFragmentChat(private var dataset :ArrayList<ChatObject>, private
         holder.textView.setOnClickListener(object : View.OnClickListener{
 
             override fun onClick(v: View?) {
+                Log.d("AllChatNumber" , AllChatDataModel.userNumberIdPM)
                   // change with number
                 /***
                  *
                  * change listner to pass chat id
                  */
-                var t : ArrayList<ChatObject> = AllChatDataModel.personalChatList
+                var t = ArrayList<ChatObject>()
+                t.addAll(AllChatDataModel.personalChatList)
                 var i = AllChatDataModel.personalChatList.indexOf(dataset[position])
+                Log.d("Debug13" , i.toString())
                 if(i>=0)
                     t.removeAt(i)
                 AllChatDataModel.personalChatList.addAll(t)

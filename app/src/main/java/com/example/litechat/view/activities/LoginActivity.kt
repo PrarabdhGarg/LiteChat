@@ -13,11 +13,11 @@ import android.view.WindowManager
 import android.widget.Toast
 import com.example.litechat.R
 import com.example.litechat.contracts.LoginContract
+import com.example.litechat.model.AllChatDataModel
 import com.example.litechat.model.UserProfileData
 import com.example.litechat.presenter.LoginActivityPresenter
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.auth.User
 import kotlinx.android.synthetic.main.login_screen.*
 
 class LoginActivity : AppCompatActivity() , LoginContract.LoginView
@@ -42,6 +42,7 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
         ProgressBar!!.visibility=View.INVISIBLE
 
         loginButton.setOnClickListener {
+            AllChatDataModel.upadateFragmentChatFirstTime=1
             when {
                 editTextName.visibility == View.VISIBLE -> {
                     if (editTextName.text.isEmpty())

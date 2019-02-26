@@ -125,11 +125,11 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
         //chatNamesForFragment.clear()
         //chatNamesForFragment.addAll(AllChatDataModel.personalChatList)
         /*AllChatDataModel.personalChatList.clear()*/
-     //   Log.d("FinalDebug10", "upadte all start chatfor size${chatNamesForFragment.last()}")
+        //Log.d("FinalDebug10", "upadte all start chatfor size${chatNamesForFragment.last()}")
         //chatNamesForFragment.add(chatNamesForFragment.last())
-if(chatNamesForFragment.size==0){
-    chatNamesForFragment.addAll(AllChatDataModel.personalChatList)
-}
+        if(chatNamesForFragment.size==0){
+            chatNamesForFragment.addAll(AllChatDataModel.personalChatList)
+        }
         adapterForFragmentChat!!.notifyDataSetChanged()
 
     }
@@ -139,6 +139,7 @@ if(chatNamesForFragment.size==0){
         chatNamesForFragment.clear()
         chatNamesForFragment.addAll(AllChatDataModel.personalChatList)
         AllChatDataModel.personalChatList.clear()
+        Log.d("Debug 13" , AllChatDataModel.personalChatList.size.toString())
         adapterForFragmentChat!!.notifyDataSetChanged()
 
     }

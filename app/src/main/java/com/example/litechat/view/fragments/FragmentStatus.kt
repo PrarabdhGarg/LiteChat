@@ -18,6 +18,7 @@ import android.net.Uri
 import android.text.Editable
 import android.text.style.LineHeightSpan
 import android.util.Log
+import android.view.WindowManager
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.example.litechat.R
@@ -102,6 +103,7 @@ class FragmentStatus: Fragment() , StatusContract.View{
 
     override fun setStatusImageView(path: String) {
         view!!.statusImageView.setImageURI(Uri.parse(path))
+        view!!.ProgressBarStatus.visibility = View.INVISIBLE
     }
 
 }

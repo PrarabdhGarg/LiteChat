@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.util.Log
+import android.view.View
+import android.view.WindowManager
 import com.bumptech.glide.Glide
 import com.example.litechat.R
 import com.example.litechat.model.UserProfileData
@@ -29,6 +31,7 @@ class ProfileActivity : AppCompatActivity() {
         setContentView(R.layout.activity_profile)
         AboutTextView.text = UserProfileData.UserAbout.toString()
         NameTextView.text = UserProfileData.UserName.toString()
+        Glide.with(applicationContext).load(R.drawable.profile).into(ProfileImageView)
         Glide.with(applicationContext).load(UserProfileData.UserProfileImage).into(ProfileImageView)
 
         ProfileImageButtonChange.setOnClickListener {
@@ -44,6 +47,11 @@ class ProfileActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         var preferances : SharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         preferances.getString("CurrentUserNumber" , "123456789")
+        ProgressBarProfile.isIndeterminate
+        ProgressBarProfile.visibility = View.VISIBLE
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
         Log.d("MobileNumberPrefer" , preferances.getString("CurrentUserNumber" , "123456789"))
         if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
             //val thumbnail: Bitmap = data!!.getParcelableExtra("data")
@@ -54,7 +62,7 @@ class ProfileActivity : AppCompatActivity() {
             ref!!.child(UserProfileData.UserNumber).child("ProfileImage").putFile(fullPhotoUri!!)
                 .addOnSuccessListener {
                     Log.d("Firebase Storage" , "Image uploaded sucessfully")
-
+                    Glide.with(applicationContext).load(fullPhotoUri).into(ProfileImageView)
                     updateProfileImageOnDatabse()
 
                 }
@@ -77,9 +85,13 @@ class ProfileActivity : AppCompatActivity() {
 
     fun updateProfileImageOnDatabse()
     {
+        ref!!.child(UserProfileData.UserNumber).child("ProfileImage").downloadUrl.addOnSuccessListener {
+            UserProfileData.UserProfileImage = it.toString()
+        }
+        Log.d("FirebaseStorage" , "${UserProfileData.UserProfileImage}")
         FirebaseFirestore.getInstance().collection("Users").document(UserProfileData.UserNumber).update("profileImage" , UserProfileData.UserProfileImage)
-        UserProfileData.UserProfileImage = ref!!.child(UserProfileData.UserNumber).child("ProfileImage").downloadUrl.toString()
-        Glide.with(applicationContext).load(UserProfileData.UserProfileImage).into(ProfileImageView)
+        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+        ProgressBarProfile.visibility = View.INVISIBLE
     }
 
 }
