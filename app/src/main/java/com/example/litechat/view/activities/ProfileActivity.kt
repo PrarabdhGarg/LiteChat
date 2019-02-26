@@ -31,8 +31,7 @@ class ProfileActivity : AppCompatActivity() {
         setContentView(R.layout.activity_profile)
         AboutTextView.text = UserProfileData.UserAbout.toString()
         NameTextView.text = UserProfileData.UserName.toString()
-        Glide.with(applicationContext).load(R.drawable.profile).into(ProfileImageView)
-        Glide.with(applicationContext).load(UserProfileData.UserProfileImage).into(ProfileImageView)
+        Glide.with(applicationContext).load(UserProfileData.UserProfileImage).into(ProfileImageView).onLoadStarted(getDrawable(R.drawable.profile))
 
         ProfileImageButtonChange.setOnClickListener {
             val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
@@ -87,9 +86,9 @@ class ProfileActivity : AppCompatActivity() {
     {
         ref!!.child(UserProfileData.UserNumber).child("ProfileImage").downloadUrl.addOnSuccessListener {
             UserProfileData.UserProfileImage = it.toString()
+            FirebaseFirestore.getInstance().collection("Users").document(UserProfileData.UserNumber).update("profileImage" , UserProfileData.UserProfileImage)
         }
         Log.d("FirebaseStorage" , "${UserProfileData.UserProfileImage}")
-        FirebaseFirestore.getInstance().collection("Users").document(UserProfileData.UserNumber).update("profileImage" , UserProfileData.UserProfileImage)
         window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
         ProgressBarProfile.visibility = View.INVISIBLE
     }

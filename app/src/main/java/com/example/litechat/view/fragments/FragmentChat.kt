@@ -83,7 +83,7 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         Log.d("ViewPager" , "onCreate of FragmentChat called")
-
+        AllChatDataModel.upadateFragmentChatFirstTime = 1
         super.onCreate(savedInstanceState)
     }
 
@@ -153,5 +153,7 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
         Log.d("ViewPager" , "onDestroyView of FragmentChat called")
         super.onDestroyView()
     }
+
+
 
 }

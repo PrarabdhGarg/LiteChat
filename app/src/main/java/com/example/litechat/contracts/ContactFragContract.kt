@@ -11,6 +11,7 @@ interface ContactFragContract {
         fun getFirebaseData()
         fun roomGetData(applicationContext: Context): List<User>
         fun roomSetData(applicationContext: Context, userList: List<User>)
+        fun roomDeleteData(applicationContext: Context)
     }
 
 

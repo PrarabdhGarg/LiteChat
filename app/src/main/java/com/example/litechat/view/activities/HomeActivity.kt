@@ -76,7 +76,7 @@ class HomeActivity : AppCompatActivity(),HomeActivityContract.View
         setContentView(R.layout.activity_home)
        homeActivityPresenter = HomeActivityPresenter(applicationContext , this)
 
-       
+       AllChatDataModel.upadateFragmentChatFirstTime = 1
         ContentResolverData.contentResolverPassed = contentResolver
        // If user is already logged in, no need to open the LoginActivity again
 
@@ -89,6 +89,8 @@ class HomeActivity : AppCompatActivity(),HomeActivityContract.View
 
             var number = PreferenceManager.getDefaultSharedPreferences(applicationContext).getString("currentUserNumber" , "123456789")
             Log.d("HomeActivity" , "Else enterd in auth.getIstance $number")
+            UserProfileData.UserNumber = number
+            AllChatDataModel.userNumberIdPM = number
             homeActivityPresenter.getUserDataOnLogin(number)
             homeActivityPresenter.getPersonalChatsFromFirestore()
         }
@@ -128,6 +130,7 @@ class HomeActivity : AppCompatActivity(),HomeActivityContract.View
     override fun onStart() {
     super.onStart()
         AllChatDataModel.personalChatList.clear()
+        homeActivityPresenter.getPersonalChatsFromFirestore()
         AllChatDataModel.userNumberIdPM = UserProfileData.UserNumber
        Log.d("FinalDebug1"," homeActivityPresenter.getPersonalChatsFromFirestore called with ${AllChatDataModel.userNumberIdPM}")
     }
@@ -237,6 +240,7 @@ class HomeActivity : AppCompatActivity(),HomeActivityContract.View
         AllChatDataModel.upadateFragmentChatFirstTime=1
         Log.d("Debug" , "On Resume of main activity called with user ${UserProfileData.UserNumber}")
         homeActivityPresenter.getPersonalChatsFromFirestore()
+        Log.d("Checking" , UserProfileData.UserNumber+"   " + AllChatDataModel.userNumberIdPM)
         /*var number = PreferenceManager.getDefaultSharedPreferences(applicationContext).getString("currentUserNumber" , "123456789")
         AllChatDataModel.userNumberIdPM = number
         Log.d("HomeActivity" , "Else enterd in auth.getIstance $number")

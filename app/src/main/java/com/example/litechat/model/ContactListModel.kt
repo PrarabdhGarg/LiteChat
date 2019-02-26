@@ -7,6 +7,11 @@ import com.example.litechat.model.contactsRoom.AppDatabse
 import com.example.litechat.model.contactsRoom.User
 
 class ContactListModel: ContactFragContract.Model{
+    override fun roomDeleteData(applicationContext: Context) {
+        val db = Room.databaseBuilder(applicationContext, AppDatabse::class.java, "Contact_Database")
+            .allowMainThreadQueries().build()
+        db.userDao().deleteAllData()
+    }
 
     override fun roomSetData(applicationContext: Context, userList: List<User>) {
         val db = Room.databaseBuilder(applicationContext, AppDatabse::class.java, "Contact_Database")

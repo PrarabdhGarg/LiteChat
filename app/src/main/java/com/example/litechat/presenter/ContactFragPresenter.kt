@@ -20,6 +20,8 @@ class ContactFragPresenter(viewPassed: ContactFragContract.View, contextPassed: 
 
     override fun getContacts() {
 
+
+
         val cursor1 = ContentResolverData.contentResolverPassed.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null)
         if (cursor1?.count ?: 0 > 0){
 
@@ -38,9 +40,10 @@ class ContactFragPresenter(viewPassed: ContactFragContract.View, contextPassed: 
 
                         val number = cursor2.getString(cursor2.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
                         val num = number.replace("[^0-9]".toRegex(),"")
-                        val userItem = User(num, name)
+                        val numb = num.takeLast(10)
+                        val userItem = User(numb, name)
+                        Log.d("ContactsAddition" , userItem.toString())
                         ContactDataModel.contactList.add(userItem)
-
                     }
                     cursor2.close()
                 }
@@ -84,6 +87,7 @@ class ContactFragPresenter(viewPassed: ContactFragContract.View, contextPassed: 
                 }
             }
         }
+        model.roomDeleteData(context)
         model.roomSetData(context, ContactDataModel.contactAndUser)
     }
 
