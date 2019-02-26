@@ -5,7 +5,8 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".view.activities.ChatActivity">
+        tools:context=".view.activities.ChatActivity"
+android:background="@drawable/pm_gradient">
 
     <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"
@@ -14,7 +15,6 @@
             app:layoutManager="android.support.v7.widget.LinearLayoutManager"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-
             android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toTopOf="@+id/editTextSend"/>
 
@@ -32,18 +32,21 @@
             app:layout_constraintEnd_toStartOf="@+id/buttonSend"
             android:layout_marginRight="8dp"
             app:layout_constraintHorizontal_bias="0.0"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            android:layout_marginBottom="12dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="@drawable/text_shape"/>
 
-    <Button
+    <ImageButton
             android:id="@+id/buttonSend"
-            android:layout_width="105dp"
+            android:layout_width="66dp"
             android:layout_height="50dp"
             android:text="Send"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="4dp"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"/>
+            android:layout_marginRight="8dp"
+            android:background="@drawable/send_button"
+            android:src="@drawable/ic_send_button_icon"/>
 
 </android.support.constraint.ConstraintLayout>
