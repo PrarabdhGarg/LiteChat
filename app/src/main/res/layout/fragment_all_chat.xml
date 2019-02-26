@@ -21,16 +21,27 @@
             android:id="@+id/chatName" android:layout_marginTop="8dp"
             app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toEndOf="@+id/profileImage"
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp" android:layout_marginRight="8dp"/>
-    <ImageView
+    <!--<ImageView
             android:layout_width="52dp"
             android:layout_height="match_parent"
             tools:srcCompat="@drawable/ic_checked"
             android:id="@+id/imageViewGreenDot"
-            android:visibility="invisible"
+            android:visibility="visible"
             android:layout_marginTop="8dp"
-            app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="@+id/chatName"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/chatName"
             android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"/>
+            android:layout_marginRight="8dp"/>-->
+
+    <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                  android:id="@+id/greenDot"
+                                                  android:layout_width="64dp"
+                                                  android:layout_height="match_parent"
+                                                  android:src="@drawable/ic_checked"
+                                                  android:visibility="invisible"
+                                                  app:civ_border_color="#FF000000"
+                                                  app:civ_border_width="2dp"
+                                                  app:layout_constraintStart_toStartOf="parent" />
 
 
 </android.support.constraint.ConstraintLayout>

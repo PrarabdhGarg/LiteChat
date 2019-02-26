@@ -72,11 +72,11 @@ class HomeActivity : AppCompatActivity(),HomeActivityContract.View
 
     lateinit var homeActivityPresenter: HomeActivityPresenter
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.e("FinalCheck" , "OnCreateCalled")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
        homeActivityPresenter = HomeActivityPresenter(applicationContext , this)
-
-       AllChatDataModel.upadateFragmentChatFirstTime = 1
+        AllChatDataModel.isPresenterCalled = true
         ContentResolverData.contentResolverPassed = contentResolver
        // If user is already logged in, no need to open the LoginActivity again
 
@@ -89,6 +89,7 @@ class HomeActivity : AppCompatActivity(),HomeActivityContract.View
 
             var number = PreferenceManager.getDefaultSharedPreferences(applicationContext).getString("currentUserNumber" , "123456789")
             Log.d("HomeActivity" , "Else enterd in auth.getIstance $number")
+            //AllChatDataModel.upadateFragmentChatFirstTime = 1
             UserProfileData.UserNumber = number
             AllChatDataModel.userNumberIdPM = number
             homeActivityPresenter.getUserDataOnLogin(number)
@@ -130,8 +131,11 @@ class HomeActivity : AppCompatActivity(),HomeActivityContract.View
 
     override fun onStart() {
     super.onStart()
+        Log.e("FinalCheck" , "OnStartCalled")
         AllChatDataModel.personalChatList.clear()
-        homeActivityPresenter.getPersonalChatsFromFirestore()
+        if (!AllChatDataModel.isPresenterCalled) {
+            homeActivityPresenter.getPersonalChatsFromFirestore()
+        }
         AllChatDataModel.userNumberIdPM = UserProfileData.UserNumber
        Log.d("FinalDebug1"," homeActivityPresenter.getPersonalChatsFromFirestore called with ${AllChatDataModel.userNumberIdPM}")
     }
@@ -239,14 +243,12 @@ class HomeActivity : AppCompatActivity(),HomeActivityContract.View
 
     override fun onResume() {
         AllChatDataModel.upadateFragmentChatFirstTime=1
+        Log.e("FinalCheck" , "onResumeCalled")
         Log.d("Debug" , "On Resume of main activity called with user ${UserProfileData.UserNumber}")
-        homeActivityPresenter.getPersonalChatsFromFirestore()
+        /*if (!AllChatDataModel.isPresenterCalled) {
+            homeActivityPresenter.getPersonalChatsFromFirestore()
+        }*/
         Log.d("Checking" , UserProfileData.UserNumber+"   " + AllChatDataModel.userNumberIdPM)
-        /*var number = PreferenceManager.getDefaultSharedPreferences(applicationContext).getString("currentUserNumber" , "123456789")
-        AllChatDataModel.userNumberIdPM = number
-        Log.d("HomeActivity" , "Else enterd in auth.getIstance $number")
-        homeActivityPresenter.getUserDataOnLogin(number)
-        homeActivityPresenter.getPersonalChatsFromFirestore()*/
         super.onResume()
     }
 
