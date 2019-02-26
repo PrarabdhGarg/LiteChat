@@ -14,6 +14,7 @@ class AdapterForChatActivity(private var dataset:ArrayList<MessageModel>): Recyc
 
     class MyViewHolderMe(val view: View): RecyclerView.ViewHolder(view){
 
+
         var myName:TextView=view.findViewById(R.id.myName)
         var myMessage:TextView=view.findViewById(R.id.myMessage)
 
@@ -32,8 +33,6 @@ class AdapterForChatActivity(private var dataset:ArrayList<MessageModel>): Recyc
         if(dataset[position].sentBy.equals(AllChatDataModel.userNumberIdPM))
 
         {
-
-
             return 0
         }
         else{
@@ -70,6 +69,7 @@ class AdapterForChatActivity(private var dataset:ArrayList<MessageModel>): Recyc
 
         return dataset.size
     }
+
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) =
         if(holder.itemViewType==0) {

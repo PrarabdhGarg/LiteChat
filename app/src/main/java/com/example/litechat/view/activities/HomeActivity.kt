@@ -37,6 +37,15 @@ import java.util.ArrayList
 
 class HomeActivity : AppCompatActivity(),HomeActivityContract.View
 {
+    override fun passContext(): Context = applicationContext
+
+    override fun isChatFragmentActive(): Boolean {
+        return  chatFragmentActive
+    }
+
+    override fun getInstanceOfFragmentChat(): FragmentChat {
+        return fragmentChat1!!
+    }
 
 
     //function to pass contentResolver to HomeActivityPresenter
@@ -64,7 +73,6 @@ class HomeActivity : AppCompatActivity(),HomeActivityContract.View
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
        homeActivityPresenter = HomeActivityPresenter(applicationContext , this)
-
 
        
         ContentResolverData.contentResolverPassed = contentResolver
@@ -155,14 +163,15 @@ class HomeActivity : AppCompatActivity(),HomeActivityContract.View
                 return true
             }
 
+
             R.id.action_newGroupChat -> {
                 startActivity(Intent(this@HomeActivity,NewGroupChatActivity::class.java))
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
         }
+        }
 
-    }
 
 
     /**
@@ -186,10 +195,10 @@ class HomeActivity : AppCompatActivity(),HomeActivityContract.View
                     return fragmentContact}
 
 
-                2   ->{ val fragmentStatus= FragmentStatus()
-                    chatFragmentActive=false
-                    fragment = fragmentStatus
-                    return fragmentStatus }
+//                2   ->{ val fragmentStatus= FragmentStatus()
+//                    chatFragmentActive=false
+//                    fragment = fragmentStatus
+//                    return fragmentStatus }
 
             }
 
@@ -201,20 +210,6 @@ class HomeActivity : AppCompatActivity(),HomeActivityContract.View
             return 3
         }
     }
-
-    override fun getInstanceOfFragmentChat(): FragmentChat {
-        return fragmentChat1!!
-    }
-
-    override fun isChatFragmentActive(): Boolean {
-        return  chatFragmentActive
-    }
-    //function to pass context to HomeActivityPresenter
-
-    override fun passContext(): Context = applicationContext
-
-
-
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
     {
