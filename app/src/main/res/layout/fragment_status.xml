@@ -1,9 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
                                              xmlns:app="http://schemas.android.com/apk/res-auto"
-                                             android:background="@drawable/status_gradient"
+                                             android:background="@drawable/contact_gradient"
                                              xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent">
 
+    <com.nightonke.boommenu.BoomMenuButton
+            android:id="@+id/bmbStatus"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            app:bmb_buttonEnum="ham"
+            app:bmb_boomEnum="boomRandom"
+            app:bmb_piecePlaceEnum="piecePlace_ham_4"
+            app:bmb_buttonPlaceEnum="buttonPlace_ham_4"
+            app:bmb_normalColor="#222F4B"
+            app:bmb_draggable="true"
+            android:layout_marginBottom="100dp" app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginEnd="24dp" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginRight="24dp"
+    />
     <View
             android:layout_width="match_parent"
             android:layout_height="111dp"
@@ -64,6 +78,7 @@
             android:layout_height="86dp"
             android:layout_margin="16dp"
             android:baseline="@dimen/activity_horizontal_margin"
+            app:bmb_draggable="true"
             app:layout_constraintLeft_toLeftOf="@id/view3"
             app:layout_constraintTop_toTopOf="@id/view3"
             android:src="@drawable/prarabdh"
@@ -101,19 +116,5 @@
             app:layout_constraintBottom_toBottomOf="@+id/view4"
             app:layout_constraintEnd_toEndOf="@+id/view4" android:layout_marginStart="8dp"
             app:layout_constraintStart_toStartOf="@+id/view4" android:layout_marginLeft="8dp"/>
-
-    <com.nightonke.boommenu.BoomMenuButton
-            android:id="@+id/bmbStatus"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            app:bmb_buttonEnum="ham"
-            app:bmb_boomEnum="boomRandom"
-            app:bmb_piecePlaceEnum="piecePlace_ham_4"
-            app:bmb_buttonPlaceEnum="buttonPlace_ham_4"
-            app:bmb_normalColor="#2C2352"
-            android:layout_marginBottom="100dp" app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginEnd="24dp" app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginRight="24dp"
-    />
 
 </android.support.constraint.ConstraintLayout>

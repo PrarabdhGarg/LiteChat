@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-android:background="@drawable/chat_gradient">
+android:background="@drawable/status_gradient">
 
     <com.nightonke.boommenu.BoomMenuButton
             android:id="@+id/bmbChat"
@@ -15,6 +15,7 @@ android:background="@drawable/chat_gradient">
             app:bmb_piecePlaceEnum="piecePlace_ham_4"
             app:bmb_buttonPlaceEnum="buttonPlace_ham_4"
             app:bmb_normalColor="#2C1738"
+            app:bmb_draggable="true"
             android:visibility="visible" android:layout_marginEnd="32dp"
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginRight="32dp"
             android:layout_marginBottom="100dp"
@@ -25,9 +26,9 @@ android:background="@drawable/chat_gradient">
             android:id="@+id/view2"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="24dp" app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="24dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="24dp"
-            android:layout_marginRight="24dp" app:layout_constraintStart_toStartOf="parent"
-            android:background="@drawable/rounded" android:layout_marginLeft="24dp" android:layout_marginStart="24dp"/>
+            android:layout_marginBottom="24dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp" app:layout_constraintStart_toStartOf="parent"
+            android:background="@drawable/rounded" android:layout_marginLeft="16dp" android:layout_marginStart="16dp"/>
 
 
     <android.support.v7.widget.RecyclerView
@@ -39,8 +40,8 @@ android:background="@drawable/chat_gradient">
             app:layoutManager="android.support.v7.widget.LinearLayoutManager"
             app:layout_constraintTop_toTopOf="@+id/view2" app:layout_constraintBottom_toBottomOf="@+id/view2"
             app:layout_constraintEnd_toEndOf="@+id/view2" app:layout_constraintStart_toStartOf="@+id/view2"
-            android:layout_marginTop="16dp" android:layout_marginLeft="8dp" android:layout_marginStart="8dp"
-            android:layout_marginBottom="16dp" android:layout_marginEnd="8dp" android:layout_marginRight="8dp">
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
     </android.support.v7.widget.RecyclerView>
 
 </android.support.constraint.ConstraintLayout>

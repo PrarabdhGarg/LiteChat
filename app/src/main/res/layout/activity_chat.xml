@@ -15,6 +15,15 @@ android:background="@drawable/pm_gradient">
               app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
               android:textSize="24sp" tools:text="Group Name" android:textColor="#FFFFFF" android:textAllCaps="false"
     />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="62dp"
+            android:layout_height="62dp"
+            android:id="@+id/imageViewOtherPerson"
+            app:layout_constraintTop_toTopOf="@+id/textViewOtherUser"
+            app:layout_constraintStart_toStartOf="@+id/textViewOtherUser" android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp" tools:src="@drawable/suyash"
+            app:layout_constraintBottom_toBottomOf="@+id/textViewOtherUser" android:layout_marginTop="8dp"/>
     <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
@@ -23,7 +32,7 @@ android:background="@drawable/pm_gradient">
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toTopOf="@+id/editTextSend"
-            app:layout_constraintTop_toBottomOf="@+id/textViewOtherUser"/>
+            app:layout_constraintTop_toBottomOf="@+id/textViewOtherUser" android:layout_marginTop="16dp"/>
 
     <EditText
             android:id="@+id/editTextSend"
@@ -32,6 +41,7 @@ android:background="@drawable/pm_gradient">
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
             android:ems="10"
+            android:padding="10dp"
             android:inputType="textPersonName"
             android:hint="Enter your message here"
             app:layout_constraintStart_toStartOf="parent"
@@ -45,11 +55,11 @@ android:background="@drawable/pm_gradient">
 
     <ImageButton
             android:id="@+id/buttonSend"
-            android:layout_width="66dp"
-            android:layout_height="50dp"
+            android:layout_width="77dp"
+            android:layout_height="48dp"
             android:text="Send"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="4dp"
+            android:layout_marginBottom="9dp"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"

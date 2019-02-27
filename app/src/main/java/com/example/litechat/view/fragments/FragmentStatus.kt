@@ -90,6 +90,7 @@ class FragmentStatus: Fragment() , StatusContract.View{
         val text = arrayOf("PROFILE", "NEW GROUP", "DEVELOPERS", "LOGOUT")
         val bmbListener = arrayOf(bmbListener1, bmbListener2, bmbListener3, bmbListener4)
         view.bmbStatus.bringToFront()
+
         for(i in 0 until view.bmbStatus.buttonPlaceEnum.buttonNumber()){
 
             val builder: HamButton.Builder = HamButton.Builder()
