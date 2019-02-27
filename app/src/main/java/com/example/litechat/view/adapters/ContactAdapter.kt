@@ -12,7 +12,9 @@ import com.bumptech.glide.Glide
 import com.example.litechat.R
 import com.example.litechat.listeners.CallListenerObject
 import com.example.litechat.model.ContactListData
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.auth.User
+import com.google.firebase.storage.FirebaseStorage
 import de.hdodenhof.circleimageview.CircleImageView
 
 class ContactAdapter(private val callListenerObject1: CallListenerObject, private val callListenerObject2: CallListenerObject, private val context: Context, private val contacts: ArrayList<com.example.litechat.model.contactsRoom.User>): RecyclerView.Adapter<ContactAdapter.ContactHolder>(){
@@ -36,7 +38,11 @@ class ContactAdapter(private val callListenerObject1: CallListenerObject, privat
     override fun onBindViewHolder(holder: ContactHolder, position: Int) {
 
         holder.names.text = ContactListData.contacts[position].name
-        Glide.with(context).load(R.drawable.suyash).into(holder.img)
+        FirebaseStorage.getInstance().reference.child(ContactListData.contacts[position].mobileNumber).child("ProfileImage").downloadUrl.addOnSuccessListener {
+
+            Glide.with(context).load(it).into(holder.img)
+        }
+
         holder.names.setOnClickListener {
 
             ContactListData.userTapped = ContactListData.contacts[position]
