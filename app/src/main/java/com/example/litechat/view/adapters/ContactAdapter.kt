@@ -12,9 +12,10 @@ import com.bumptech.glide.Glide
 import com.example.litechat.R
 import com.example.litechat.listeners.CallListenerObject
 import com.example.litechat.model.ContactListData
+import com.google.firebase.firestore.auth.User
 import de.hdodenhof.circleimageview.CircleImageView
 
-class ContactAdapter(private val callListenerObject1: CallListenerObject, private val callListenerObject2: CallListenerObject, private val context: Context): RecyclerView.Adapter<ContactAdapter.ContactHolder>(){
+class ContactAdapter(private val callListenerObject1: CallListenerObject, private val callListenerObject2: CallListenerObject, private val context: Context, private val contacts: ArrayList<com.example.litechat.model.contactsRoom.User>): RecyclerView.Adapter<ContactAdapter.ContactHolder>(){
 
     inner class ContactHolder(view: View) : RecyclerView.ViewHolder(view){
 
@@ -39,12 +40,12 @@ class ContactAdapter(private val callListenerObject1: CallListenerObject, privat
         holder.names.setOnClickListener {
 
             ContactListData.userTapped = ContactListData.contacts[position]
-            callListenerObject2.callListener!!.startCallIntent(ContactListData.contacts[position].mobileNumber)
+            callListenerObject2.callListener!!.startCallIntent(contacts[position].mobileNumber)
 
         }
         holder.call.setOnClickListener {
 
-            callListenerObject1.callListener!!.startCallIntent(ContactListData.contacts[position].mobileNumber)
+            callListenerObject1.callListener!!.startCallIntent(contacts[position].mobileNumber)
 
         }
     }

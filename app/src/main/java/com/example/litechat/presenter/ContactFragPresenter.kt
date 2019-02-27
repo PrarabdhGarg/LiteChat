@@ -8,6 +8,7 @@ import android.support.annotation.RequiresApi
 import android.util.Log
 import android.view.View
 import com.example.litechat.contracts.ContactFragContract
+import com.example.litechat.listeners.BoomListener
 import com.example.litechat.listeners.CallListenerObject
 import com.example.litechat.model.*
 import com.example.litechat.model.contactsRoom.AppDatabse
@@ -22,9 +23,7 @@ class ContactFragPresenter(viewPassed: ContactFragContract.View, contextPassed: 
     private val context = contextPassed
 
 
-    override fun getContacts() {
-
-
+    override fun getContacts(adapterListener: BoomListener) {
 
         val cursor1 = ContentResolverData.contentResolverPassed.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null)
         if (cursor1?.count ?: 0 > 0){
@@ -40,52 +39,57 @@ class ContactFragPresenter(viewPassed: ContactFragContract.View, contextPassed: 
                         ContactsContract.CommonDataKinds.Phone.CONTENT_URI,null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
                         arrayOf(id),null)
 
+                    var userItem: User? = null
                     while (cursor2!!.moveToNext()){
 
                         val number = cursor2.getString(cursor2.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
                         val num = number.replace("[^0-9]".toRegex(),"")
                         val numb = num.takeLast(10)
-                        val userItem = User(numb, name)
-                        Log.d("ContactsAddition" , userItem.toString())
 
-                        ContactDataModel.contactList.add(userItem)
+                        if (ContactDataModel.contactList.find { it.mobileNumber.equals(numb)} == null)
+                        {
+                            userItem = User(numb, name)
+                            Log.d("ContactsAddition" , userItem.toString())
+                            ContactDataModel.contactList.add(userItem)
+                        }
+
                     }
                     cursor2.close()
                 }
             }
         }
         cursor1?.close()
-        getUsers()
-
+        getUsers(adapterListener)
     }
 
     override fun passUserList(): List<User> {
         return model.roomGetData(context)
     }
 
-    override fun getUsers() {
+    override fun getUsers(adapterListener: BoomListener) {
 
         val database = FirebaseFirestore.getInstance()
         database.collection("Users").get().addOnSuccessListener { result ->
 
             for ( document in result){
-
                 ContactDataModel.usersList.add(document.id)
-
             }
-
-            compareUserContact()
+            Log.d("ContactThread","Comparison Starts")
+            compareUserContact(adapterListener)
+            Log.d("ContactThread","Comparison Stops")
         }
     }
 
 
-    private fun compareUserContact() {
+    override fun compareUserContact(adapterListener: BoomListener) {
 
+        Log.d("ContactThread","Comparison Invoked")
+        //model.roomDeleteData(context)
         for (user in ContactDataModel.usersList){
 
             for (contact in ContactDataModel.contactList){
 
-                if (contact.mobileNumber == user /*||  contact.mobileNumber == "0$user" || contact.mobileNumber == "91$user"*/ ){
+                if (contact.mobileNumber == user  ){
                     ContactDataModel.contactAndUser.add(contact)
                     Log.d("contact", contact.mobileNumber + contact.name)
                     break
@@ -94,6 +98,8 @@ class ContactFragPresenter(viewPassed: ContactFragContract.View, contextPassed: 
         }
         model.roomDeleteData(context)
         model.roomSetData(context, ContactDataModel.contactAndUser)
+        Log.d("ContactThread","Listener Called")
+        adapterListener.listener!!.doThis()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
