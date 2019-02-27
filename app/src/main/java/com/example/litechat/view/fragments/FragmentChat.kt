@@ -145,7 +145,8 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
 
                 if(numeric)
                 {   //  to show contact name of person chatting with
-                    var intent = Intent(context,ProfileActivity(number)::class.java)
+                    var intent = Intent(context,ProfileOtherUser::class.java)
+                    intent.putExtra("number" , number)
                     startActivity(intent)
                 }
                 else
@@ -220,6 +221,7 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
             chatNamesForFragment.addAll(AllChatDataModel.personalChatList)
         }
         adapterForFragmentChat!!.notifyDataSetChanged()
+        AllChatDataModel.isPresenterCalled = false
 
     }
 
