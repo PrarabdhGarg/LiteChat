@@ -76,6 +76,7 @@ class ContactFragPresenter(viewPassed: ContactFragContract.View, contextPassed: 
 
             compareUserContact()
         }
+        model.roomDeleteData(context)
     }
 
 
@@ -92,7 +93,7 @@ class ContactFragPresenter(viewPassed: ContactFragContract.View, contextPassed: 
                 }
             }
         }
-        model.roomDeleteData(context)
+
         model.roomSetData(context, ContactDataModel.contactAndUser)
     }
 

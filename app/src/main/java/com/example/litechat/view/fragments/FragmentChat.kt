@@ -217,9 +217,9 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
         /*AllChatDataModel.personalChatList.clear()*/
         //Log.d("FinalDebug10", "upadte all start chatfor size${chatNamesForFragment.last()}")
         //chatNamesForFragment.add(chatNamesForFragment.last())
-        if(chatNamesForFragment.size==0){
+        /*if(chatNamesForFragment.size==0){
             chatNamesForFragment.addAll(AllChatDataModel.personalChatList)
-        }
+        }*/
         adapterForFragmentChat!!.notifyDataSetChanged()
         AllChatDataModel.isPresenterCalled = false
 

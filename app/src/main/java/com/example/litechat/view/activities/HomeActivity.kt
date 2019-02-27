@@ -82,8 +82,8 @@ class HomeActivity : AppCompatActivity(),HomeActivityContract.View
         Log.e("FinalCheck" , "OnCreateCalled")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
-       homeActivityPresenter = HomeActivityPresenter(applicationContext , this)
-        AllChatDataModel.isPresenterCalled = true
+        homeActivityPresenter = HomeActivityPresenter(applicationContext , this)
+
         ContentResolverData.contentResolverPassed = contentResolver
        // If user is already logged in, no need to open the LoginActivity again
 
@@ -100,7 +100,12 @@ class HomeActivity : AppCompatActivity(),HomeActivityContract.View
             UserProfileData.UserNumber = number
             AllChatDataModel.userNumberIdPM = number
             homeActivityPresenter.getUserDataOnLogin(number)
-            homeActivityPresenter.getPersonalChatsFromFirestore()
+            if (!AllChatDataModel.isPresenterCalled) {
+                homeActivityPresenter.getPersonalChatsFromFirestore()
+                AllChatDataModel.isPresenterCalled = true
+            }else{
+                AllChatDataModel.isPresenterCalled = false
+            }
         }
 
 
@@ -135,6 +140,7 @@ class HomeActivity : AppCompatActivity(),HomeActivityContract.View
         AllChatDataModel.personalChatList.clear()
         if (!AllChatDataModel.isPresenterCalled) {
             homeActivityPresenter.getPersonalChatsFromFirestore()
+            AllChatDataModel.isPresenterCalled = true
         }
         AllChatDataModel.userNumberIdPM = UserProfileData.UserNumber
        Log.d("FinalDebug1"," homeActivityPresenter.getPersonalChatsFromFirestore called with ${AllChatDataModel.userNumberIdPM}")
@@ -245,9 +251,9 @@ class HomeActivity : AppCompatActivity(),HomeActivityContract.View
         AllChatDataModel.upadateFragmentChatFirstTime=1
         Log.e("FinalCheck" , "onResumeCalled")
         Log.d("Debug" , "On Resume of main activity called with user ${UserProfileData.UserNumber}")
-        /*if (!AllChatDataModel.isPresenterCalled) {
+        if (!AllChatDataModel.isPresenterCalled) {
             homeActivityPresenter.getPersonalChatsFromFirestore()
-        }*/
+        }
         Log.d("Checking" , UserProfileData.UserNumber+"   " + AllChatDataModel.userNumberIdPM)
         super.onResume()
     }

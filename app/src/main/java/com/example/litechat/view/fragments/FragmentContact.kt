@@ -70,7 +70,6 @@ class FragmentContact : Fragment(), ContactFragContract.View {
             super.onPostExecute(result)
             ContactListData.contacts = contactPresenter.passUserList() as ArrayList<User>
             activitySet.runOnUiThread {
-
                 viewAdapter.notifyDataSetChanged()
             }
         }
@@ -80,6 +79,8 @@ class FragmentContact : Fragment(), ContactFragContract.View {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val view = inflater.inflate(R.layout.fragment_contact, container, false)
+
+        Log.e("ViewPager" , "OnCreateViewCalled")
 
         val bmbListener1 = BoomListener()
         bmbListener1.setCustomObjectListener(object: BoomListener.Boom{
@@ -200,12 +201,12 @@ class FragmentContact : Fragment(), ContactFragContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        Log.e("ViewPager" , "OnCreateCalled")
 
     }
     override fun onStart() {
         super.onStart()
-
+        Log.e("ViewPager" , "OnStartCalled")
         activitySet = activity!!
         if (ContextCompat.checkSelfPermission(
                 context!!,
@@ -246,8 +247,24 @@ class FragmentContact : Fragment(), ContactFragContract.View {
     }
 
     override fun onDestroy() {
+        Log.e("ViewPager" , "OnDestroyCalled")
         task.cancel(true)
         super.onDestroy()
+    }
+
+    override fun onResume() {
+        Log.e("ViewPager" , "OnResumeCalled")
+        super.onResume()
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        Log.e("ViewPager" , "OnActivityCreatedCalled")
+        super.onActivityCreated(savedInstanceState)
+    }
+
+    override fun onPause() {
+        Log.e("ViewPager" , "OnActivityCreatedCalled")
+        super.onPause()
     }
 
 

@@ -49,7 +49,7 @@ class AdapterForFragmentChat(private var dataset :ArrayList<ChatObject>, private
 
         holder.textView.text = dataset[position].otherNumber
         Log.d("QueryF",dataset[position].otherNumber+ " \n" +position.toString())
-
+        Glide.with(context).load(R.drawable.profile).into(holder.imageView)
         Log.d("FinalDebug11","AllChatDataModel.personalChatList.size:${AllChatDataModel.personalChatList.size}\n${AllChatDataModel.personalChatList.contains(dataset[position])}")
         if ((AllChatDataModel.personalChatList.size!=0 && (AllChatDataModel.personalChatList.find { it.chatDocumentId==dataset[position].chatDocumentId }!=null)) || holder.imageView.drawable == context.getDrawable(R.drawable.ic_checked))
         {
@@ -59,7 +59,7 @@ class AdapterForFragmentChat(private var dataset :ArrayList<ChatObject>, private
             holder.greenDot.bringToFront()*/
            Glide.with(context).load(R.drawable.ic_checked).into(holder.imageView)
         }
-        Glide.with(context).load(R.drawable.profile).into(holder.imageView)
+
         holder.textView.setOnClickListener(object : View.OnClickListener{
 
             override fun onClick(v: View?) {
