@@ -5,29 +5,66 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".view.activities.GroupInfoActivity">
+        tools:context=".view.activities.GroupInfoActivity"
+        android:background="#000">
 
+    <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:id="@+id/view7" app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp" android:layout_marginBottom="16dp" android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:background="@drawable/rounded" android:layout_marginTop="16dp"/>
     <ImageView
-        android:id="@+id/groupImage"
-        android:layout_width="wrap_content"
-        android:layout_height="274dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/backgrounds/scenic" />
+            android:id="@+id/groupImage"
+            android:layout_width="0dp"
+            android:layout_height="360dp"
+            android:scaleType="fitXY"
+            app:layout_constraintEnd_toEndOf="@id/view7"
+            app:layout_constraintTop_toTopOf="@id/view7"
+            app:layout_constraintStart_toStartOf="@+id/view7" tools:srcCompat="@drawable/akshat"/>
 
     <TextView
-        android:id="@+id/groupName"
-        android:layout_width="match_parent"
-        android:layout_height="59dp"
-        android:gravity="center"
-        android:padding="16dp"
-        android:text="Group Name"
-        android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/groupImage" />
+            android:id="@+id/groupName"
+            android:layout_width="0dp"
+            android:layout_height="59dp"
+            android:gravity="center"
+            android:padding="16dp"
+            android:text="Group Name"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="@id/view7"
+            app:layout_constraintTop_toBottomOf="@+id/groupImage" app:layout_constraintEnd_toEndOf="@+id/view7"
+            android:layout_marginTop="8dp"/>
+
+    <ImageButton
+            android:layout_width="56dp"
+            android:id="@+id/groupImageButtonChange"
+            android:background="#0000ffff"
+            android:scaleType="fitXY"
+            android:layout_height="56dp" android:src="@drawable/ic_picture"
+            android:layout_marginStart="28dp" app:layout_constraintStart_toStartOf="@+id/groupName"
+            android:layout_marginLeft="28dp" android:layout_marginTop="8dp"
+            app:layout_constraintTop_toTopOf="@+id/guideline"
+    />
+
+
     <android.support.v7.widget.RecyclerView
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="0dp"
+            android:id="@+id/recyclerViewGroupinfo"
             app:layout_constraintTop_toBottomOf="@+id/groupName"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+            app:layout_constraintStart_toStartOf="@id/view7" app:layout_constraintEnd_toEndOf="@+id/groupName"
+            android:layout_marginEnd="8dp" android:layout_marginRight="8dp" android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/view7" android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp" android:layout_marginTop="8dp"
+            tools:listitem="@layout/group_member_name"/>
+    <android.support.constraint.Guideline
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" app:layout_constraintGuide_begin="332dp" android:id="@+id/guideline"
+    />
+
 </android.support.constraint.ConstraintLayout>

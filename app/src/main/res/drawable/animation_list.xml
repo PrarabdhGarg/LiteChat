@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:drawable="@drawable/login_gradient1"
+        android:duration="70"/>
+
+    <item
+            android:drawable="@drawable/login_gradient2"
+            android:duration="70"/>
+
+    <item
+            android:drawable="@drawable/login_gradient3"
+            android:duration="70"/>
+
+    <item
+            android:drawable="@drawable/login_gradient4"
+            android:duration="70"/>
+
+    <item
+            android:drawable="@drawable/login_gradient5"
+            android:duration="70"/>
+
+    <item
+            android:drawable="@drawable/login_gradient6"
+            android:duration="70"/>
+
+    <item
+            android:drawable="@drawable/login_gradient7"
+            android:duration="70"/>
+
+    <item
+            android:drawable="@drawable/login_gradient8"
+            android:duration="70"/>
+
+    <item
+            android:drawable="@drawable/login_gradient9"
+            android:duration="70"/>
+
+    <item
+            android:drawable="@drawable/login_gradient10"
+            android:duration="70"/>
+
+    <item
+            android:drawable="@drawable/login_gradient11"
+            android:duration="70"/>
+
+    <item
+            android:drawable="@drawable/login_gradient12"
+            android:duration="70"/>
+
+    <item
+            android:drawable="@drawable/login_gradient13"
+            android:duration="70"/>
+
+    <item
+            android:drawable="@drawable/login_gradient14"
+            android:duration="70"/>
+
+    <item
+            android:drawable="@drawable/login_gradient15"
+            android:duration="70"/>
+
+    <item
+            android:drawable="@drawable/login_gradient16"
+            android:duration="70"/>
+
+    <item
+            android:drawable="@drawable/login_gradient17"
+            android:duration="70"/>
+
+    <item
+            android:drawable="@drawable/login_gradient18"
+            android:duration="70"/>
+
+    <item
+            android:drawable="@drawable/login_gradient19"
+            android:duration="70"/>
+
+    <item
+            android:drawable="@drawable/login_gradient20"
+            android:duration="70"/>
+
+</animation-list>

@@ -71,9 +71,10 @@ class LoginActivityPresenter (loginView : LoginContract.LoginView): LoginContrac
     override fun addUserToFirebase(number : String, id : String, name : String)
     {
         val database = FirebaseFirestore.getInstance()
-        val user = UserDataModel(Id = id , Name = name , Number = number , About = UserProfileData.UserAbout)
+        val user = UserDataModel(Name = name , Number = number , About = UserProfileData.UserAbout)
         UserProfileData.UserName = name
         UserProfileData.UserNumber = number
+        AllChatDataModel.userNumberIdPM =  number
         database.collection("Users").document(number).set(user)
     }
 
@@ -165,4 +166,5 @@ class LoginActivityPresenter (loginView : LoginContract.LoginView): LoginContrac
                 loginActivity.onLoginError()
             }
     }
+
 }

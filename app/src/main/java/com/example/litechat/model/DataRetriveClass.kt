@@ -2,12 +2,14 @@ package com.example.litechat.model
 
 import android.content.Context
 import android.util.Log
-import com.google.firebase.firestore.DocumentChange
-import com.google.firebase.firestore.EventListener
-import android.widget.Toast
 import com.example.litechat.contracts.HomeActivityContract
-import com.example.litechat.presenter.HomeActivityPresenter
 import com.example.litechat.presenter.StatusFragmentPresenter
+import com.google.firebase.firestore.*
+
+import android.widget.Toast
+
+import com.example.litechat.presenter.HomeActivityPresenter
+
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.MetadataChanges
 import com.google.firebase.firestore.QuerySnapshot
@@ -15,8 +17,6 @@ import com.google.firebase.firestore.QuerySnapshot
 class DataRetriveClass : HomeActivityContract.Model{
 
     private val db = FirebaseFirestore.getInstance()
-    
-
     /**
      * This class should not be used currently as the structure of firestore is not yet finalized.
      */
@@ -92,7 +92,7 @@ class DataRetriveClass : HomeActivityContract.Model{
                     Log.d("Run3","passNewMessagetoPrentercallled")
 
                     if(AllChatDataModel.flagPersonalChat) {
-                        AllChatDataModel.flagPersonalChat=false
+                        AllChatDataModel.flagPersonalChat=true
                         Log.d("FinalDebug5", " persona presenter.sortPersonalChatList() ${AllChatDataModel.personalChatList.size}")
                         presenter.sortPersonalChatList()
 
@@ -102,17 +102,19 @@ class DataRetriveClass : HomeActivityContract.Model{
     }
 
 
-    override fun getCurrentActivitiesOfOtherUsers(presenter: StatusFragmentPresenter) {
+    override fun getCurrentActivitiesOfOtherUsers(presenter: StatusFragmentPresenter, context: Context) {
         var maps = ArrayList<Pair<String , String>>()
+        var model = ContactListModel()
         FirebaseFirestore.getInstance().collection("Users").get()
             .addOnSuccessListener { documents ->
                 for (document in documents) {
                     if (document.id == UserProfileData.UserNumber)
                         continue
-                    maps.add(Pair(document.data.getValue("name").toString() , document.data.get("profileImage").toString()))
+                    maps.add(Pair(model.roomGetName(context , document.data.get("number").toString()) , document.data.get("profileImage").toString()))
                     //Log.d("Status" , "${maps[i].first} =>  ${maps[i].second}")
                 }
                 presenter.onStatusDataRecived(maps)
             }
     }
+
 }

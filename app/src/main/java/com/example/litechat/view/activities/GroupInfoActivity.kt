@@ -10,12 +10,12 @@ import com.example.litechat.R
 import com.example.litechat.model.NewDocumentCreate
 import com.example.litechat.view.adapters.GroupInfoAdapter
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.android.synthetic.main.activity_group_info.*
 
 class GroupInfoActivity : AppCompatActivity() {
-    private lateinit var adapter: RecyclerView.Adapter<*>
-    private lateinit var viewManager: RecyclerView.LayoutManager
-    private lateinit var nmemlist:ArrayList<String>
+
+    private  var nmemlist= ArrayList<String>()
     var data=FirebaseFirestore.getInstance()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,7 +27,8 @@ class GroupInfoActivity : AppCompatActivity() {
             nmemlist=obj!!.groupmembers
             groupName.setText(obj!!.groupname)
         }
-        viewManager=LinearLayoutManager(applicationContext)
-        adapter=GroupInfoAdapter(nmemlist);
+          var adapter = GroupInfoAdapter(nmemlist)
+        recyclerViewGroupinfo.adapter=adapter
     }
 }
+

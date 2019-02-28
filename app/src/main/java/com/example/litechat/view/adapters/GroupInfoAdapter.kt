@@ -25,7 +25,4 @@ class GroupInfoAdapter(var memlist:ArrayList<String>): RecyclerView.Adapter<Grou
     override fun onBindViewHolder(p0: GroupInfoHolder, p1: Int) {
        p0.memName.setText(memlist.get(p1))
     }
-
-
-
 }
