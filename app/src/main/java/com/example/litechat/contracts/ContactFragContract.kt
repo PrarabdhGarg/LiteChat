@@ -1,6 +1,7 @@
 package com.example.litechat.contracts
 
 import android.content.Context
+import com.example.litechat.listeners.BoomListener
 import com.example.litechat.listeners.CallListenerObject
 import com.example.litechat.model.ChatObject
 import com.example.litechat.model.contactsRoom.User
@@ -21,8 +22,9 @@ interface ContactFragContract {
 
     interface Presenter{
 
-        fun getContacts()
-        fun getUsers()
+        fun getContacts(adapterListener: BoomListener)
+        fun getUsers(adapterListener: BoomListener)
+        fun compareUserContact(adapterListener: BoomListener)
         fun passUserList(): List<User>
         fun startNewChatFromContact(number:String)
         fun passDataForChatActivity(chatObject: ChatObject)

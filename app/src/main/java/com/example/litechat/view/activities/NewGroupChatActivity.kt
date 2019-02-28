@@ -64,22 +64,25 @@ class NewGroupChatActivity : AppCompatActivity() {
                                     group.lastUpdated = timeStamp.toString()
                                     group.chatDocumentId = doc.id
                                     group.otherNumber = groupName
+                                    group.lastSeen = timeStamp.toString()
                                     Log.d("check", group.toString())
                                     database.collection("Users").document(AllChatDataModel.groupNumbers[i])
-                                        .collection("currentPersonalChats").document().set(group)
+                                        .collection("currentChats").document().set(group)
                                 }
 
                                 var me = ChatObject()
                                 me.lastUpdated = timeStamp.toString()
                                 me.chatDocumentId = doc.id
                                 me.otherNumber = groupName
+                                me.lastSeen = timeStamp.toString()
                                 database.collection("Users").document(AllChatDataModel.userNumberIdPM)
-                                    .collection("currentPersonalChats").document().set(me)
+                                    .collection("currentChats").document().set(me)
                                     .addOnSuccessListener { result ->
                                         var intent = Intent(this@NewGroupChatActivity, ChatActivity::class.java)
                                         intent.putExtra("documentPathId", me.chatDocumentId)
                                         intent.putExtra("string", me.otherNumber)
                                         intent.putExtra("lastUpdated", me.lastUpdated)
+                                        intent.putExtra("lastSeen" , me.toString())
                                         startActivity(intent)
 
                                         finish()

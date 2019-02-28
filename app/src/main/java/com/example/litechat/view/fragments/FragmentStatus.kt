@@ -27,6 +27,7 @@ import com.bumptech.glide.Glide
 import com.example.litechat.R
 import com.example.litechat.contracts.StatusContract
 import com.example.litechat.listeners.BoomListener
+import com.example.litechat.model.AllChatDataModel
 import com.example.litechat.model.ContactListModel
 import com.example.litechat.model.UserDataModel
 import com.example.litechat.model.UserProfileData
@@ -53,6 +54,7 @@ class FragmentStatus: Fragment() , StatusContract.View{
         val bmbListener1 = BoomListener()
         bmbListener1.setCustomObjectListener(object: BoomListener.Boom{
             override fun doThis() {
+                //AllChatDataModel.upadateFragmentChatFirstTime = 1
                 startActivity(Intent(activity, ProfileActivity::class.java))
             }
 
@@ -61,6 +63,7 @@ class FragmentStatus: Fragment() , StatusContract.View{
         val bmbListener2 = BoomListener()
         bmbListener2.setCustomObjectListener(object: BoomListener.Boom{
             override fun doThis() {
+                //AllChatDataModel.upadateFragmentChatFirstTime = 1
                 startActivity(Intent(activity, NewGroupChatActivity::class.java))
             }
 
@@ -69,7 +72,7 @@ class FragmentStatus: Fragment() , StatusContract.View{
         val bmbListener3 = BoomListener()
         bmbListener3.setCustomObjectListener(object: BoomListener.Boom{
             override fun doThis() {
-
+                //AllChatDataModel.upadateFragmentChatFirstTime = 1
                 startActivity(Intent(activity, DeveloperActivity::class.java))
             }
 
@@ -78,6 +81,7 @@ class FragmentStatus: Fragment() , StatusContract.View{
         val bmbListener4 = BoomListener()
         bmbListener4.setCustomObjectListener(object: BoomListener.Boom{
             override fun doThis() {
+                //AllChatDataModel.upadateFragmentChatFirstTime = 1
                 FirebaseAuth.getInstance().signOut()
                 PreferenceManager.getDefaultSharedPreferences(context).edit().putString("CurrentUserNumber" , "").apply()
                 UserProfileData.clearData()

@@ -51,7 +51,7 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
         loginButton.setOnClickListener {
 
             animationDrawable.start()
-            AllChatDataModel.upadateFragmentChatFirstTime=1
+            //AllChatDataModel.upadateFragmentChatFirstTime=1
             when {
                 editTextName.visibility == View.VISIBLE -> {
                     if (editTextName.text.isEmpty())

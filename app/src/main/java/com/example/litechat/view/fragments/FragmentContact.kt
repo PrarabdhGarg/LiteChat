@@ -27,6 +27,7 @@ import com.example.litechat.R
 import com.example.litechat.contracts.ContactFragContract
 import com.example.litechat.listeners.BoomListener
 import com.example.litechat.listeners.CallListenerObject
+import com.example.litechat.model.AllChatDataModel
 import com.example.litechat.model.ChatObject
 import com.example.litechat.model.ContactListData
 import com.example.litechat.model.UserProfileData
@@ -42,11 +43,12 @@ import java.util.ArrayList
 
 class FragmentContact : Fragment(), ContactFragContract.View {
 
-    private lateinit var viewManager: RecyclerView.LayoutManager
-    private lateinit var viewAdapter: RecyclerView.Adapter<*>
     lateinit var contactPresenter: ContactFragPresenter
     lateinit var activitySet: FragmentActivity
     lateinit var task : AsyncTask<Void , Void , Void>
+    private var dataSet = ArrayList<User>()
+    lateinit var adapterListener: BoomListener
+
 
     override fun startChatActivity(chatObject: ChatObject) {
         var intent = Intent(context, ChatActivity::class.java)
@@ -57,21 +59,13 @@ class FragmentContact : Fragment(), ContactFragContract.View {
     }
 
 
-    inner class getingContacts(val contactPresenter: ContactFragPresenter) : AsyncTask<Void, Void, Void>() {
+    inner class getingContacts(val contactPresenter: ContactFragPresenter, val adapter: BoomListener) : AsyncTask<Void, Void, Void>() {
 
         override fun doInBackground(vararg params: Void?): Void? {
 
-                contactPresenter.getContacts()
+                contactPresenter.getContacts(adapter)
                 ContactListData.contacts = contactPresenter.passUserList() as ArrayList<User>
             return null
-        }
-
-        override fun onPostExecute(result: Void?) {
-            super.onPostExecute(result)
-            ContactListData.contacts = contactPresenter.passUserList() as ArrayList<User>
-            activitySet.runOnUiThread {
-                viewAdapter.notifyDataSetChanged()
-            }
         }
 
     }
@@ -80,11 +74,18 @@ class FragmentContact : Fragment(), ContactFragContract.View {
 
         val view = inflater.inflate(R.layout.fragment_contact, container, false)
 
-        Log.e("ViewPager" , "OnCreateViewCalled")
+
+        contactPresenter = ContactFragPresenter(this, context!!)
+
+        ContactListData.contacts = contactPresenter.passUserList() as ArrayList<User>
+
+
+
 
         val bmbListener1 = BoomListener()
         bmbListener1.setCustomObjectListener(object: BoomListener.Boom{
             override fun doThis() {
+                //AllChatDataModel.upadateFragmentChatFirstTime = 1
                 startActivity(Intent(activity, ProfileActivity::class.java))
             }
 
@@ -93,6 +94,7 @@ class FragmentContact : Fragment(), ContactFragContract.View {
         val bmbListener2 = BoomListener()
         bmbListener2.setCustomObjectListener(object: BoomListener.Boom{
             override fun doThis() {
+                //AllChatDataModel.upadateFragmentChatFirstTime = 1
                 startActivity(Intent(activity, NewGroupChatActivity::class.java))
             }
 
@@ -101,7 +103,7 @@ class FragmentContact : Fragment(), ContactFragContract.View {
         val bmbListener3 = BoomListener()
         bmbListener3.setCustomObjectListener(object: BoomListener.Boom{
             override fun doThis() {
-
+                //AllChatDataModel.upadateFragmentChatFirstTime = 1
                 startActivity(Intent(activity, DeveloperActivity::class.java))
             }
 
@@ -110,6 +112,7 @@ class FragmentContact : Fragment(), ContactFragContract.View {
         val bmbListener4 = BoomListener()
         bmbListener4.setCustomObjectListener(object: BoomListener.Boom{
             override fun doThis() {
+                //AllChatDataModel.upadateFragmentChatFirstTime = 1
                 FirebaseAuth.getInstance().signOut()
                 PreferenceManager.getDefaultSharedPreferences(context).edit().putString("CurrentUserNumber" , "").apply()
                 UserProfileData.clearData()
@@ -142,11 +145,6 @@ class FragmentContact : Fragment(), ContactFragContract.View {
             view.bmbContact.addBuilder(builder)
         }
 
-        contactPresenter = ContactFragPresenter(this, context!!)
-
-        ContactListData.contacts = contactPresenter.passUserList() as ArrayList<User>
-
-
         val callingListener1 = CallListenerObject()
         callingListener1.setListener(object : CallListenerObject.CallListener {
 
@@ -164,37 +162,30 @@ class FragmentContact : Fragment(), ContactFragContract.View {
             @RequiresApi(Build.VERSION_CODES.O)
             override fun startCallIntent(number: String) {
 
-              contactPresenter.startNewChatFromContact(number)
+                contactPresenter.startNewChatFromContact(number)
                 Log.d("Context",context.toString())
 
             }
         })
 
-        viewManager = LinearLayoutManager(activity)
-        viewAdapter = ContactAdapter(callingListener1, callingListener2, context!!)
-        view!!.contactRecycler.apply {
+        adapterListener = BoomListener()
+        adapterListener.setCustomObjectListener(object: BoomListener.Boom{
+            override fun doThis() {
 
-            layoutManager = viewManager
-            adapter = viewAdapter
-        }
+                ContactListData.contacts = contactPresenter.passUserList() as ArrayList<User>
+                Log.d("ContactThread","In Listener")
+                dataSet.clear()
+                dataSet.addAll(ContactListData.contacts)
+                Log.d("ContactThread","${dataSet.size}")
+                view.contactRecycler.adapter!!.notifyDataSetChanged()
+            }
 
-/*
-        if (ContextCompat.checkSelfPermission(
-                context!!,
-                Manifest.permission.READ_CONTACTS
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
+        })
 
-           *//* if (contactPresenter.passUserList().isEmpty()) {
+        //viewAdapter = ContactAdapter(callingListener1, callingListener2, context!!, dataSet)
+        dataSet.addAll(ContactListData.contacts)
+        view.contactRecycler.adapter = ContactAdapter(callingListener1, callingListener2, context!!, dataSet)
 
-                contactPresenter.getContacts()
-
-            }*//*
-            //getingContacts(contactPresenter).execute()
-        }*/
-
-
-        //ContactListData.contacts = contactPresenter.passUserList() as ArrayList<User>
 
         return view
     }
@@ -208,48 +199,11 @@ class FragmentContact : Fragment(), ContactFragContract.View {
         super.onStart()
         Log.e("ViewPager" , "OnStartCalled")
         activitySet = activity!!
-        if (ContextCompat.checkSelfPermission(
-                context!!,
-                Manifest.permission.READ_CONTACTS
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-        task = getingContacts(contactPresenter).execute()
+        task = getingContacts(contactPresenter, adapterListener)
+        if ((ContextCompat.checkSelfPermission(context!!, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) && (task.status != AsyncTask.Status.RUNNING)){
+            task.execute()
         }
-//        val callingListener1 = CallListenerObject()
-//        callingListener1.setListener(object : CallListenerObject.CallListener {
-//
-//            override fun startCallIntent(number: String) {
-//
-//                val intent = Intent(Intent.ACTION_CALL)
-//                intent.data = Uri.parse("tel:$number")
-//                startActivity(intent)
-//            }
-//        })
-//
-//        val callingListener2 = CallListenerObject()
-//        callingListener2.setListener(object : CallListenerObject.CallListener {
-//
-//            override fun startCallIntent(number: String) {
-//
-//                startActivity(Intent(context, ChatActivity::class.java))
-//
-//            }
-//        })
-//
-//        viewManager = LinearLayoutManager(activity)
-//        viewAdapter = ContactAdapter(callingListener1, callingListener2, context!!)
-//        view!!.contactRecycler.apply {
-//
-//            layoutManager = viewManager
-//            adapter = viewAdapter
-//        }
 
-    }
-
-    override fun onDestroy() {
-        Log.e("ViewPager" , "OnDestroyCalled")
-        task.cancel(true)
-        super.onDestroy()
     }
 
     override fun onResume() {

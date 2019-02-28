@@ -26,7 +26,10 @@ import java.lang.Double.parseDouble
 import java.lang.NumberFormatException
 import java.time.Instant
 import android.support.v7.widget.RecyclerView
+import com.example.litechat.model.UserProfileData
 import com.example.litechat.model.contactsRoom.AppDatabse
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlin.math.log
 
 
 class ChatActivity : AppCompatActivity(), ChatContract.CView {
@@ -59,7 +62,14 @@ class ChatActivity : AppCompatActivity(), ChatContract.CView {
          AllChatDataModel.otherUserNumber = intent.getStringExtra("string")
          AllChatDataModel.documentPathId=intent.getStringExtra("documentPathId")
          AllChatDataModel.lastUpdated=intent.getStringExtra("lastUpdated")
-
+         var lastSeen = intent.getStringExtra("lastSeen")
+         //Log.e("LastSeen" , lastSeen)
+         FirebaseFirestore.getInstance().collection("Users").document(UserProfileData.UserNumber).collection("currentChats").whereEqualTo("chatDocumentId" , AllChatDataModel.documentPathId).get().addOnSuccessListener {
+             for (i in it)
+             {
+                 i.reference.update("lastSeen" , Instant.now().epochSecond.toString())
+             }
+         }
         try
         {
             val num = parseDouble(AllChatDataModel.otherUserNumber)

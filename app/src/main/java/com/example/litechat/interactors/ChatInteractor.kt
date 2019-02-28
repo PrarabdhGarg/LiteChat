@@ -30,19 +30,17 @@ class ChatInteractor(p1:ChatContract.CPresenter) : ChatContract.CInteractor {
         }
 
         // sets last updated to  both the users
-        database!!.collection("Users").document(AllChatDataModel.userNumberIdPM).collection("currentPersonalChats")
+        database!!.collection("Users").document(AllChatDataModel.userNumberIdPM).collection("currentChats")
             .whereEqualTo("otherNumber",AllChatDataModel.otherUserNumber).get().addOnSuccessListener { documents ->
 
-                if(documents!=null)
-                {
-                    for (doc in documents )
-                    {
-                        doc.reference.update("lastUpdated",messageModel.sentOn)
+                if(documents!=null) {
+                    for (doc in documents) {
+                        doc.reference.update("lastUpdated", messageModel.sentOn)
                     }
                 }
         }
 
-        database!!.collection("Users").document(AllChatDataModel.otherUserNumber).collection("currentPersonalChats")
+        database!!.collection("Users").document(AllChatDataModel.otherUserNumber).collection("currentChats")
             .whereEqualTo("otherNumber",AllChatDataModel.userNumberIdPM).get().addOnSuccessListener { documents ->
 
                 if(documents!=null)

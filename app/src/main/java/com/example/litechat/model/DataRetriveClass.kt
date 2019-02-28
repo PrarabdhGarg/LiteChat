@@ -33,7 +33,7 @@ class DataRetriveClass : HomeActivityContract.Model{
     override fun retrievePersonalChatDataFromFirestore(presenter: HomeActivityContract.Presenter) {
 
         Log.d("FinalDebug3","vf")
-        db.collection("Users").document(AllChatDataModel.userNumberIdPM).collection("currentPersonalChats")
+        db.collection("Users").document(AllChatDataModel.userNumberIdPM).collection("currentChats")
             .addSnapshotListener(
                 MetadataChanges.INCLUDE,
                 EventListener<QuerySnapshot>{ snap, e ->
@@ -56,8 +56,11 @@ class DataRetriveClass : HomeActivityContract.Model{
                                 objectChatPersonal.otherNumber=dc.document["otherNumber"].toString()
                                 objectChatPersonal.chatDocumentId=dc.document["chatDocumentId"].toString()
                                 objectChatPersonal.lastUpdated=dc.document["lastUpdated"].toString()
-
-                                AllChatDataModel.personalChatList.add(objectChatPersonal)
+                                objectChatPersonal.lastSeen = dc.document["lastSeen"].toString()
+                                if(AllChatDataModel.personalChatList.find { it.chatDocumentId == objectChatPersonal.chatDocumentId } == null)
+                                {
+                                    AllChatDataModel.personalChatList.add(objectChatPersonal)
+                                }
                                 Log.d("FinalDebug4","all upate in added with ${AllChatDataModel.personalChatList.size}")
                                 Log.d("FireStoreSnap",  dc.document["otherNumber"].toString())
                                 Log.d("HomeActivity","Size"+AllChatDataModel.personalChatList.size.toString())
@@ -71,8 +74,15 @@ class DataRetriveClass : HomeActivityContract.Model{
                                 objectChatPersonal.otherNumber=dc.document["otherNumber"].toString()
                                 objectChatPersonal.chatDocumentId=dc.document["chatDocumentId"].toString()
                                 objectChatPersonal.lastUpdated=dc.document["lastUpdated"].toString()
+                                objectChatPersonal.lastSeen = dc.document["lastSeen"].toString()
 
-                                AllChatDataModel.personalChatList.add(objectChatPersonal)
+                                if(AllChatDataModel.personalChatList.find { it.chatDocumentId == objectChatPersonal.chatDocumentId } == null)
+                                {
+                                    AllChatDataModel.personalChatList.add(objectChatPersonal)
+                                }
+                                else{
+                                    AllChatDataModel.personalChatList.set(AllChatDataModel.personalChatList.indexOf(AllChatDataModel.personalChatList.find { it.chatDocumentId == objectChatPersonal.chatDocumentId }) , objectChatPersonal)
+                                }
                                 Log.d("FinalDebug4","all upate${AllChatDataModel.personalChatList.size}")
                                 Log.d("FireStoreSnap",  dc.document["otherNumber"].toString())
                                 Log.d("HomeActivity","Size"+AllChatDataModel.personalChatList.size.toString())

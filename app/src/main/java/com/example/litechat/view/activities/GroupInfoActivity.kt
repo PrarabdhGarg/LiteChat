@@ -17,6 +17,7 @@ class GroupInfoActivity : AppCompatActivity() {
 
     private  var nmemlist= ArrayList<String>()
     var data=FirebaseFirestore.getInstance()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_group_info)
@@ -27,7 +28,7 @@ class GroupInfoActivity : AppCompatActivity() {
             nmemlist=obj!!.groupmembers
             groupName.setText(obj!!.groupname)
         }
-          var adapter = GroupInfoAdapter(nmemlist)
+        var adapter = GroupInfoAdapter(nmemlist)
         recyclerViewGroupinfo.adapter=adapter
     }
 }

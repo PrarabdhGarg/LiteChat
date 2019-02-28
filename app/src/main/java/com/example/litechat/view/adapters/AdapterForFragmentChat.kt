@@ -17,6 +17,7 @@ import com.example.litechat.R
 import com.example.litechat.model.AllChatDataModel
 import com.example.litechat.model.ChatObject
 import com.example.litechat.model.DataChatModel
+import java.time.Instant
 
 class AdapterForFragmentChat(private var dataset :ArrayList<ChatObject>, private var context: Context,
                              private var listenerObjectTryImage: ListenerObjectTry,private var listenerObjectTryChat: ListenerObjectTry): RecyclerView.Adapter<AdapterForFragmentChat.MyViewHolder>() {
@@ -51,13 +52,18 @@ class AdapterForFragmentChat(private var dataset :ArrayList<ChatObject>, private
         Log.d("QueryF",dataset[position].otherNumber+ " \n" +position.toString())
         Glide.with(context).load(R.drawable.profile).into(holder.imageView)
         Log.d("FinalDebug11","AllChatDataModel.personalChatList.size:${AllChatDataModel.personalChatList.size}\n${AllChatDataModel.personalChatList.contains(dataset[position])}")
-        if ((AllChatDataModel.personalChatList.size!=0 && (AllChatDataModel.personalChatList.find { it.chatDocumentId==dataset[position].chatDocumentId }!=null)) || holder.imageView.drawable == context.getDrawable(R.drawable.ic_checked))
+        /*if ((AllChatDataModel.personalChatList.size!=0 && (AllChatDataModel.personalChatList.find { it.chatDocumentId==dataset[position].chatDocumentId }!=null)) || holder.imageView.drawable == context.getDrawable(R.drawable.ic_checked))
         {
             //Log.e("FinalCheck" , "AdapterIf Condition called")
             Log.d("FinalDebuf12","AllChatDataModel.personalChatList.size:${AllChatDataModel.personalChatList.size}\n${AllChatDataModel.personalChatList.contains(dataset[position])}")
-            /*holder.greenDot.visibility=View.VISIBLE
-            holder.greenDot.bringToFront()*/
+            *//*holder.greenDot.visibility=View.VISIBLE
+            holder.greenDot.bringToFront()*//*
            Glide.with(context).load(R.drawable.ic_checked).into(holder.imageView)
+        }*/
+
+        if (AllChatDataModel.personalChatList.size!=0 && (AllChatDataModel.personalChatList.find { it.chatDocumentId==dataset[position].chatDocumentId }!=null) && AllChatDataModel.personalChatList.find { it.chatDocumentId == dataset[position].chatDocumentId }!!.lastSeen < Instant.now().epochSecond.toString() && AllChatDataModel.personalChatList.find { it.chatDocumentId == dataset[position].chatDocumentId }!!.lastSeen < AllChatDataModel.personalChatList.find { it.chatDocumentId == dataset[position].chatDocumentId }!!.lastUpdated)
+        {
+            Glide.with(context).load(R.drawable.ic_checked).into(holder.imageView)
         }
 
         holder.textView.setOnClickListener(object : View.OnClickListener{
@@ -69,13 +75,13 @@ class AdapterForFragmentChat(private var dataset :ArrayList<ChatObject>, private
                  *
                  * change listner to pass chat id
                  */
-                var t = ArrayList<ChatObject>()
+                /*var t = ArrayList<ChatObject>()
                 t.addAll(AllChatDataModel.personalChatList)
-                var i = AllChatDataModel.personalChatList.indexOf(dataset[position])
-                Log.d("Debug13" , i.toString())
-                if(i>=0)
+                var i = AllChatDataModel.personalChatList.indexOf(dataset[position])*/
+                //Log.d("Debug13" , i.toString())
+                /*if(i>=0)
                     t.removeAt(i)
-                AllChatDataModel.personalChatList.addAll(t)
+                AllChatDataModel.personalChatList.addAll(t)*/
                 Log.d("Debug13" , AllChatDataModel.personalChatList.size.toString())
                 Glide.with(context).load(R.drawable.profile).into(holder.imageView)
                //holder.greenDot.visibility=View.INVISIBLE
