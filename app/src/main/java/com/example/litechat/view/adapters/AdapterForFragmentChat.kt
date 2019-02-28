@@ -4,6 +4,7 @@ import android.annotation.TargetApi
 import android.arch.persistence.room.Room
 import android.content.Context
 import android.content.res.Resources
+import android.icu.lang.UCharacter.GraphemeClusterBreak.L
 import android.os.Build
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -55,11 +56,14 @@ class AdapterForFragmentChat(private var dataset :ArrayList<ChatObject>, private
         Log.d("QueryF",dataset[position].otherNumber+ " \n" +position.toString())
         try {
             var t = AllChatDataModel.otherUserNumber.toDouble()
+            Log.d("Firebase" , "Entered try")
             FirebaseStorage.getInstance().reference.child(AllChatDataModel.otherUserNumber).child("ProfileImage").downloadUrl.addOnSuccessListener {
+                Log.d("Firebse" , "Entered and retrivedd storage sucessfully ${it}")
                 Glide.with(context).load(it).into(holder.imageView).onLoadStarted(context.getDrawable(R.drawable.profile))
             }
         }catch (e : Exception)
         {
+            Log.d("Firebase" , "Entered catch \n $e")
             /*FirebaseStorage.getInstance().reference.child("Groups").child(AllChatDataModel.documentPathId).downloadUrl.addOnSuccessListener {
                 Glide.with(context).load(it).into(holder.imageView).onLoadStarted(context.getDrawable(R.drawable.profile))
             }*/

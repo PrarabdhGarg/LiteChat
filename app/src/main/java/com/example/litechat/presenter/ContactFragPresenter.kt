@@ -50,7 +50,7 @@ class ContactFragPresenter(viewPassed: ContactFragContract.View, contextPassed: 
                         if (ContactDataModel.contactList.find { it.mobileNumber.equals(numb)} == null)
                         {
                             userItem = User(numb, name)
-                            //Log.d("ContactsAddition" , userItem.toString())
+                            Log.d("ContactsAddition" , userItem.toString())
                             ContactDataModel.contactList.add(userItem)
                         }
 
@@ -74,6 +74,7 @@ class ContactFragPresenter(viewPassed: ContactFragContract.View, contextPassed: 
         database.collection("Users").get().addOnSuccessListener { result ->
 
             for ( document in result){
+                Log.d("ContactFirebase" , document.data.toString())
                 ContactDataModel.usersList.add(document.id)
             }
             Log.d("ContactThread","Comparison Starts")
@@ -100,6 +101,7 @@ class ContactFragPresenter(viewPassed: ContactFragContract.View, contextPassed: 
                 }
             }
         }
+
         model.roomDeleteData(context)
         model.roomSetData(context, ContactDataModel.contactAndUser)
         Log.d("ContactThread","Listener Called")

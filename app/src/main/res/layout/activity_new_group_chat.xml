@@ -22,12 +22,12 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="Name"
             app:layout_constraintStart_toStartOf="@id/view9"
             android:layout_marginLeft="16dp" android:layout_marginStart="16dp"
             android:layout_marginTop="40dp"
             app:layout_constraintTop_toTopOf="@id/view9" android:layout_marginEnd="16dp"
-            app:layout_constraintEnd_toStartOf="@+id/buttong" android:layout_marginRight="16dp"/>
+            app:layout_constraintEnd_toStartOf="@+id/buttong" android:layout_marginRight="16dp"
+            android:hint="Group Name"/>
 
     <Button
             android:id="@+id/buttong"
@@ -55,4 +55,14 @@
 
     </android.support.v7.widget.RecyclerView>
 
+    <pl.droidsonroids.gif.GifImageView
+            android:layout_width="56dp" android:layout_height="56dp"
+            android:src="@drawable/grp_make_gif"
+            android:id="@+id/groupLoader"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginLeft="8dp" android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent" android:visibility="invisible"/>
 </android.support.constraint.ConstraintLayout>

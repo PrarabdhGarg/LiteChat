@@ -184,7 +184,7 @@ class FragmentStatus: Fragment() , StatusContract.View{
 
     override fun setStatusImageView(path: String) {
         view!!.statusImageView.setImageURI(Uri.parse(path))
-        view!!.ProgressBarStatus.visibility = View.INVISIBLE
+        view!!.statusLoader.visibility = View.INVISIBLE
     }
 
 }

@@ -22,15 +22,15 @@ import com.example.litechat.model.UserProfileData
 import com.example.litechat.presenter.LoginActivityPresenter
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.android.synthetic.main.login_screen1.*
+import kotlinx.android.synthetic.main.login_screen.*
 
 class LoginActivity : AppCompatActivity() , LoginContract.LoginView
 {
     private val PERMISSIONS_REQUEST_READ_STORAGE = 200
     var mobileNumber : String? = null
     var firebaseAuth : FirebaseAuth? = null
-    lateinit var animMove1: Animation
-    lateinit var animMove2: Animation
+    lateinit var animFade: Animation
+    lateinit var animationDrawable: AnimationDrawable
     var loginActivityPresenter : LoginActivityPresenter? = null   //Stores the instance of the presenter that will be used throughout this activity
     var userName : String? = null
     var doubleBackToExitPressedOnce = false   //This variable is true if the user has pressed the button once. This variable gets reset after every 2 seconds
@@ -38,17 +38,16 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.login_screen1)
+        setContentView(R.layout.login_screen)
 
         requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE , Manifest.permission.READ_CONTACTS , Manifest.permission.CALL_PHONE) , PERMISSIONS_REQUEST_READ_STORAGE)
 
-        val constraintLayout = findViewById<ConstraintLayout>(R.id.login_layout1)
-        val animationDrawable = constraintLayout.background as AnimationDrawable
+        val constraintLayout = findViewById<ConstraintLayout>(R.id.login_layout)
+        animationDrawable = constraintLayout.background as AnimationDrawable
         animationDrawable.setEnterFadeDuration(2000)
         animationDrawable.setExitFadeDuration(4000)
 
-        animMove1 = AnimationUtils.loadAnimation(applicationContext, R.anim.move1)
-        animMove2 = AnimationUtils.loadAnimation(applicationContext, R.anim.move2)
+        animFade = AnimationUtils.loadAnimation(applicationContext, R.anim.fade_in)
 
         FirebaseApp.initializeApp(baseContext)
         loginActivityPresenter = LoginActivityPresenter(this)
@@ -74,6 +73,12 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
                     onFirstButtonPressed()
                 }
             }
+        }
+
+        loginRetryButton.setOnClickListener {
+
+            animationDrawable.start()
+            onFirstButtonPressed()
         }
     }
 
@@ -129,7 +134,7 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
         window.setFlags(
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-        loginActivityPresenter!!.verifyNumber(UserProfileData.UserNumber!! , this , applicationContext , ProgressBar , UserProfileData.UserName!!)
+        loginActivityPresenter!!.verifyNumber(UserProfileData.UserNumber!! , this , applicationContext, UserProfileData.UserName!!)
     }
 
     override fun onUserAccontNotFound() {
@@ -137,11 +142,12 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
          * Ask user to create new Account
          */
         Log.d("TAG " , "New User")
-        loginButton.text = "SignUp"
+        loginButton.text = "Sign Up"
         editTextName.visibility = View.VISIBLE
         loginRetryButton.visibility = View.VISIBLE
-        editTextNewNumber.startAnimation(animMove1)
-        loginButton.startAnimation(animMove2)
+        editTextName.startAnimation(animFade)
+        loginRetryButton.startAnimation(animFade)
+        animationDrawable.stop()
         //editTextAbout.visibility = View.VISIBLE
         //ProgressBar!!.visibility = View.INVISIBLE
         window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
@@ -157,7 +163,7 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
         Log.d("Context" , "${applicationContext}")
-        loginActivityPresenter!!.verifyNumber(UserProfileData.UserNumber , this@LoginActivity , applicationContext , dialog = ProgressBar)
+        loginActivityPresenter!!.verifyNumber(UserProfileData.UserNumber , this@LoginActivity , applicationContext)
         window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
     }
 

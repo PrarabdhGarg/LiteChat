@@ -38,6 +38,7 @@ import com.example.litechat.view.activities.*
 import com.example.litechat.view.adapters.ContactAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.nightonke.boommenu.BoomButtons.HamButton
+import kotlinx.android.synthetic.main.fragment_contact.*
 import kotlinx.android.synthetic.main.fragment_contact.view.*
 import kotlinx.android.synthetic.main.fragment_status.view.*
 import java.util.ArrayList
@@ -49,6 +50,7 @@ class FragmentContact : Fragment(), ContactFragContract.View {
     lateinit var task : AsyncTask<Void , Void , Void>
     private var dataSet = ArrayList<User>()
     lateinit var adapterListener: BoomListener
+    private var flag : Boolean? = null
 
     override fun startChatActivity(chatObject: ChatObject) {
 
@@ -180,6 +182,7 @@ class FragmentContact : Fragment(), ContactFragContract.View {
                 dataSet.clear()
                 dataSet.addAll(ContactListData.contacts)
                 Log.d("ContactThread","${dataSet.size}")
+                contactLoader.visibility = View.GONE
                 view.contactRecycler.adapter!!.notifyDataSetChanged()
             }
 
@@ -187,6 +190,10 @@ class FragmentContact : Fragment(), ContactFragContract.View {
 
         //viewAdapter = ContactAdapter(callingListener1, callingListener2, context!!, dataSet)
         dataSet.addAll(ContactListData.contacts)
+        if(dataSet.size!=0)
+        {
+            view.contactLoader.visibility = View.GONE
+        }
         view.contactRecycler.adapter = ContactAdapter(callingListener1, callingListener2, context!!, dataSet)
 
 
@@ -195,6 +202,7 @@ class FragmentContact : Fragment(), ContactFragContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        flag = true
         Log.e("ViewPager" , "OnCreateCalled")
 
     }
@@ -203,7 +211,8 @@ class FragmentContact : Fragment(), ContactFragContract.View {
         Log.e("ViewPager" , "OnStartCalled")
         activitySet = activity!!
         task = getingContacts(contactPresenter, adapterListener)
-        if ((ContextCompat.checkSelfPermission(context!!, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) && (task.status != AsyncTask.Status.RUNNING)){
+        if ((ContextCompat.checkSelfPermission(context!!, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) && (task.status != AsyncTask.Status.RUNNING) && flag!!){
+            flag = false
             task.execute()
         }
 

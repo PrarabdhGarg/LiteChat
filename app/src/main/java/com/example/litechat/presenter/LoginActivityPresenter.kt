@@ -86,7 +86,7 @@ class LoginActivityPresenter (loginView : LoginContract.LoginView): LoginContrac
      * Still have to add the case where the user wants to use a different mobile number, so that the user can manually enter the verification code
      */
 
-    override fun verifyNumber(number : String, activity : Activity, context: Context, dialog: ProgressBar)
+    override fun verifyNumber(number : String, activity : Activity, context: Context)
     {
         var mCallbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks =
             object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
@@ -119,7 +119,7 @@ class LoginActivityPresenter (loginView : LoginContract.LoginView): LoginContrac
      * It not only verifies the user mobile number, but also adds user information to the database
      */
 
-    override fun verifyNumber(number : String, activity : Activity, context: Context, dialog: ProgressBar, name: String)
+    override fun verifyNumber(number : String, activity : Activity, context: Context, name: String)
     {
         var mCallbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks =
             object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
