@@ -30,7 +30,7 @@ class LoginActivityPresenter (loginView : LoginContract.LoginView): LoginContrac
      * This function checks if the account of the user already exists in our database or not
      * If the account exists, all the data gets read from firestore and gets stored in the static variables of [UserProfileData]
      * The mobile number also gets stored in the [SharedPreferences], because every time an intent to the gallery or phone is made,
-     * the staic variables get destroyed, and we need some identifying parametre to get data again from the database
+     * the staic variables get destroyed, and we need some identifying parameters to get data again from the database
      * Other information of users is not stored in [SharedPreferences] as the static variables are much easier to use throughout the app
      */
 
@@ -40,6 +40,7 @@ class LoginActivityPresenter (loginView : LoginContract.LoginView): LoginContrac
         var preferances : SharedPreferences = PreferenceManager.getDefaultSharedPreferences(loginActivity.getCurrentContext())
         val database = FirebaseFirestore.getInstance()
         database.collection("Users").get().addOnSuccessListener { result ->
+            Log.d("iss",result.toString())
             for (document in result) {
                 if(document.id == number)
                 {
