@@ -38,6 +38,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.nightonke.boommenu.BoomButtons.HamButton
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.fragment_status.view.*
+import java.lang.Exception
 
 
 class FragmentStatus: Fragment() , StatusContract.View{
@@ -94,6 +95,7 @@ class FragmentStatus: Fragment() , StatusContract.View{
         val text = arrayOf("PROFILE", "NEW GROUP", "DEVELOPERS", "LOGOUT")
         val bmbListener = arrayOf(bmbListener1, bmbListener2, bmbListener3, bmbListener4)
         view.bmbStatus.bringToFront()
+
         for(i in 0 until view.bmbStatus.buttonPlaceEnum.buttonNumber()){
 
             val builder: HamButton.Builder = HamButton.Builder()
@@ -117,6 +119,11 @@ class FragmentStatus: Fragment() , StatusContract.View{
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d("ViewPager" , "onCreate of FragmentStatus called")
+        try {
+            view!!.RecyclerStatus.adapter!!.notifyDataSetChanged()
+        }catch (e : Exception){
+
+        }
         super.onCreate(savedInstanceState)
     }
 
@@ -126,7 +133,7 @@ class FragmentStatus: Fragment() , StatusContract.View{
         Log.d("ViewPager" , "onStart of FragmentStatus Called")
         //Make and Call a function to get and display data
         view!!.RecyclerStatus.adapter = StatusAdapter(context!! , maps)
-        Glide.with(context!!).load(UserProfileData.UserImage).into(view!!.statusImageView)//On starting the fragment, load the current image in the image view, whose Uri is stored locally
+        Glide.with(context!!).load(UserProfileData.UserImage).into(view!!.statusImageView).onLoadStarted(context!!.getDrawable(R.drawable.profile))//On starting the fragment, load the current image in the image view, whose Uri is stored locally
         view!!.currentActivityTextView.setText(UserProfileData.UserCurrentActivity)
 
         stausFragmentPresenter!!.getInfoForRecyclerView()
@@ -164,7 +171,11 @@ class FragmentStatus: Fragment() , StatusContract.View{
     {
         maps.clear()
         maps.addAll(maps1)
-        view!!.RecyclerStatus.adapter!!.notifyDataSetChanged()
+        try {
+            view!!.RecyclerStatus.adapter!!.notifyDataSetChanged()
+        }catch (e : Exception){
+
+        }
     }
 
     override fun getCurrentContext(): Context {

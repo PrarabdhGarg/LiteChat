@@ -12,6 +12,8 @@ import android.support.constraint.ConstraintLayout
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.Toast
 import com.example.litechat.R
 import com.example.litechat.contracts.LoginContract
@@ -20,13 +22,15 @@ import com.example.litechat.model.UserProfileData
 import com.example.litechat.presenter.LoginActivityPresenter
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.android.synthetic.main.login_screen.*
+import kotlinx.android.synthetic.main.login_screen1.*
 
 class LoginActivity : AppCompatActivity() , LoginContract.LoginView
 {
     private val PERMISSIONS_REQUEST_READ_STORAGE = 200
     var mobileNumber : String? = null
     var firebaseAuth : FirebaseAuth? = null
+    lateinit var animMove1: Animation
+    lateinit var animMove2: Animation
     var loginActivityPresenter : LoginActivityPresenter? = null   //Stores the instance of the presenter that will be used throughout this activity
     var userName : String? = null
     var doubleBackToExitPressedOnce = false   //This variable is true if the user has pressed the button once. This variable gets reset after every 2 seconds
@@ -34,19 +38,22 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.login_screen)
+        setContentView(R.layout.login_screen1)
 
         requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE , Manifest.permission.READ_CONTACTS , Manifest.permission.CALL_PHONE) , PERMISSIONS_REQUEST_READ_STORAGE)
 
-        val constraintLayout = findViewById<ConstraintLayout>(R.id.login_layout)
+        val constraintLayout = findViewById<ConstraintLayout>(R.id.login_layout1)
         val animationDrawable = constraintLayout.background as AnimationDrawable
         animationDrawable.setEnterFadeDuration(2000)
         animationDrawable.setExitFadeDuration(4000)
 
+        animMove1 = AnimationUtils.loadAnimation(applicationContext, R.anim.move1)
+        animMove2 = AnimationUtils.loadAnimation(applicationContext, R.anim.move2)
+
         FirebaseApp.initializeApp(baseContext)
         loginActivityPresenter = LoginActivityPresenter(this)
         firebaseAuth = FirebaseAuth.getInstance()
-        ProgressBar!!.visibility=View.INVISIBLE
+        //ProgressBar!!.visibility=View.INVISIBLE
 
         loginButton.setOnClickListener {
 
@@ -118,7 +125,7 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
     {
         UserProfileData.UserName = editTextName.text.toString()
         //UserProfileData.UserAbout = editTextAbout.text.toString()
-        ProgressBar!!.setVisibility(View.VISIBLE)
+        //ProgressBar!!.setVisibility(View.VISIBLE)
         window.setFlags(
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
@@ -132,8 +139,11 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
         Log.d("TAG " , "New User")
         loginButton.text = "SignUp"
         editTextName.visibility = View.VISIBLE
+        loginRetryButton.visibility = View.VISIBLE
+        editTextNewNumber.startAnimation(animMove1)
+        loginButton.startAnimation(animMove2)
         //editTextAbout.visibility = View.VISIBLE
-        ProgressBar!!.visibility = View.INVISIBLE
+        //ProgressBar!!.visibility = View.INVISIBLE
         window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
     }
 
@@ -142,7 +152,7 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
          * Login the User into the app
          */
         Log.d("TAG " , "Existing User")
-        ProgressBar!!.visibility = View.VISIBLE
+        //ProgressBar!!.visibility = View.VISIBLE
         window.setFlags(
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)

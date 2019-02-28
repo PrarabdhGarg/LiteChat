@@ -25,6 +25,7 @@ class ContactFragPresenter(viewPassed: ContactFragContract.View, contextPassed: 
 
     override fun getContacts(adapterListener: BoomListener) {
 
+        ContactDataModel.contactList.clear()
         val cursor1 = ContentResolverData.contentResolverPassed.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null)
         if (cursor1?.count ?: 0 > 0){
 
@@ -68,6 +69,7 @@ class ContactFragPresenter(viewPassed: ContactFragContract.View, contextPassed: 
 
     override fun getUsers(adapterListener: BoomListener) {
 
+        ContactDataModel.usersList.clear()
         val database = FirebaseFirestore.getInstance()
         database.collection("Users").get().addOnSuccessListener { result ->
 
@@ -86,6 +88,7 @@ class ContactFragPresenter(viewPassed: ContactFragContract.View, contextPassed: 
 
         Log.d("ContactThread","Comparison Invoked")
         //model.roomDeleteData(context)
+        ContactDataModel.contactAndUser.clear()
         for (user in ContactDataModel.usersList){
 
             for (contact in ContactDataModel.contactList){

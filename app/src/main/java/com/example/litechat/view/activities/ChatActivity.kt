@@ -94,23 +94,22 @@ class ChatActivity : AppCompatActivity(), ChatContract.CView {
             chatPresenter.getNewOtherMessagesFromInteractor()
 
         // handle when message is sent
-        buttonSend.setOnClickListener(object : View.OnClickListener{
-
-            @TargetApi(Build.VERSION_CODES.O)
-            override fun onClick(v: View?) {
-                // also change last updated
-                Log.d("saala","meonclick")
-                var messageModel= MessageModel()
-                messageModel.message=editTextSend.text.toString()
-                messageModel.sentBy=AllChatDataModel.userNumberIdPM// sala ab bhi null h
-                messageModel.sentOn=Instant.now().epochSecond.toString()
-                editTextSend.setText("")
-                buttonSend.isClickable=false;
-                chatPresenter.passNewSetMessageFromViewtoPresenter(messageModel,applicationContext)
+        buttonSend.setOnClickListener {
+            // also change last updated
+            Log.d("saala","meonclick")
+            var messageModel= MessageModel()
+            messageModel.message=editTextSend.text.toString()
+            messageModel.sentBy=AllChatDataModel.userNumberIdPM// sala ab bhi null h
+            messageModel.sentOn=Instant.now().epochSecond.toString()
+            editTextSend.setText("")
+            buttonSend.isClickable=false;
+            chatPresenter.passNewSetMessageFromViewtoPresenter(messageModel,applicationContext)
+        }
 
 
-            }
-        })
+        buttonCamera.setOnClickListener {
+
+        }
 
 
     }

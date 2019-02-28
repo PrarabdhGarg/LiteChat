@@ -23,6 +23,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import com.example.litechat.R
 import com.example.litechat.contracts.ContactFragContract
 import com.example.litechat.listeners.BoomListener
@@ -49,12 +50,13 @@ class FragmentContact : Fragment(), ContactFragContract.View {
     private var dataSet = ArrayList<User>()
     lateinit var adapterListener: BoomListener
 
-
     override fun startChatActivity(chatObject: ChatObject) {
+
         var intent = Intent(context, ChatActivity::class.java)
         intent.putExtra("documentPathId",chatObject.chatDocumentId)
         intent.putExtra("string", chatObject.otherNumber)
         intent.putExtra("lastUpdated",chatObject.lastUpdated)
+        activity!!.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
         startActivity(intent)
     }
 
@@ -162,6 +164,7 @@ class FragmentContact : Fragment(), ContactFragContract.View {
             @RequiresApi(Build.VERSION_CODES.O)
             override fun startCallIntent(number: String) {
 
+                activity!!.window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                 contactPresenter.startNewChatFromContact(number)
                 Log.d("Context",context.toString())
 
