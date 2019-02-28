@@ -37,6 +37,7 @@ import com.example.litechat.view.activities.*
 import com.example.litechat.view.adapters.ContactAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.nightonke.boommenu.BoomButtons.HamButton
+import kotlinx.android.synthetic.main.fragment_contact.*
 import kotlinx.android.synthetic.main.fragment_contact.view.*
 import kotlinx.android.synthetic.main.fragment_status.view.*
 import java.util.ArrayList
@@ -173,6 +174,7 @@ class FragmentContact : Fragment(), ContactFragContract.View {
                 dataSet.clear()
                 dataSet.addAll(ContactListData.contacts)
                 Log.d("ContactThread","${dataSet.size}")
+                contactLoader.visibility = View.GONE
                 view.contactRecycler.adapter!!.notifyDataSetChanged()
             }
 

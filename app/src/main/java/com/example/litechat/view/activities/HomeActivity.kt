@@ -231,7 +231,7 @@ class HomeActivity : AppCompatActivity(),HomeActivityContract.View
         var preferances : SharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         preferances.getString("CurrentUserNumber" , "123456789")
         Log.d("MobileNumberPrefer" , preferances.getString("CurrentUserNumber" , "123456789"))
-        fragment!!.view!!.ProgressBarStatus.visibility = View.VISIBLE
+        fragment!!.view!!.statusLoader.visibility = View.VISIBLE
         if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
             //val thumbnail: Bitmap = data!!.getParcelableExtra("data")
             val fullPhotoUri: Uri? = data!!.data

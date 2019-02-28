@@ -5,26 +5,13 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/login_layout2"
+        android:id="@+id/login_layout"
         tools:context=".view.activities.LoginActivity"
         android:background="@drawable/animation_list"
 >
 
-    <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            style="@style/Widget.AppCompat.ProgressBar"
-            android:id="@+id/ProgressBar"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:visibility="invisible"
-            android:indeterminate="true"
-    />
-
     <Button
-            android:text="Sign Up"
+            android:text="Verify"
             android:layout_width="263dp"
             android:layout_height="62dp"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -42,15 +29,14 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             android:id="@+id/loginRetryButton"
-            android:layout_marginBottom="64dp"
             android:background="@drawable/rounded" android:textSize="30sp" android:textColor="#8CA6DB"
-            android:textStyle="bold"/>
+            android:textStyle="bold" android:visibility="invisible" android:layout_marginBottom="60dp"/>
 
     <EditText
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/editTextNewNumber"
-            android:hint="Enter PhoneNumber"
+            android:hint="Enter Phone Number"
             android:textAlignment="center"
             android:inputType="phone"
             app:layout_constraintStart_toStartOf="parent"
@@ -64,7 +50,7 @@
     <EditText
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:visibility="visible"
+            android:visibility="invisible"
             android:id="@+id/editTextName"
             android:hint="Enter Your Name"
             android:textAlignment="center"

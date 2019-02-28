@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-android:background="@drawable/status_gradient">
+android:background="@drawable/chatf_gradient">
 
     <com.nightonke.boommenu.BoomMenuButton
             android:id="@+id/bmbChat"
@@ -35,13 +35,12 @@ android:background="@drawable/status_gradient">
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:id="@+id/recyView_FragmentChat"
-            tools:listitem="@layout/fragment_all_chat"
             android:background="@drawable/rounded"
             app:layoutManager="android.support.v7.widget.LinearLayoutManager"
             app:layout_constraintTop_toTopOf="@+id/view2" app:layout_constraintBottom_toBottomOf="@+id/view2"
             app:layout_constraintEnd_toEndOf="@+id/view2" app:layout_constraintStart_toStartOf="@+id/view2"
             android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="16dp" tools:listitem="@layout/fragment_all_chat">
     </android.support.v7.widget.RecyclerView>
 
 </android.support.constraint.ConstraintLayout>
