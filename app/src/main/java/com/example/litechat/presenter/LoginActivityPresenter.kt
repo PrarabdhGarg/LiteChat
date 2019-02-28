@@ -92,7 +92,7 @@ class LoginActivityPresenter (loginView : LoginContract.LoginView): LoginContrac
             object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
                 override fun onVerificationCompleted(p0: PhoneAuthCredential?) {
                     Log.d("Verification", "SMS Verification Sucessful\n$p0")
-                    dialog.visibility = View.INVISIBLE
+                    //dialog.visibility = View.INVISIBLE
                     signInWithPhoneAuthCredential(p0!! , context)
                     AllChatDataModel.userNumberIdPM = number
                     Toast.makeText(context, "Verification Sucessfull", Toast.LENGTH_LONG).show()
@@ -125,7 +125,7 @@ class LoginActivityPresenter (loginView : LoginContract.LoginView): LoginContrac
             object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
                 override fun onVerificationCompleted(p0: PhoneAuthCredential?) {
                     Log.d("Verification", "SMS Verification Sucessful\n$p0")
-                    dialog.visibility = View.INVISIBLE
+                    //dialog.visibility = View.INVISIBLE
                     addUserToFirebase(number , p0.toString() , name)
                     signInWithPhoneAuthCredential(p0!! , context)
                     Toast.makeText(context, "Verification Sucessfull", Toast.LENGTH_LONG).show()

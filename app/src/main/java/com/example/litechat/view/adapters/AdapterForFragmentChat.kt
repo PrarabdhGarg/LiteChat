@@ -1,6 +1,7 @@
 package com.example.litechat.view.adapters
 
 import android.annotation.TargetApi
+import android.arch.persistence.room.Room
 import android.content.Context
 import android.content.res.Resources
 import android.os.Build
@@ -14,9 +15,8 @@ import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.example.litechat.ListenerObjectTry
 import com.example.litechat.R
-import com.example.litechat.model.AllChatDataModel
-import com.example.litechat.model.ChatObject
-import com.example.litechat.model.DataChatModel
+import com.example.litechat.model.*
+import com.example.litechat.model.contactsRoom.AppDatabse
 
 class AdapterForFragmentChat(private var dataset :ArrayList<ChatObject>, private var context: Context,
                              private var listenerObjectTryImage: ListenerObjectTry,private var listenerObjectTryChat: ListenerObjectTry): RecyclerView.Adapter<AdapterForFragmentChat.MyViewHolder>() {
@@ -40,14 +40,12 @@ class AdapterForFragmentChat(private var dataset :ArrayList<ChatObject>, private
     } // create a new view
 
 
-    override fun getItemCount(): Int {
-        return dataset.size
-           }
+    override fun getItemCount(): Int = dataset.size
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     override fun onBindViewHolder(holder: AdapterForFragmentChat.MyViewHolder, position: Int) {
 
-        holder.textView.text = dataset[position].otherNumber
+        holder.textView.text = searchContactName(dataset[position].otherNumber)
         Log.d("QueryF",dataset[position].otherNumber+ " \n" +position.toString())
 
         Log.d("FinalDebug11","AllChatDataModel.personalChatList.size:${AllChatDataModel.personalChatList.size}\n${AllChatDataModel.personalChatList.contains(dataset[position])}")
@@ -63,6 +61,8 @@ class AdapterForFragmentChat(private var dataset :ArrayList<ChatObject>, private
         holder.textView.setOnClickListener(object : View.OnClickListener{
 
             override fun onClick(v: View?) {
+
+
                 Log.d("AllChatNumber" , AllChatDataModel.userNumberIdPM)
                   // change with number
                 /***
@@ -80,7 +80,7 @@ class AdapterForFragmentChat(private var dataset :ArrayList<ChatObject>, private
                 Glide.with(context).load(R.drawable.profile).into(holder.imageView)
                //holder.greenDot.visibility=View.INVISIBLE
                 Log.d("Dataa","first tigrme")
-                Log.d("Persoo",holder.textView!!.text.toString())
+                Log.d("Persoo",holder.textView.text.toString())
                 //AllChatDataModel.otherUserNumber=dataset[position].otherNumber
                listenerObjectTryChat.listener!!.onDataRecieved(dataset[position].otherNumber,dataset[position].chatDocumentId,dataset[position].lastUpdated)
 
@@ -96,5 +96,20 @@ class AdapterForFragmentChat(private var dataset :ArrayList<ChatObject>, private
                 listenerObjectTryImage.listener!!.onDataRecieved(dataset[position].otherNumber,dataset[position].chatDocumentId,dataset[position].lastUpdated)
             }
         })
+    }
+
+    private fun searchContactName(number: String): String {
+
+        val dbModel = ContactListModel()
+
+        var namePassed = dbModel.roomGetName(context, number)
+
+        if(namePassed.isEmpty()){
+            return number
+        }
+        else{
+            return namePassed
+        }
+
     }
 }

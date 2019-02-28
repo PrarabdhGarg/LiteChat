@@ -11,7 +11,7 @@
                     android:startColor="#FFFFFF"
                     android:centerColor="#FFFFFF"
                     android:endColor="#FFFFFF"/>
-            <corners android:radius="30dp"/>
+            <corners android:bottomRightRadius="25dp"/>
         </shape>
     </item>
 </selector>
