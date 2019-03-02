@@ -91,7 +91,7 @@ class AdapterForFragmentChat(private var dataset :ArrayList<ChatObject>, private
         holder.imageView.setOnClickListener(object: View.OnClickListener{
 
             override fun onClick(v: View?) {
-
+Log.d("GroupInfo2","documnetId from adapter${dataset[position].chatDocumentId}")
                 // give number to launch profile
                 listenerObjectTryImage.listener!!.onDataRecieved(dataset[position].otherNumber,dataset[position].chatDocumentId,dataset[position].lastUpdated)
             }

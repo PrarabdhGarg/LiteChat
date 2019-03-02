@@ -152,6 +152,7 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
                 else
                 {
                     var intent=Intent(context,GroupInfoActivity::class.java)
+                    Log.d("GroupInfo1","documentPathId$chatDocumentId")
                     intent.putExtra("documentPathId",chatDocumentId)
                     startActivity(intent)
                 }

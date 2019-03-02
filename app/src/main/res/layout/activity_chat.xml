@@ -20,6 +20,7 @@ android:background="@drawable/pm_gradient">
             android:layout_width="62dp"
             android:layout_height="62dp"
             android:id="@+id/imageViewOtherPerson"
+            android:src="@drawable/akshat"
             app:layout_constraintTop_toTopOf="@+id/textViewOtherUser"
             app:layout_constraintStart_toStartOf="@+id/textViewOtherUser" android:layout_marginLeft="16dp"
             android:layout_marginStart="16dp" tools:src="@drawable/suyash"

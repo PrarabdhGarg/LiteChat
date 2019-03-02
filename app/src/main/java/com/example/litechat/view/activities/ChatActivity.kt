@@ -26,7 +26,9 @@ import java.lang.Double.parseDouble
 import java.lang.NumberFormatException
 import java.time.Instant
 import android.support.v7.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.litechat.model.contactsRoom.AppDatabse
+import com.google.firebase.storage.FirebaseStorage
 
 
 class ChatActivity : AppCompatActivity(), ChatContract.CView {
@@ -72,10 +74,21 @@ class ChatActivity : AppCompatActivity(), ChatContract.CView {
         if(numeric)
         {   //  to show contact name of person chatting with
             textViewOtherUser.setText(searchContactName(AllChatDataModel.otherUserNumber))
+          FirebaseStorage.getInstance().getReference().child(AllChatDataModel.otherUserNumber).child("ProfileImage")
+              .downloadUrl.addOnSuccessListener { uri ->
+
+              Glide.with(applicationContext).load(uri).into(imageViewOtherPerson)
+          }
         }
         else
         {
             textViewOtherUser.setText(AllChatDataModel.otherUserNumber)
+            // for group icon
+           /* FirebaseStorage.getInstance().getReference().child(AllChatDataModel.otherUserNumber).child("ProfileImage")
+                .downloadUrl.addOnSuccessListener { uri ->
+
+                Glide.with(applicationContext).load(uri).into(imageViewOtherPerson)
+            }*/
         }
 
 
