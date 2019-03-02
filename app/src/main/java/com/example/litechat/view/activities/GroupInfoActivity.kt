@@ -18,6 +18,7 @@ class GroupInfoActivity : AppCompatActivity() {
      private var nmemlist=ArrayList<String>()
     //private  var nmemlist= List<String>
     var data=FirebaseFirestore.getInstance()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_group_info)
@@ -36,7 +37,6 @@ class GroupInfoActivity : AppCompatActivity() {
             Log.d("DataRetrived", "Mebers$nmemlist")
             groupName.setText(obj.groupname)
         }
-
 
     }
 }

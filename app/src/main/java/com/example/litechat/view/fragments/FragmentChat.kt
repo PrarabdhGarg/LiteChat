@@ -58,6 +58,7 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
         val bmbListener1 = BoomListener()
         bmbListener1.setCustomObjectListener(object: BoomListener.Boom{
             override fun doThis() {
+                //AllChatDataModel.upadateFragmentChatFirstTime = 1
                 startActivity(Intent(activity, ProfileActivity::class.java))
             }
 
@@ -66,6 +67,7 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
         val bmbListener2 = BoomListener()
         bmbListener2.setCustomObjectListener(object: BoomListener.Boom{
             override fun doThis() {
+                //AllChatDataModel.upadateFragmentChatFirstTime = 1
                 startActivity(Intent(activity, NewGroupChatActivity::class.java))
             }
 
@@ -74,7 +76,7 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
         val bmbListener3 = BoomListener()
         bmbListener3.setCustomObjectListener(object: BoomListener.Boom{
             override fun doThis() {
-
+                //AllChatDataModel.upadateFragmentChatFirstTime = 1
                 startActivity(Intent(activity, DeveloperActivity::class.java))
             }
 
@@ -83,6 +85,7 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
         val bmbListener4 = BoomListener()
         bmbListener4.setCustomObjectListener(object: BoomListener.Boom{
             override fun doThis() {
+                //AllChatDataModel.upadateFragmentChatFirstTime = 1
                 FirebaseAuth.getInstance().signOut()
                 PreferenceManager.getDefaultSharedPreferences(context).edit().putString("CurrentUserNumber" , "").apply()
                 UserProfileData.clearData()
@@ -172,7 +175,7 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         Log.d("ViewPager" , "onCreate of FragmentChat called")
-        AllChatDataModel.upadateFragmentChatFirstTime = 1
+        //AllChatDataModel.upadateFragmentChatFirstTime = 1
         super.onCreate(savedInstanceState)
 
 
@@ -218,9 +221,9 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
         /*AllChatDataModel.personalChatList.clear()*/
         //Log.d("FinalDebug10", "upadte all start chatfor size${chatNamesForFragment.last()}")
         //chatNamesForFragment.add(chatNamesForFragment.last())
-        if(chatNamesForFragment.size==0){
+        /*if(chatNamesForFragment.size==0){
             chatNamesForFragment.addAll(AllChatDataModel.personalChatList)
-        }
+        }*/
         adapterForFragmentChat!!.notifyDataSetChanged()
         AllChatDataModel.isPresenterCalled = false
 
@@ -230,10 +233,9 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
         Log.d("Dataa","first time code start ${adapterForFragmentChat}")
         chatNamesForFragment.clear()
         chatNamesForFragment.addAll(AllChatDataModel.personalChatList)
-        AllChatDataModel.personalChatList.clear()
+        //AllChatDataModel.personalChatList.clear()
         Log.d("Debug 13" , AllChatDataModel.personalChatList.size.toString())
         adapterForFragmentChat!!.notifyDataSetChanged()
-
     }
 
     override fun onDestroy() {

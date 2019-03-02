@@ -27,6 +27,7 @@ import com.bumptech.glide.Glide
 import com.example.litechat.R
 import com.example.litechat.contracts.StatusContract
 import com.example.litechat.listeners.BoomListener
+import com.example.litechat.model.AllChatDataModel
 import com.example.litechat.model.ContactListModel
 import com.example.litechat.model.UserDataModel
 import com.example.litechat.model.UserProfileData
@@ -37,6 +38,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.nightonke.boommenu.BoomButtons.HamButton
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.fragment_status.view.*
+import java.lang.Exception
 
 
 class FragmentStatus: Fragment() , StatusContract.View{
@@ -53,6 +55,7 @@ class FragmentStatus: Fragment() , StatusContract.View{
         val bmbListener1 = BoomListener()
         bmbListener1.setCustomObjectListener(object: BoomListener.Boom{
             override fun doThis() {
+                //AllChatDataModel.upadateFragmentChatFirstTime = 1
                 startActivity(Intent(activity, ProfileActivity::class.java))
             }
 
@@ -61,6 +64,7 @@ class FragmentStatus: Fragment() , StatusContract.View{
         val bmbListener2 = BoomListener()
         bmbListener2.setCustomObjectListener(object: BoomListener.Boom{
             override fun doThis() {
+                //AllChatDataModel.upadateFragmentChatFirstTime = 1
                 startActivity(Intent(activity, NewGroupChatActivity::class.java))
             }
 
@@ -69,7 +73,7 @@ class FragmentStatus: Fragment() , StatusContract.View{
         val bmbListener3 = BoomListener()
         bmbListener3.setCustomObjectListener(object: BoomListener.Boom{
             override fun doThis() {
-
+                //AllChatDataModel.upadateFragmentChatFirstTime = 1
                 startActivity(Intent(activity, DeveloperActivity::class.java))
             }
 
@@ -78,6 +82,7 @@ class FragmentStatus: Fragment() , StatusContract.View{
         val bmbListener4 = BoomListener()
         bmbListener4.setCustomObjectListener(object: BoomListener.Boom{
             override fun doThis() {
+                //AllChatDataModel.upadateFragmentChatFirstTime = 1
                 FirebaseAuth.getInstance().signOut()
                 PreferenceManager.getDefaultSharedPreferences(context).edit().putString("CurrentUserNumber" , "").apply()
                 UserProfileData.clearData()
@@ -114,6 +119,11 @@ class FragmentStatus: Fragment() , StatusContract.View{
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d("ViewPager" , "onCreate of FragmentStatus called")
+        try {
+            view!!.RecyclerStatus.adapter!!.notifyDataSetChanged()
+        }catch (e : Exception){
+
+        }
         super.onCreate(savedInstanceState)
     }
 
@@ -123,7 +133,7 @@ class FragmentStatus: Fragment() , StatusContract.View{
         Log.d("ViewPager" , "onStart of FragmentStatus Called")
         //Make and Call a function to get and display data
         view!!.RecyclerStatus.adapter = StatusAdapter(context!! , maps)
-        Glide.with(context!!).load(UserProfileData.UserImage).into(view!!.statusImageView)//On starting the fragment, load the current image in the image view, whose Uri is stored locally
+        Glide.with(context!!).load(UserProfileData.UserImage).into(view!!.statusImageView).onLoadStarted(context!!.getDrawable(R.drawable.profile))//On starting the fragment, load the current image in the image view, whose Uri is stored locally
         view!!.currentActivityTextView.setText(UserProfileData.UserCurrentActivity)
 
         stausFragmentPresenter!!.getInfoForRecyclerView()
@@ -161,7 +171,11 @@ class FragmentStatus: Fragment() , StatusContract.View{
     {
         maps.clear()
         maps.addAll(maps1)
-        view!!.RecyclerStatus.adapter!!.notifyDataSetChanged()
+        try {
+            view!!.RecyclerStatus.adapter!!.notifyDataSetChanged()
+        }catch (e : Exception){
+
+        }
     }
 
     override fun getCurrentContext(): Context {
@@ -170,7 +184,7 @@ class FragmentStatus: Fragment() , StatusContract.View{
 
     override fun setStatusImageView(path: String) {
         view!!.statusImageView.setImageURI(Uri.parse(path))
-        view!!.ProgressBarStatus.visibility = View.INVISIBLE
+        view!!.statusLoader.visibility = View.INVISIBLE
     }
 
 }

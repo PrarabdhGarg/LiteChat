@@ -37,7 +37,7 @@ class FragmentChatInteractor(p1: AllChatsContractFrag.CFPresenter) : AllChatsCon
 
                 for (doc in documents) {
 
-                    currentPersonalChats = doc["currentPersonalChats"] as ArrayList<String>
+                    currentPersonalChats = doc["currentChats"] as ArrayList<String>
                     Log.d("chatName", currentPersonalChats.toString())
                 }
                //p2.personalChatsDataRecieved(currentPersonalChats)

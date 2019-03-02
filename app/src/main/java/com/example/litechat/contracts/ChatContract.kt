@@ -1,7 +1,6 @@
 package com.example.litechat.contracts
 
 import android.content.Context
-import com.example.litechat.model.ChatModelK
 import com.example.litechat.model.MessageModel
 
 interface ChatContract {

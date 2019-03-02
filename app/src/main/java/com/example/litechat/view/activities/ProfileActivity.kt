@@ -32,8 +32,7 @@ class ProfileActivity : AppCompatActivity() {
         setContentView(R.layout.activity_profile)
         AboutTextView.text = UserProfileData.UserAbout.toString()
         NameTextView.text = UserProfileData.UserName.toString()
-        Glide.with(applicationContext).load(R.drawable.profile).into(ProfileImageView)
-        Glide.with(applicationContext).load(UserProfileData.UserProfileImage).into(ProfileImageView)
+        Glide.with(applicationContext).load(UserProfileData.UserProfileImage).into(ProfileImageView).onLoadStarted(getDrawable(R.drawable.profile))
 
         ProfileImageButtonChange.setOnClickListener {
             val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
@@ -63,21 +62,8 @@ class ProfileActivity : AppCompatActivity() {
             ref!!.child(UserProfileData.UserNumber).child("ProfileImage").putFile(fullPhotoUri!!)
                 .addOnSuccessListener {
                     Log.d("Firebase Storage" , "Image uploaded sucessfully")
-                    Glide.with(applicationContext).load(fullPhotoUri).into(ProfileImageView)
+                    Glide.with(applicationContext).load(fullPhotoUri).into(ProfileImageView).onLoadStarted(getDrawable(R.drawable.profile))
                     updateProfileImageOnDatabse()
-
-                }
-                .addOnFailureListener {
-                    Log.d("Firebase Storage" , "Unable to upload the image")
-                    UserProfileData.UserProfileImage  = "https://firebasestorage.googleapis.com/v0/b/litechat-3960c.appspot.com/o/images.png?alt=media&token=d73dedf8-4abb-4bf0-bc65-f980f0bf6f7a"
-                    updateProfileImageOnDatabse()
-                    Glide.with(applicationContext).load(UserProfileData.UserProfileImage).into(ProfileImageView)
-                }
-                .addOnCanceledListener {
-                    Log.d("Firebase Storage" , "Unable to upload the image")
-                    UserProfileData.UserProfileImage  = "https://firebasestorage.googleapis.com/v0/b/litechat-3960c.appspot.com/o/images.png?alt=media&token=d73dedf8-4abb-4bf0-bc65-f980f0bf6f7a"
-                    updateProfileImageOnDatabse()
-                    Glide.with(applicationContext).load(UserProfileData.UserProfileImage).into(ProfileImageView)
                 }
         }
         super.onActivityResult(requestCode, resultCode, data)

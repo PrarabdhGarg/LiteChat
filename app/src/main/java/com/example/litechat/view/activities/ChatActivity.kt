@@ -5,6 +5,7 @@ import android.arch.persistence.room.Room
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.annotation.RequiresApi
 import android.util.Log
 
 import kotlinx.android.synthetic.main.activity_chat.*
@@ -25,10 +26,13 @@ import java.lang.Double.parseDouble
 
 import java.lang.NumberFormatException
 import java.time.Instant
-import android.support.v7.widget.RecyclerView
+
 import com.bumptech.glide.Glide
+import com.example.litechat.model.UserProfileData
 import com.example.litechat.model.contactsRoom.AppDatabse
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+
 
 
 class ChatActivity : AppCompatActivity(), ChatContract.CView {
@@ -43,6 +47,7 @@ class ChatActivity : AppCompatActivity(), ChatContract.CView {
     private lateinit var adapterForChatActivity: AdapterForChatActivity
 
     private var chatPresenter = ChatPresenter(this)
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -61,7 +66,14 @@ class ChatActivity : AppCompatActivity(), ChatContract.CView {
          AllChatDataModel.otherUserNumber = intent.getStringExtra("string")
          AllChatDataModel.documentPathId=intent.getStringExtra("documentPathId")
          AllChatDataModel.lastUpdated=intent.getStringExtra("lastUpdated")
-
+         var lastSeen = intent.getStringExtra("lastSeen")
+         //Log.e("LastSeen" , lastSeen)
+         FirebaseFirestore.getInstance().collection("Users").document(UserProfileData.UserNumber).collection("currentChats").whereEqualTo("chatDocumentId" , AllChatDataModel.documentPathId).get().addOnSuccessListener {
+             for (i in it)
+             {
+                 i.reference.update("lastSeen" , Instant.now().epochSecond.toString())
+             }
+         }
         try
         {
             val num = parseDouble(AllChatDataModel.otherUserNumber)
@@ -97,23 +109,22 @@ class ChatActivity : AppCompatActivity(), ChatContract.CView {
             chatPresenter.getNewOtherMessagesFromInteractor()
 
         // handle when message is sent
-        buttonSend.setOnClickListener(object : View.OnClickListener{
-
-            @TargetApi(Build.VERSION_CODES.O)
-            override fun onClick(v: View?) {
-                // also change last updated
-                Log.d("saala","meonclick")
-                var messageModel= MessageModel()
-                messageModel.message=editTextSend.text.toString()
-                messageModel.sentBy=AllChatDataModel.userNumberIdPM// sala ab bhi null h
-                messageModel.sentOn=Instant.now().epochSecond.toString()
-                editTextSend.setText("")
-                buttonSend.isClickable=false;
-                chatPresenter.passNewSetMessageFromViewtoPresenter(messageModel,applicationContext)
+        buttonSend.setOnClickListener {
+            // also change last updated
+            Log.d("saala","meonclick")
+            var messageModel= MessageModel()
+            messageModel.message=editTextSend.text.toString()
+            messageModel.sentBy=AllChatDataModel.userNumberIdPM// sala ab bhi null h
+            messageModel.sentOn=Instant.now().epochSecond.toString()
+            editTextSend.setText("")
+            buttonSend.isClickable=false;
+            chatPresenter.passNewSetMessageFromViewtoPresenter(messageModel,applicationContext)
+        }
 
 
-            }
-        })
+        buttonCamera.setOnClickListener {
+
+        }
 
 
     }

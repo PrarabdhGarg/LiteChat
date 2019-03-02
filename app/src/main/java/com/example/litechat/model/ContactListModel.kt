@@ -65,7 +65,7 @@ class ContactListModel : ContactFragContract.Model {
 
         val db = FirebaseFirestore.getInstance()
         db.collection("Users").document(AllChatDataModel.userNumberIdPM)
-            .collection("currentPersonalChats").whereEqualTo("otherNumber", number).get()
+            .collection("currentChats").whereEqualTo("otherNumber", number).get()
             .addOnSuccessListener { documents ->
                 // if chat between these two existed previously than open their chat
                 Log.d("New1", "g")
@@ -89,7 +89,7 @@ class ContactListModel : ContactFragContract.Model {
                         .addOnSuccessListener {
 
                             db.collection("Chats").whereEqualTo("number1", AllChatDataModel.userNumberIdPM)
-                                .// get this value from user
+                                .
                                     whereEqualTo("number2", number).get().addOnSuccessListener { result ->
 
                                     if (result != null) {
@@ -108,9 +108,10 @@ class ContactListModel : ContactFragContract.Model {
                                             var chatObject2 = ChatObject()
                                             chatObject2.lastUpdated = timeStamp.toString()
                                             chatObject2.chatDocumentId = doc.id
-                                            chatObject2.otherNumber = AllChatDataModel.userNumberIdPM// add numbers
+                                            chatObject2.otherNumber = AllChatDataModel.userNumberIdPM
+                                            chatObject2.lastSeen = timeStamp.toString()// add numbers
                                             db.collection("Users").document(number)
-                                                .collection("currentPersonalChats").document().set(chatObject2)
+                                                .collection("currentChats").document().set(chatObject2)
                                                 .addOnSuccessListener {
 
                                                     /**
@@ -120,9 +121,10 @@ class ContactListModel : ContactFragContract.Model {
                                                     var chatObject1 = ChatObject()
                                                     chatObject1.lastUpdated = timeStamp.toString()
                                                     chatObject1.chatDocumentId = doc.id
-                                                    chatObject1.otherNumber = number// add numbers
+                                                    chatObject1.otherNumber = number
+                                                    chatObject1.lastSeen = timeStamp.toString()// add numbers
                                                     db.collection("Users").document(AllChatDataModel.userNumberIdPM)
-                                                        .collection("currentPersonalChats").document().set(chatObject1)
+                                                        .collection("currentChats").document().set(chatObject1)
                                                         .addOnSuccessListener { res ->
 
                                                             presenter.passDataForChatActivity(chatObject1)

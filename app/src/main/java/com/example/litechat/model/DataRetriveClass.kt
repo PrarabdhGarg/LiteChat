@@ -33,17 +33,16 @@ class DataRetriveClass : HomeActivityContract.Model{
     override fun retrievePersonalChatDataFromFirestore(presenter: HomeActivityContract.Presenter) {
 
         Log.d("FinalDebug3","vf")
-        db.collection("Users").document(AllChatDataModel.userNumberIdPM).collection("currentPersonalChats")
+        db.collection("Users").document(AllChatDataModel.userNumberIdPM).collection("currentChats")
             .addSnapshotListener(
                 MetadataChanges.INCLUDE,
                 EventListener<QuerySnapshot>{ snap, e ->
                     Log.d("datau","1 : "+AllChatDataModel.flagPersonalChat.toString())
                     AllChatDataModel.flagPersonalChat = !snap!!.metadata.hasPendingWrites()
                     Log.d("data","2: "+AllChatDataModel.flagPersonalChat.toString())
-                    if(e!=null){
+                    if(e != null){
                         Log.d("Error", "listen:error", e)
                         return@EventListener
-
                     }
 
                     for(dc in snap!!.documentChanges){
@@ -51,32 +50,40 @@ class DataRetriveClass : HomeActivityContract.Model{
                         when(dc.type){
                             DocumentChange.Type.ADDED ->
                             {
-                                Log.d("FinalDebug18" , "${dc} \n")
+                                Log.d("FinalDebug18" , "Added Called With ${dc} \n")
                                 //AllChatDataModel.allChatArrayListPersonalStatic.clear()
-                                var objectChatPersonal :ChatObject= ChatObject()
+                                var objectChatPersonal = ChatObject()
                                 objectChatPersonal.otherNumber=dc.document["otherNumber"].toString()
                                 objectChatPersonal.chatDocumentId=dc.document["chatDocumentId"].toString()
                                 objectChatPersonal.lastUpdated=dc.document["lastUpdated"].toString()
-
-                                AllChatDataModel.personalChatList.add(objectChatPersonal)
-                                Log.d("FinalDebug4","all upate${AllChatDataModel.personalChatList.size}")
-
+                                objectChatPersonal.lastSeen = dc.document["lastSeen"].toString()
+                                if(AllChatDataModel.personalChatList.find { it.chatDocumentId == objectChatPersonal.chatDocumentId } == null)
+                                {
+                                    AllChatDataModel.personalChatList.add(objectChatPersonal)
+                                }
+                                Log.d("FinalDebug4","all upate in added with ${AllChatDataModel.personalChatList.size}")
                                 Log.d("FireStoreSnap",  dc.document["otherNumber"].toString())
                                 Log.d("HomeActivity","Size"+AllChatDataModel.personalChatList.size.toString())
                             }
 
                             DocumentChange.Type.MODIFIED ->
                             {
-                                Log.d("FinalDebug19" , "${dc} \n")
+                                Log.d("FinalDebug19" , "Modified called with ${dc} \n")
                                 //AllChatDataModel.allChatArrayListPersonalStatic.clear()
                                 var objectChatPersonal :ChatObject= ChatObject()
                                 objectChatPersonal.otherNumber=dc.document["otherNumber"].toString()
                                 objectChatPersonal.chatDocumentId=dc.document["chatDocumentId"].toString()
                                 objectChatPersonal.lastUpdated=dc.document["lastUpdated"].toString()
+                                objectChatPersonal.lastSeen = dc.document["lastSeen"].toString()
 
-                                AllChatDataModel.personalChatList.add(objectChatPersonal)
+                                if(AllChatDataModel.personalChatList.find { it.chatDocumentId == objectChatPersonal.chatDocumentId } == null)
+                                {
+                                    AllChatDataModel.personalChatList.add(objectChatPersonal)
+                                }
+                                else{
+                                    AllChatDataModel.personalChatList.set(AllChatDataModel.personalChatList.indexOf(AllChatDataModel.personalChatList.find { it.chatDocumentId == objectChatPersonal.chatDocumentId }) , objectChatPersonal)
+                                }
                                 Log.d("FinalDebug4","all upate${AllChatDataModel.personalChatList.size}")
-
                                 Log.d("FireStoreSnap",  dc.document["otherNumber"].toString())
                                 Log.d("HomeActivity","Size"+AllChatDataModel.personalChatList.size.toString())
                             }
@@ -88,7 +95,7 @@ class DataRetriveClass : HomeActivityContract.Model{
                     Log.d("Run3","passNewMessagetoPrentercallled")
 
                     if(AllChatDataModel.flagPersonalChat) {
-                        AllChatDataModel.flagPersonalChat=true
+                        AllChatDataModel.flagPersonalChat=false
                         Log.d("FinalDebug5", " persona presenter.sortPersonalChatList() ${AllChatDataModel.personalChatList.size}")
                         presenter.sortPersonalChatList()
 

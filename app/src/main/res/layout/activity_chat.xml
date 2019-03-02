@@ -6,66 +6,99 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".view.activities.ChatActivity"
-android:background="@drawable/pm_gradient">
+        android:background="#EBE4E4">
 
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+    <View
+            android:layout_width="86dp"
+            android:layout_height="24dp"
+            android:id="@+id/view12"
+            android:background="#fff"
+            app:layout_constraintTop_toTopOf="@id/editTextSend" app:layout_constraintEnd_toEndOf="@+id/view11"
+            android:layout_marginEnd="32dp" android:layout_marginRight="32dp"/>
+    <View
+            android:layout_width="86dp"
+            android:layout_height="22dp"
+            android:id="@+id/view13"
+            android:background="#de6262"
+            app:layout_constraintEnd_toEndOf="@+id/view11"
+            android:layout_marginEnd="32dp" android:layout_marginRight="32dp"
+            app:layout_constraintBottom_toBottomOf="@id/editTextSend"
+    />
+
+    <View
+            android:layout_width="56dp"
+            android:layout_height="0dp"
+            android:id="@+id/view11" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/editTextSend"
+            android:background="@drawable/chat_button"
+            app:layout_constraintTop_toTopOf="@id/editTextSend"
+            app:layout_constraintStart_toEndOf="@id/editTextSend"/>
+
+    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
               android:textAlignment="center"
-              android:padding="8dp"
+              android:padding="15dp"
+              android:background="#de6262"
               android:id="@+id/textViewOtherUser" app:layout_constraintTop_toTopOf="parent"
-              app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
-              android:textSize="24sp" tools:text="Group Name" android:textColor="#FFFFFF" android:textAllCaps="false"
+              app:layout_constraintEnd_toEndOf="parent"
+              tools:text="Group Name"
+              android:textSize="24sp" android:textAllCaps="true" android:textColor="#FFF" android:textStyle="bold"
+              app:layout_constraintStart_toEndOf="@+id/imageViewOtherPerson"
     />
 
     <de.hdodenhof.circleimageview.CircleImageView
-            android:layout_width="62dp"
-            android:layout_height="62dp"
+            android:layout_width="81dp"
+            android:layout_height="0dp"
             android:id="@+id/imageViewOtherPerson"
-            android:src="@drawable/akshat"
+
+
             app:layout_constraintTop_toTopOf="@+id/textViewOtherUser"
-            app:layout_constraintStart_toStartOf="@+id/textViewOtherUser" android:layout_marginLeft="16dp"
-            android:layout_marginStart="16dp" tools:src="@drawable/suyash"
-            app:layout_constraintBottom_toBottomOf="@+id/textViewOtherUser" android:layout_marginTop="8dp"/>
+            tools:src="@drawable/suyash"
+            android:background="#de6262"
+            app:layout_constraintBottom_toBottomOf="@+id/textViewOtherUser" android:src="@drawable/profile"
+            app:layout_constraintVertical_bias="0.0" app:layout_constraintStart_toStartOf="parent"
+    />
+
     <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layoutManager="android.support.v7.widget.LinearLayoutManager"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/editTextSend"
-            app:layout_constraintTop_toBottomOf="@+id/textViewOtherUser" android:layout_marginTop="16dp"/>
+            app:layout_constraintTop_toBottomOf="@+id/textViewOtherUser"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/editTextSend"/>
 
     <EditText
             android:id="@+id/editTextSend"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:ems="10"
             android:padding="10dp"
             android:inputType="textPersonName"
             android:hint="Enter your message here"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toStartOf="@+id/buttonSend"
-            android:layout_marginRight="8dp"
-            app:layout_constraintHorizontal_bias="0.0"
-            android:layout_marginBottom="12dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:background="@drawable/text_shape"/>
+            android:background="@drawable/text_shape"
+            app:layout_constraintEnd_toStartOf="@+id/view11"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toEndOf="@+id/buttonCamera"
+    />
 
     <ImageButton
             android:id="@+id/buttonSend"
-            android:layout_width="77dp"
+            android:layout_width="0dp"
             android:layout_height="48dp"
             android:text="Send"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="9dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:background="@drawable/send_button"
-            android:src="@drawable/ic_send_button_icon"/>
+            app:layout_constraintEnd_toEndOf="@id/view11"
+            android:background="#0000ffff"
+            app:layout_constraintStart_toStartOf="@id/view11"
+            android:src="@drawable/ic_send_button_icon" app:layout_constraintTop_toTopOf="@+id/view11"
+            android:layout_marginLeft="8dp" android:layout_marginStart="8dp"/>
 
+    <ImageButton
+            android:layout_width="45dp"
+            android:layout_height="0dp"
+            android:id="@+id/buttonCamera"
+            android:src="@drawable/ic_camera" android:background="#FFF"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/editTextSend"
+            app:layout_constraintBottom_toBottomOf="@id/editTextSend"
+    />
 
 </android.support.constraint.ConstraintLayout>
