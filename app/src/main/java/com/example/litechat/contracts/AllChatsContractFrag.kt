@@ -1,6 +1,5 @@
 package com.example.litechat.contracts
 
-import com.example.litechat.model.ChatModelK
 import com.example.litechat.model.MessageList
 
 class AllChatsContractFrag {

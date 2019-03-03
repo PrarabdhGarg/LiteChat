@@ -74,12 +74,14 @@ class ContactFragPresenter(viewPassed: ContactFragContract.View, contextPassed: 
         database.collection("Users").get().addOnSuccessListener { result ->
 
             for ( document in result){
+                Log.d("ContactFirebase" , document.data.toString())
                 ContactDataModel.usersList.add(document.id)
             }
             Log.d("ContactThread","Comparison Starts")
             compareUserContact(adapterListener)
             Log.d("ContactThread","Comparison Stops")
         }
+
     }
 
 
@@ -99,6 +101,7 @@ class ContactFragPresenter(viewPassed: ContactFragContract.View, contextPassed: 
                 }
             }
         }
+
         model.roomDeleteData(context)
         model.roomSetData(context, ContactDataModel.contactAndUser)
         Log.d("ContactThread","Listener Called")

@@ -84,8 +84,8 @@ class HomeActivity : AppCompatActivity(),HomeActivityContract.View,SearchView.On
         Log.e("FinalCheck" , "OnCreateCalled")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
-       homeActivityPresenter = HomeActivityPresenter(applicationContext , this)
-        AllChatDataModel.isPresenterCalled = true
+        homeActivityPresenter = HomeActivityPresenter(applicationContext , this)
+
         ContentResolverData.contentResolverPassed = contentResolver
        // If user is already logged in, no need to open the LoginActivity again
 
@@ -102,7 +102,10 @@ class HomeActivity : AppCompatActivity(),HomeActivityContract.View,SearchView.On
             UserProfileData.UserNumber = number
             AllChatDataModel.userNumberIdPM = number
             homeActivityPresenter.getUserDataOnLogin(number)
-            homeActivityPresenter.getPersonalChatsFromFirestore()
+
+                homeActivityPresenter.getPersonalChatsFromFirestore()
+                AllChatDataModel.isPresenterCalled = true
+
         }
 
 
@@ -143,9 +146,10 @@ class HomeActivity : AppCompatActivity(),HomeActivityContract.View,SearchView.On
     super.onStart()
         Log.e("FinalCheck" , "OnStartCalled")
         AllChatDataModel.personalChatList.clear()
-        if (!AllChatDataModel.isPresenterCalled) {
+
             homeActivityPresenter.getPersonalChatsFromFirestore()
-        }
+            AllChatDataModel.isPresenterCalled = true
+
         AllChatDataModel.userNumberIdPM = UserProfileData.UserNumber
        Log.d("FinalDebug1"," homeActivityPresenter.getPersonalChatsFromFirestore called with ${AllChatDataModel.userNumberIdPM}")
     }
@@ -162,17 +166,18 @@ class HomeActivity : AppCompatActivity(),HomeActivityContract.View,SearchView.On
             R.id.action_profile -> {
 
                 // start Activity for Profile
+                //AllChatDataModel.upadateFragmentChatFirstTime = 1
                 startActivity(Intent(this@HomeActivity, ProfileActivity::class.java))
                 return true
             }
             R.id.action_developers -> {
 
-
+                //AllChatDataModel.upadateFragmentChatFirstTime = 1
                 startActivity(Intent(this@HomeActivity, DeveloperActivity::class.java))
                 return true
             }
             R.id.action_signOut -> {
-
+                //AllChatDataModel.upadateFragmentChatFirstTime = 1
                 FirebaseAuth.getInstance().signOut()
                 PreferenceManager.getDefaultSharedPreferences(applicationContext).edit().putString("CurrentUserNumber" , "").apply()
                 UserProfileData.clearData()
@@ -181,6 +186,7 @@ class HomeActivity : AppCompatActivity(),HomeActivityContract.View,SearchView.On
             }
 
             R.id.action_newPersonalChat -> {
+                //AllChatDataModel.upadateFragmentChatFirstTime = 1
                 Log.d("AllChatNumber" , AllChatDataModel.userNumberIdPM)
                 startActivity(Intent(this@HomeActivity,NewPersonalChatActivity::class.java))
                 return true
@@ -188,6 +194,7 @@ class HomeActivity : AppCompatActivity(),HomeActivityContract.View,SearchView.On
 
 
             R.id.action_newGroupChat -> {
+                //AllChatDataModel.upadateFragmentChatFirstTime = 1
                 Log.d("AllChatNumber" , AllChatDataModel.userNumberIdPM)
                 startActivity(Intent(this@HomeActivity,NewGroupChatActivity::class.java))
                 return true
@@ -241,7 +248,7 @@ class HomeActivity : AppCompatActivity(),HomeActivityContract.View,SearchView.On
         var preferances : SharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         preferances.getString("CurrentUserNumber" , "123456789")
         Log.d("MobileNumberPrefer" , preferances.getString("CurrentUserNumber" , "123456789"))
-        fragment!!.view!!.ProgressBarStatus.visibility = View.VISIBLE
+        fragment!!.view!!.statusLoader.visibility = View.VISIBLE
         if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
             //val thumbnail: Bitmap = data!!.getParcelableExtra("data")
             val fullPhotoUri: Uri? = data!!.data
@@ -252,12 +259,12 @@ class HomeActivity : AppCompatActivity(),HomeActivityContract.View,SearchView.On
     }
 
     override fun onResume() {
-        AllChatDataModel.upadateFragmentChatFirstTime=1
+        //AllChatDataModel.upadateFragmentChatFirstTime=1
         Log.e("FinalCheck" , "onResumeCalled")
         Log.d("Debug" , "On Resume of main activity called with user ${UserProfileData.UserNumber}")
-        /*if (!AllChatDataModel.isPresenterCalled) {
+
             homeActivityPresenter.getPersonalChatsFromFirestore()
-        }*/
+
         Log.d("Checking" , UserProfileData.UserNumber+"   " + AllChatDataModel.userNumberIdPM)
         super.onResume()
     }

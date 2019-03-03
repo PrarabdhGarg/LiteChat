@@ -14,6 +14,7 @@ import com.example.litechat.model.AllChatDataModel
 import com.example.litechat.model.ContactListModel
 import kotlinx.android.synthetic.main.group_member_name.view.*
 
+
 class GroupInfoAdapter(var memlist:ArrayList<String>,var context: Context): RecyclerView.Adapter<GroupInfoAdapter.GroupInfoHolder>() {
    class GroupInfoHolder(val view: View):RecyclerView.ViewHolder(view){
          var memName: TextView = view.findViewById(R.id.memberName);
@@ -27,10 +28,12 @@ class GroupInfoAdapter(var memlist:ArrayList<String>,var context: Context): Recy
     }
 
     override fun getItemCount(): Int {
+        Log.d("GroupInfo3",memlist.size.toString())
         return memlist.size
     }
 
     override fun onBindViewHolder(p0: GroupInfoHolder, p1: Int) {
+
         Log.d("names","binded")
         if(memlist.get(p1)!=AllChatDataModel.userNumberIdPM)
         p0.memName.text =(ContactListModel().roomGetName(context ,memlist.get(p1)))

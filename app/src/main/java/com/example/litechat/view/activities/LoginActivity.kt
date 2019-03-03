@@ -12,6 +12,8 @@ import android.support.constraint.ConstraintLayout
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.Toast
 import com.example.litechat.R
 import com.example.litechat.contracts.LoginContract
@@ -27,6 +29,8 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
     private val PERMISSIONS_REQUEST_READ_STORAGE = 200
     var mobileNumber : String? = null
     var firebaseAuth : FirebaseAuth? = null
+    lateinit var animFade: Animation
+    lateinit var animationDrawable: AnimationDrawable
     var loginActivityPresenter : LoginActivityPresenter? = null   //Stores the instance of the presenter that will be used throughout this activity
     var userName : String? = null
     var doubleBackToExitPressedOnce = false   //This variable is true if the user has pressed the button once. This variable gets reset after every 2 seconds
@@ -39,19 +43,21 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
         requestPermissions(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE , Manifest.permission.READ_CONTACTS , Manifest.permission.CALL_PHONE) , PERMISSIONS_REQUEST_READ_STORAGE)
 
         val constraintLayout = findViewById<ConstraintLayout>(R.id.login_layout)
-        val animationDrawable = constraintLayout.background as AnimationDrawable
+        animationDrawable = constraintLayout.background as AnimationDrawable
         animationDrawable.setEnterFadeDuration(2000)
         animationDrawable.setExitFadeDuration(4000)
+
+        animFade = AnimationUtils.loadAnimation(applicationContext, R.anim.fade_in)
 
         FirebaseApp.initializeApp(baseContext)
         loginActivityPresenter = LoginActivityPresenter(this)
         firebaseAuth = FirebaseAuth.getInstance()
-        ProgressBar!!.visibility=View.INVISIBLE
+        //ProgressBar!!.visibility=View.INVISIBLE
 
         loginButton.setOnClickListener {
 
             animationDrawable.start()
-            AllChatDataModel.upadateFragmentChatFirstTime=1
+            //AllChatDataModel.upadateFragmentChatFirstTime=1
             when {
                 editTextName.visibility == View.VISIBLE -> {
                     if (editTextName.text.isEmpty())
@@ -67,6 +73,12 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
                     onFirstButtonPressed()
                 }
             }
+        }
+
+        loginRetryButton.setOnClickListener {
+
+            animationDrawable.start()
+            onFirstButtonPressed()
         }
     }
 
@@ -118,11 +130,11 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
     {
         UserProfileData.UserName = editTextName.text.toString()
         //UserProfileData.UserAbout = editTextAbout.text.toString()
-        ProgressBar!!.setVisibility(View.VISIBLE)
+        //ProgressBar!!.setVisibility(View.VISIBLE)
         window.setFlags(
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-        loginActivityPresenter!!.verifyNumber(UserProfileData.UserNumber!! , this , applicationContext , ProgressBar , UserProfileData.UserName!!)
+        loginActivityPresenter!!.verifyNumber(UserProfileData.UserNumber!! , this , applicationContext, UserProfileData.UserName!!)
     }
 
     override fun onUserAccontNotFound() {
@@ -130,10 +142,14 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
          * Ask user to create new Account
          */
         Log.d("TAG " , "New User")
-        loginButton.text = "SignUp"
+        loginButton.text = "Sign Up"
         editTextName.visibility = View.VISIBLE
+        loginRetryButton.visibility = View.VISIBLE
+        editTextName.startAnimation(animFade)
+        loginRetryButton.startAnimation(animFade)
+        animationDrawable.stop()
         //editTextAbout.visibility = View.VISIBLE
-        ProgressBar!!.visibility = View.INVISIBLE
+        //ProgressBar!!.visibility = View.INVISIBLE
         window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
     }
 
@@ -142,12 +158,12 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
          * Login the User into the app
          */
         Log.d("TAG " , "Existing User")
-        ProgressBar!!.visibility = View.VISIBLE
+        //ProgressBar!!.visibility = View.VISIBLE
         window.setFlags(
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
         Log.d("Context" , "${applicationContext}")
-        loginActivityPresenter!!.verifyNumber(UserProfileData.UserNumber , this@LoginActivity , applicationContext , dialog = ProgressBar)
+        loginActivityPresenter!!.verifyNumber(UserProfileData.UserNumber , this@LoginActivity , applicationContext)
         window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
     }
 

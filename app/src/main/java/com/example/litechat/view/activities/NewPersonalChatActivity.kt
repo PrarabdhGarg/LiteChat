@@ -43,7 +43,7 @@ class NewPersonalChatActivity : AppCompatActivity() {
                          //Method to check if current Personal  Chats exists or not
                          // in Current Logged in user
                        // loader start
-                        db.collection("Users").document(AllChatDataModel.userNumberIdPM).collection("currentPersonalChats"). //
+                        db.collection("Users").document(AllChatDataModel.userNumberIdPM).collection("currentChats"). //
                          whereEqualTo("otherNumber",editTextNewNumber.text.toString().trim()).get().addOnSuccessListener { documents ->
                          // if chat between these two existed previously than open their chat
                             Log.d("New1","g")
@@ -59,6 +59,7 @@ class NewPersonalChatActivity : AppCompatActivity() {
                                  intent.putExtra("documentPathId", currentPersonalChatData.chatDocumentId)
                                  intent.putExtra("string", currentPersonalChatData.otherNumber)
                                  intent.putExtra("lastUpdated",currentPersonalChatData.lastUpdated)
+                                 intent.putExtra("lastSeen" , currentPersonalChatData.lastSeen)
                                  startActivity(intent)
                                  finish()
                              }// loser fnsh
@@ -95,9 +96,10 @@ class NewPersonalChatActivity : AppCompatActivity() {
                                              var chatObject2 = ChatObject()
                                              chatObject2.lastUpdated = timeStamp.toString()
                                              chatObject2.chatDocumentId = doc.id
-                                             chatObject2.otherNumber = AllChatDataModel.userNumberIdPM// add numbers
+                                             chatObject2.otherNumber = AllChatDataModel.userNumberIdPM
+                                             chatObject2.lastSeen = timeStamp.toString() // add numbers
                                              db.collection("Users").document(newNumber)
-                                                 .collection("currentPersonalChats").document().set(chatObject2)
+                                                 .collection("currentChats").document().set(chatObject2)
                                                  .addOnSuccessListener {
 
                                                      /**
@@ -107,9 +109,10 @@ class NewPersonalChatActivity : AppCompatActivity() {
                                                      var chatObject1 = ChatObject()
                                                      chatObject1.lastUpdated = timeStamp.toString()
                                                      chatObject1.chatDocumentId = doc.id
-                                                     chatObject1.otherNumber = newNumber// add numbers
+                                                     chatObject1.otherNumber = newNumber
+                                                     chatObject1.lastSeen = timeStamp.toString()// add numbers
                                                      db.collection("Users").document(AllChatDataModel.userNumberIdPM)
-                                                         .collection("currentPersonalChats").document().set(chatObject1)
+                                                         .collection("currentChats").document().set(chatObject1)
                                                          .addOnSuccessListener { res ->
 
                                                              // check non null

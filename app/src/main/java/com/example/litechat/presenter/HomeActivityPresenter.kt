@@ -45,14 +45,14 @@ class HomeActivityPresenter(contextPassed: Context , val view : HomeActivityCont
 
              if(view.isChatFragmentActive())
              {
-                 // store
+                 // Store data
              }
             else
              {
                  if(AllChatDataModel.upadateFragmentChatFirstTime==1)
                  {  // to call only 1 time
                      Log.e("FinalCheck" , "UpdateOneTime")
-                     AllChatDataModel.upadateFragmentChatFirstTime=0
+                     //AllChatDataModel.upadateFragmentChatFirstTime=0
                      Log.d("FinalDebug7"," updateRecyclerViewForFirstTime() Size  ${AllChatDataModel.personalChatList.size}")
                      view.getInstanceOfFragmentChat().updateRecyclerViewForFirstTime()
                  }
@@ -60,8 +60,7 @@ class HomeActivityPresenter(contextPassed: Context , val view : HomeActivityCont
                  {
                      Log.e("FinalCheck" , "Update other")
                      Log.d("FinalDebug8","all upate${AllChatDataModel.personalChatList.size}")
-                   view.getInstanceOfFragmentChat().updateRecyclerView()
-
+                     view.getInstanceOfFragmentChat().updateRecyclerView()
                  }
              }
 

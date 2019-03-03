@@ -16,17 +16,21 @@ import kotlinx.android.synthetic.main.activity_group_info.*
 
 class GroupInfoActivity : AppCompatActivity() {
 
+
     private  var nmemlist= ArrayList<String>()
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private lateinit var viewManager: RecyclerView.LayoutManager
+
     var data=FirebaseFirestore.getInstance()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_group_info)
         var id=intent.getStringExtra("documentPathId")
+
         viewManager = LinearLayoutManager(this)
         data!!.collection("Chats").document(id).get().addOnSuccessListener { result->
-
+          Log.d("Data","Query"+result.toString() )
            var obj= result.toObject(NewDocumentCreate::class.java)
             nmemlist=obj!!.groupmembers
             groupName.text = obj.groupname
@@ -38,7 +42,6 @@ class GroupInfoActivity : AppCompatActivity() {
                 adapter=viewAdapter
             }
         }
-
 
     }
 }

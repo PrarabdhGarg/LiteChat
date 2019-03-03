@@ -18,7 +18,7 @@ import com.example.litechat.model.UserProfileData
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import kotlinx.android.synthetic.main.activity_profile.*
+import kotlinx.android.synthetic.main.activity_profile_other_user.*
 
 class ProfileOtherUser : AppCompatActivity() {
 
@@ -39,10 +39,14 @@ class ProfileOtherUser : AppCompatActivity() {
             names = it.data!!.get("name").toString()
             about = it.data!!.get("about").toString()
             image = it.data!!.get("profileImage").toString()
+
+            AboutTextView.text = about.toString()
+            NameTextView.text = names.toString()
+            Glide.with(applicationContext).load(image).into(ProfileImageView)
+
+            otherProfileLoader.visibility = View.INVISIBLE
         }
-        AboutTextView.text = about.toString()
-        NameTextView.text = names.toString()
-        Glide.with(applicationContext).load(image).into(ProfileImageView)
+
 
 
     }

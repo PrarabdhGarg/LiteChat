@@ -1,8 +1,10 @@
 package com.example.litechat.view.adapters
 
 import android.annotation.TargetApi
+import android.arch.persistence.room.Room
 import android.content.Context
 import android.content.res.Resources
+import android.icu.lang.UCharacter.GraphemeClusterBreak.L
 import android.os.Build
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -16,10 +18,15 @@ import com.example.litechat.ListenerObjectTry
 import com.example.litechat.R
 import com.example.litechat.model.AllChatDataModel
 import com.example.litechat.model.ChatObject
-import com.example.litechat.model.DataChatModel
+import com.example.litechat.model.ContactListModel
+import com.example.litechat.model.UserProfileData
+import com.google.firebase.storage.FirebaseStorage
+import java.lang.Exception
+import java.time.Instant
+
 
 class AdapterForFragmentChat(private var dataset :ArrayList<ChatObject>, private var context: Context,
-                             private var listenerObjectTryImage: ListenerObjectTry,private var listenerObjectTryChat: ListenerObjectTry): RecyclerView.Adapter<AdapterForFragmentChat.MyViewHolder>() {
+                             private var listenerObjectTryImage: ListenerObjectTry, private var listenerObjectTryChat: ListenerObjectTry): RecyclerView.Adapter<AdapterForFragmentChat.MyViewHolder>() {
 
 //    private lateinit var dataset: ArrayList<String>
 
@@ -28,7 +35,7 @@ class AdapterForFragmentChat(private var dataset :ArrayList<ChatObject>, private
 
         var textView: TextView =view.findViewById(R.id.chatName)
         var imageView: ImageView=view.findViewById(R.id.profileImage)
-        //var greenDot: ImageView=view.findViewById(R.id.imageViewGreenDot)
+        var greenDot: ImageView=view.findViewById(R.id.imageViewGreenDot)
 
     }
 
@@ -40,47 +47,63 @@ class AdapterForFragmentChat(private var dataset :ArrayList<ChatObject>, private
     } // create a new view
 
 
-    override fun getItemCount(): Int {
-        return dataset.size
-           }
+    override fun getItemCount(): Int = dataset.size
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     override fun onBindViewHolder(holder: AdapterForFragmentChat.MyViewHolder, position: Int) {
 
-        holder.textView.text = dataset[position].otherNumber
+        holder.textView.text = searchContactName(dataset[position].otherNumber)
         Log.d("QueryF",dataset[position].otherNumber+ " \n" +position.toString())
-
+        try {
+            var t = AllChatDataModel.otherUserNumber.toDouble()
+            Log.d("Firebase" , "Entered try")
+            FirebaseStorage.getInstance().reference.child(AllChatDataModel.otherUserNumber).child("ProfileImage").downloadUrl.addOnSuccessListener {
+                Log.d("Firebse" , "Entered and retrivedd storage sucessfully ${it}")
+                Glide.with(context).load(it).into(holder.imageView).onLoadStarted(context.getDrawable(R.drawable.profile))
+            }
+        }catch (e : Exception)
+        {
+            Log.d("Firebase" , "Entered catch \n $e")
+            /*FirebaseStorage.getInstance().reference.child("Groups").child(AllChatDataModel.documentPathId).downloadUrl.addOnSuccessListener {
+                Glide.with(context).load(it).into(holder.imageView).onLoadStarted(context.getDrawable(R.drawable.profile))
+            }*/
+        }
         Log.d("FinalDebug11","AllChatDataModel.personalChatList.size:${AllChatDataModel.personalChatList.size}\n${AllChatDataModel.personalChatList.contains(dataset[position])}")
-        if ((AllChatDataModel.personalChatList.size!=0 && (AllChatDataModel.personalChatList.find { it.chatDocumentId==dataset[position].chatDocumentId }!=null)) || holder.imageView.drawable == context.getDrawable(R.drawable.ic_checked))
+        /*if ((AllChatDataModel.personalChatList.size!=0 && (AllChatDataModel.personalChatList.find { it.chatDocumentId==dataset[position].chatDocumentId }!=null)) || holder.imageView.drawable == context.getDrawable(R.drawable.ic_checked))
         {
             //Log.e("FinalCheck" , "AdapterIf Condition called")
             Log.d("FinalDebuf12","AllChatDataModel.personalChatList.size:${AllChatDataModel.personalChatList.size}\n${AllChatDataModel.personalChatList.contains(dataset[position])}")
-            /*holder.greenDot.visibility=View.VISIBLE
-            holder.greenDot.bringToFront()*/
+            *//*holder.greenDot.visibility=View.VISIBLE
+            holder.greenDot.bringToFront()*//*
            Glide.with(context).load(R.drawable.ic_checked).into(holder.imageView)
+        }*/
+        if (AllChatDataModel.personalChatList.size!=0 && (AllChatDataModel.personalChatList.find { it.chatDocumentId==dataset[position].chatDocumentId }!=null) && AllChatDataModel.personalChatList.find { it.chatDocumentId == dataset[position].chatDocumentId }!!.lastSeen < Instant.now().epochSecond.toString() && AllChatDataModel.personalChatList.find { it.chatDocumentId == dataset[position].chatDocumentId }!!.lastSeen < AllChatDataModel.personalChatList.find { it.chatDocumentId == dataset[position].chatDocumentId }!!.lastUpdated)
+        {
+            holder.greenDot.visibility = View.VISIBLE
         }
-        Glide.with(context).load(R.drawable.profile).into(holder.imageView)
+
         holder.textView.setOnClickListener(object : View.OnClickListener{
 
             override fun onClick(v: View?) {
+
+
                 Log.d("AllChatNumber" , AllChatDataModel.userNumberIdPM)
                   // change with number
                 /***
                  *
                  * change listner to pass chat id
                  */
-                var t = ArrayList<ChatObject>()
+                /*var t = ArrayList<ChatObject>()
                 t.addAll(AllChatDataModel.personalChatList)
-                var i = AllChatDataModel.personalChatList.indexOf(dataset[position])
-                Log.d("Debug13" , i.toString())
-                if(i>=0)
+                var i = AllChatDataModel.personalChatList.indexOf(dataset[position])*/
+                //Log.d("Debug13" , i.toString())
+                /*if(i>=0)
                     t.removeAt(i)
-                AllChatDataModel.personalChatList.addAll(t)
+                AllChatDataModel.personalChatList.addAll(t)*/
                 Log.d("Debug13" , AllChatDataModel.personalChatList.size.toString())
-                Glide.with(context).load(R.drawable.profile).into(holder.imageView)
-               //holder.greenDot.visibility=View.INVISIBLE
+                holder.greenDot.visibility = View.INVISIBLE
                 Log.d("Dataa","first tigrme")
-                Log.d("Persoo",holder.textView!!.text.toString())
+                Log.d("Persoo",holder.textView.text.toString())
                 //AllChatDataModel.otherUserNumber=dataset[position].otherNumber
                listenerObjectTryChat.listener!!.onDataRecieved(dataset[position].otherNumber,dataset[position].chatDocumentId,dataset[position].lastUpdated)
 
@@ -91,10 +114,25 @@ class AdapterForFragmentChat(private var dataset :ArrayList<ChatObject>, private
         holder.imageView.setOnClickListener(object: View.OnClickListener{
 
             override fun onClick(v: View?) {
-
+Log.d("GroupInfo2","documnetId from adapter${dataset[position].chatDocumentId}")
                 // give number to launch profile
                 listenerObjectTryImage.listener!!.onDataRecieved(dataset[position].otherNumber,dataset[position].chatDocumentId,dataset[position].lastUpdated)
             }
         })
+    }
+
+    private fun searchContactName(number: String): String {
+
+        val dbModel = ContactListModel()
+
+        var namePassed = dbModel.roomGetName(context, number)
+
+        if(namePassed.isEmpty()){
+            return number
+        }
+        else{
+            return namePassed
+        }
+
     }
 }

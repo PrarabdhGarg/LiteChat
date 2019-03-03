@@ -30,19 +30,17 @@ class ChatInteractor(p1:ChatContract.CPresenter) : ChatContract.CInteractor {
         }
 
         // sets last updated to  both the users
-        database!!.collection("Users").document(AllChatDataModel.userNumberIdPM).collection("currentPersonalChats")
+        database!!.collection("Users").document(AllChatDataModel.userNumberIdPM).collection("currentChats")
             .whereEqualTo("otherNumber",AllChatDataModel.otherUserNumber).get().addOnSuccessListener { documents ->
 
-                if(documents!=null)
-                {
-                    for (doc in documents )
-                    {
-                        doc.reference.update("lastUpdated",messageModel.sentOn)
+                if(documents!=null) {
+                    for (doc in documents) {
+                        doc.reference.update("lastUpdated", messageModel.sentOn)
                     }
                 }
         }
 
-        database!!.collection("Users").document(AllChatDataModel.otherUserNumber).collection("currentPersonalChats")
+        database!!.collection("Users").document(AllChatDataModel.otherUserNumber).collection("currentChats")
             .whereEqualTo("otherNumber",AllChatDataModel.userNumberIdPM).get().addOnSuccessListener { documents ->
 
                 if(documents!=null)
@@ -148,7 +146,49 @@ class ChatInteractor(p1:ChatContract.CPresenter) : ChatContract.CInteractor {
     }
 
     override fun removeListener() {
-   listener!!.remove()
+
+  Log.d("Tag4", "enter the method")
+        FirebaseFirestore.getInstance().collection("Chats").document(AllChatDataModel.documentPathId)
+            .collection("messages").get().addOnSuccessListener { documents ->
+                if (documents.size()>0)
+                {
+
+                }
+                else{
+
+                    Log.d("Tag", "entered else condition")
+
+                    FirebaseFirestore.getInstance().collection("Chats")
+                        .document(AllChatDataModel.documentPathId).delete().addOnSuccessListener {
+
+                            Log.d("Tag2", "Child deleted sucessfully")
+                        }
+
+                    FirebaseFirestore.getInstance().collection("Users")
+                        .get().addOnSuccessListener { result ->
+
+                            for(res in result)
+                            {
+                                 res.reference.collection("currentPersonalChats")
+                                     .whereEqualTo("chatDocumentId",AllChatDataModel.documentPathId).get().addOnSuccessListener { documents ->
+                                         Log.d("Tag5","Enter query")
+                                         for (doc in documents)
+                                         {
+                                             doc.reference.delete().addOnSuccessListener {
+
+                                                 Log.d("Tag3","All personal chats deleted")
+                                             }
+                                         }
+                                     }
+                            }
+                        }
+                }
+
+            }
+
+        listener!!.remove()
     }
+
+
 }
 
