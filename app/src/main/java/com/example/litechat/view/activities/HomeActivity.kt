@@ -44,8 +44,10 @@ import kotlinx.android.synthetic.main.fragment_status.view.*
 import java.util.ArrayList
 
 
-class HomeActivity : AppCompatActivity(),HomeActivityContract.View
+class HomeActivity : AppCompatActivity(),HomeActivityContract.View,SearchView.OnQueryTextListener
 {
+
+
     override fun passContext(): Context = applicationContext
 
     override fun isChatFragmentActive(): Boolean {
@@ -124,10 +126,18 @@ class HomeActivity : AppCompatActivity(),HomeActivityContract.View
         val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
         (menu.findItem(R.id.search).actionView as SearchView).apply {
             setSearchableInfo(searchManager.getSearchableInfo(componentName))
+
         }
         return true
     }
 
+    override fun onQueryTextSubmit(text: String?): Boolean {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onQueryTextChange(text: String?): Boolean {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     override fun onStart() {
     super.onStart()
@@ -141,14 +151,14 @@ class HomeActivity : AppCompatActivity(),HomeActivityContract.View
     }
 
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+  //  override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        val id = item.itemId
+    //    val id = item.itemId
 
 
-        when (id) {
+  /*      when (id) {
             R.id.action_profile -> {
 
                 // start Activity for Profile
@@ -183,8 +193,8 @@ class HomeActivity : AppCompatActivity(),HomeActivityContract.View
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
-        }
-        }
+        }*/
+      //  }
 
 
 

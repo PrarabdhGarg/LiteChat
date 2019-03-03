@@ -3,35 +3,11 @@
       xmlns:tools="http://schemas.android.com/tools"
       tools:context="com.example.litechat.loginView.activities.HomeActivity"
 >
-    <item
-            android:id="@+id/action_profile"
-            android:orderInCategory="100"
-            android:title="@string/action_settings"
-            app:showAsAction="never" />
-
-    <item
-            android:id="@+id/action_developers"
-            android:orderInCategory="100"
-            android:title="@string/action_developers"
-            app:showAsAction="never" />
-
     <item android:id="@+id/search"
           android:title="@string/search_title"
           android:icon="@drawable/ic_search_white_24dp"
-          app:actionViewClass="android.widget.SearchView"
-          app:showAsAction="collapseActionView|ifRoom" />
-
-    <item android:id="@+id/action_signOut"
-          android:title="@string/action_signOut"
-          android:orderInCategory="100"
-          app:showAsAction="never"/>
-
-    <item android:id="@+id/action_newPersonalChat"
-          android:title="@string/action_newPersonalChat"
-          android:orderInCategory="100"
-          app:showAsAction="never"/>
-    <item android:id="@+id/action_newGroupChat"
-          android:title="@string/action_newGroupChat"
-          android:orderInCategory="100"
-          app:showAsAction="never"/>
+          app:actionViewClass="android.support.v7.widget.SearchView"
+          app:showAsAction="collapseActionView|ifRoom"
+          android:visible="true"
+    />
 </menu>
