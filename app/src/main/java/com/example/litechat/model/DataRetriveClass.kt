@@ -80,7 +80,8 @@ class DataRetriveClass : HomeActivityContract.Model{
                                 {
                                     AllChatDataModel.personalChatList.add(objectChatPersonal)
                                 }
-                                else{
+                                else
+                                {
                                     AllChatDataModel.personalChatList.set(AllChatDataModel.personalChatList.indexOf(AllChatDataModel.personalChatList.find { it.chatDocumentId == objectChatPersonal.chatDocumentId }) , objectChatPersonal)
                                 }
                                 Log.d("FinalDebug4","all upate${AllChatDataModel.personalChatList.size}")

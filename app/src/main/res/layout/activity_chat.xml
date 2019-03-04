@@ -34,7 +34,7 @@
             app:layout_constraintTop_toTopOf="@id/editTextSend"
             app:layout_constraintStart_toEndOf="@id/editTextSend"/>
 
-    <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+    <TextView android:layout_width="0dp" android:layout_height="72dp"
               android:textAlignment="center"
               android:padding="15dp"
               android:background="#de6262"
@@ -43,7 +43,7 @@
               tools:text="Group Name"
               android:textSize="24sp" android:textAllCaps="true" android:textColor="#FFF" android:textStyle="bold"
               app:layout_constraintStart_toEndOf="@+id/imageViewOtherPerson"
-    />
+              app:layout_constraintBottom_toTopOf="@+id/recyclerView"/>
 
     <de.hdodenhof.circleimageview.CircleImageView
             android:layout_width="81dp"

@@ -169,7 +169,7 @@ class ChatInteractor(p1:ChatContract.CPresenter) : ChatContract.CInteractor {
 
                             for(res in result)
                             {
-                                 res.reference.collection("currentPersonalChats")
+                                 res.reference.collection("currentChats")
                                      .whereEqualTo("chatDocumentId",AllChatDataModel.documentPathId).get().addOnSuccessListener { documents ->
                                          Log.d("Tag5","Enter query")
                                          for (doc in documents)
