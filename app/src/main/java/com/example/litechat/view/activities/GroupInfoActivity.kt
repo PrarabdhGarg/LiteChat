@@ -15,27 +15,32 @@ import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.android.synthetic.main.activity_group_info.*
 
 class GroupInfoActivity : AppCompatActivity() {
-     private var nmemlist=ArrayList<String>()
-    //private  var nmemlist= List<String>
+
+
+    private  var nmemlist= ArrayList<String>()
+    private lateinit var viewAdapter: RecyclerView.Adapter<*>
+    private lateinit var viewManager: RecyclerView.LayoutManager
+
     var data=FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_group_info)
         var id=intent.getStringExtra("documentPathId")
-        Log.d("Data","Query Called$id")
-        var adapter = GroupInfoAdapter(nmemlist)
-        recyclerViewGroupinfo.adapter=adapter
-        nmemlist.clear()
-        data.collection("Chats").document(id).get().addOnSuccessListener { result->
 
+        viewManager = LinearLayoutManager(this)
+        data!!.collection("Chats").document(id).get().addOnSuccessListener { result->
           Log.d("Data","Query"+result.toString() )
            var obj= result.toObject(NewDocumentCreate::class.java)
-            nmemlist.clear()
-            nmemlist.addAll(obj!!.groupmembers)
-            adapter.notifyDataSetChanged()
-            Log.d("DataRetrived", "Mebers$nmemlist")
-            groupName.setText(obj.groupname)
+            nmemlist=obj!!.groupmembers
+            groupName.text = obj.groupname
+            Log.d("names",nmemlist.toString())
+            var viewAdapter = GroupInfoAdapter(nmemlist,this)
+            recyclerViewGroupinfo.apply {
+                Log.d("names","executed")
+                layoutManager=viewManager
+                adapter=viewAdapter
+            }
         }
 
     }

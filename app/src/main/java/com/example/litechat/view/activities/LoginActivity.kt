@@ -107,7 +107,7 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
 
     override fun onFirstButtonPressed()
     {
-        Log.d("LOGIN" , "onFirstPressed Callsed")
+        Log.d("LOGIN" , "onFirstPressed Called")
 
         UserProfileData.UserNumber = editTextNewNumber.text.toString()
 

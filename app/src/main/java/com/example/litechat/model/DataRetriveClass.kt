@@ -2,10 +2,14 @@ package com.example.litechat.model
 
 import android.content.Context
 import android.util.Log
-import com.google.firebase.firestore.DocumentChange
-import com.google.firebase.firestore.EventListener
 import com.example.litechat.contracts.HomeActivityContract
 import com.example.litechat.presenter.StatusFragmentPresenter
+import com.google.firebase.firestore.*
+
+import android.widget.Toast
+
+import com.example.litechat.presenter.HomeActivityPresenter
+
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.MetadataChanges
 import com.google.firebase.firestore.QuerySnapshot
@@ -106,7 +110,7 @@ class DataRetriveClass : HomeActivityContract.Model{
     }
 
 
-    override fun getCurrentActivitiesOfOtherUsers(presenter: StatusFragmentPresenter , context: Context) {
+    override fun getCurrentActivitiesOfOtherUsers(presenter: StatusFragmentPresenter, context: Context) {
         var maps = ArrayList<Pair<String , String>>()
         var model = ContactListModel()
         FirebaseFirestore.getInstance().collection("Users").get()
