@@ -10,7 +10,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.example.litechat"
-        minSdkVersion 15
+        minSdkVersion 26
         targetSdkVersion 28
         multiDexEnabled true
         versionCode 1

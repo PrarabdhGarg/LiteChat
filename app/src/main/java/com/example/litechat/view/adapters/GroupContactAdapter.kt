@@ -8,10 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.GlideContext
 import com.example.litechat.R
 import com.example.litechat.model.ContactListData
+import com.example.litechat.model.UserProfileData
 import de.hdodenhof.circleimageview.CircleImageView
 
 class GroupContactAdapter(var context: Context): RecyclerView.Adapter<GroupContactAdapter.GroupContactHolder>() {
@@ -39,9 +41,15 @@ class GroupContactAdapter(var context: Context): RecyclerView.Adapter<GroupConta
             Log.d("check","exec")
             if(holder.check.visibility == View.INVISIBLE){
 
-                holder.check.visibility = View.VISIBLE
-                ContactListData.groupContacts.add(ContactListData.contacts[position])
-                Log.d("check",ContactListData.groupContacts.toString())
+                if (ContactListData.contacts[position].mobileNumber==UserProfileData.UserNumber) {
+                   Toast.makeText(context,"You are already in the group",Toast.LENGTH_SHORT).show()
+                }
+                else
+                {
+                    holder.check.visibility = View.VISIBLE
+                    ContactListData.groupContacts.add(ContactListData.contacts[position])
+                    Log.d("check",ContactListData.groupContacts.toString())
+                }
             }
             else{
                 holder.check.visibility = View.INVISIBLE

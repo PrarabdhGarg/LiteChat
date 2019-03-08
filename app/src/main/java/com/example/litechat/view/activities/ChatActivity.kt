@@ -1,3 +1,4 @@
+
 package com.example.litechat.view.activities
 
 import android.annotation.TargetApi
@@ -96,20 +97,22 @@ class ChatActivity : AppCompatActivity(), ChatContract.CView {
         // to send messages
         buttonSend.setOnClickListener {
                 // also change last updated
-
-                if (!editTextSend.text.toString().isEmpty())
+                if(AllChatDataModel.documentPathId != null)
                 {
-                    var messageModel= MessageModel()
-                    messageModel.message=editTextSend.text.toString()
-                    messageModel.sentBy=AllChatDataModel.userNumberIdPM// sala ab bhi null h
-                    messageModel.sentOn=Instant.now().epochSecond.toString()
-                    editTextSend.setText("")
-                    buttonSend.isClickable=false
-                    chatPresenter.passNewSetMessageFromViewtoPresenter(messageModel,applicationContext)
-                }
-                else
-                {
-                    Toast.makeText(this@ChatActivity,"Please type a message to send",Toast.LENGTH_SHORT).show()
+                    if (!editTextSend.text.toString().isEmpty())
+                    {
+                        var messageModel= MessageModel()
+                        messageModel.message=editTextSend.text.toString()
+                        messageModel.sentBy=AllChatDataModel.userNumberIdPM// sala ab bhi null h
+                        messageModel.sentOn=Instant.now().epochSecond.toString()
+                        editTextSend.setText("")
+                        buttonSend.isClickable=false
+                        chatPresenter.passNewSetMessageFromViewtoPresenter(messageModel,applicationContext)
+                    }
+                    else
+                    {
+                        Toast.makeText(this@ChatActivity,"Please type a message to send",Toast.LENGTH_SHORT).show()
+                    }
                 }
 
         }
@@ -166,10 +169,17 @@ class ChatActivity : AppCompatActivity(), ChatContract.CView {
 
     override fun onBackPressed()
     {
-        AllChatDataModel.allChatArrayListPersonalStatic.clear()
-        AllChatDataModel.flagOnBackPressed = true
-        chatPresenter.notifyModelOfBackPressed()
-        super.onBackPressed()
+        FirebaseFirestore.getInstance().collection("Users").document(UserProfileData.UserNumber).collection("currentChats").whereEqualTo("chatDocumentId" , AllChatDataModel.documentPathId).get().addOnSuccessListener {
+            for (i in it)
+            {
+                i.reference.update("lastSeen" , Instant.now().epochSecond.toString())
+            }
+            AllChatDataModel.allChatArrayListPersonalStatic.clear()
+            AllChatDataModel.flagOnBackPressed = true
+            chatPresenter.notifyModelOfBackPressed()
+            super.onBackPressed()
+        }
+
     }
  }
 

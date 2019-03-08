@@ -55,11 +55,12 @@ class AdapterForFragmentChat(private var dataset :ArrayList<ChatObject>, private
         holder.textView.text = searchContactName(dataset[position].otherNumber)
         Log.d("QueryF",dataset[position].otherNumber+ " \n" +position.toString())
         try {
-            var t = AllChatDataModel.otherUserNumber.toDouble()
+            var t = dataset[position].otherNumber.toDouble()
             Log.d("Firebase" , "Entered try")
-            FirebaseStorage.getInstance().reference.child(AllChatDataModel.otherUserNumber).child("ProfileImage").downloadUrl.addOnSuccessListener {
+            FirebaseStorage.getInstance().reference.child(dataset[position].otherNumber).child("ProfileImage").downloadUrl.addOnSuccessListener {
                 Log.d("Firebse" , "Entered and retrivedd storage sucessfully ${it}")
-                Glide.with(context).load(it).into(holder.imageView).onLoadStarted(context.getDrawable(R.drawable.profile))
+                // onLoad Started ki wjah se profile image not being displayed in fragment chat
+                Glide.with(context).load(it.toString()).into(holder.imageView)
             }
         }catch (e : Exception)
         {
@@ -77,7 +78,8 @@ class AdapterForFragmentChat(private var dataset :ArrayList<ChatObject>, private
             holder.greenDot.bringToFront()*//*
            Glide.with(context).load(R.drawable.ic_checked).into(holder.imageView)
         }*/
-        if (AllChatDataModel.personalChatList.size!=0 && (AllChatDataModel.personalChatList.find { it.chatDocumentId==dataset[position].chatDocumentId }!=null) && AllChatDataModel.personalChatList.find { it.chatDocumentId == dataset[position].chatDocumentId }!!.lastSeen < Instant.now().epochSecond.toString() && AllChatDataModel.personalChatList.find { it.chatDocumentId == dataset[position].chatDocumentId }!!.lastSeen < AllChatDataModel.personalChatList.find { it.chatDocumentId == dataset[position].chatDocumentId }!!.lastUpdated)
+        //AllChatDataModel.personalChatList.find { it.chatDocumentId == dataset[position].chatDocumentId }!!.lastSeen < Instant.now().epochSecond.toString() &&
+        if (AllChatDataModel.personalChatList.size!=0 && (AllChatDataModel.personalChatList.find { it.chatDocumentId==dataset[position].chatDocumentId }!=null) &&  AllChatDataModel.personalChatList.find { it.chatDocumentId == dataset[position].chatDocumentId }!!.lastSeen < AllChatDataModel.personalChatList.find { it.chatDocumentId == dataset[position].chatDocumentId }!!.lastUpdated)
         {
             holder.greenDot.visibility = View.VISIBLE
         }

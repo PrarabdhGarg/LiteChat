@@ -133,7 +133,7 @@ class FragmentStatus: Fragment() , StatusContract.View{
         Log.d("ViewPager" , "onStart of FragmentStatus Called")
         //Make and Call a function to get and display data
         view!!.RecyclerStatus.adapter = StatusAdapter(context!! , maps)
-        Glide.with(context!!).load(UserProfileData.UserImage).into(view!!.statusImageView).onLoadStarted(context!!.getDrawable(R.drawable.profile))//On starting the fragment, load the current image in the image view, whose Uri is stored locally
+        Glide.with(context!!).load(UserProfileData.UserImage).into(view!!.statusImageView).onLoadFailed(context!!.getDrawable(R.drawable.profile))//On starting the fragment, load the current image in the image view, whose Uri is stored locally
         view!!.currentActivityTextView.setText(UserProfileData.UserCurrentActivity)
 
         stausFragmentPresenter!!.getInfoForRecyclerView()

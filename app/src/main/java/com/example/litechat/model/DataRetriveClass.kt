@@ -1,6 +1,7 @@
 package com.example.litechat.model
 
 import android.content.Context
+import android.provider.DocumentsContract
 import android.util.Log
 import com.example.litechat.contracts.HomeActivityContract
 import com.example.litechat.presenter.StatusFragmentPresenter
@@ -93,6 +94,18 @@ class DataRetriveClass : HomeActivityContract.Model{
                                 Log.d("HomeActivity","Size"+AllChatDataModel.personalChatList.size.toString())
                             }
 
+                            DocumentChange.Type.REMOVED ->
+                            {
+                                Log.d("BeforeDeletion" , "Data : ${dc.document.data} \n Size : ${AllChatDataModel.personalChatList.size}}")
+                                var objectChatPersonal :ChatObject= ChatObject()
+                                objectChatPersonal.otherNumber=dc.document["otherNumber"].toString()
+                                objectChatPersonal.chatDocumentId=dc.document["chatDocumentId"].toString()
+                                objectChatPersonal.lastUpdated=dc.document["lastUpdated"].toString()
+                                objectChatPersonal.lastSeen = dc.document["lastSeen"].toString()
+                                AllChatDataModel.personalChatList.remove(AllChatDataModel.personalChatList.find { it.chatDocumentId == objectChatPersonal.chatDocumentId })
+                               // presenter.sortPersonalChatList()
+                                Log.d("AfterDeletion" , "Size : ${AllChatDataModel.personalChatList.size} \n Object : ${objectChatPersonal.otherNumber}")
+                            }
                         }
                     }
 

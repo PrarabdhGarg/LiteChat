@@ -24,10 +24,16 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import kotlinx.android.synthetic.main.activity_profile.*
 
+/**
+ * This class doesnot follow the MVP structure
+ * This is because by the time this class was written, all of us were so tired and frustrated that we thaught to just write
+ * a simple calss, and make the code work as soon as possible
+ */
+
 class ProfileActivity : AppCompatActivity() {
 
     var number : String? = null
-    final var REQUEST_IMAGE_GET = 1
+    val REQUEST_IMAGE_GET = 1   //Request code for selecting an image from the gallery
     var ref : StorageReference? = null
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -69,6 +75,14 @@ class ProfileActivity : AppCompatActivity() {
 
     }
 
+    /**
+     * This function is called when the user clicks on the button to finish editing his about information
+     * The function first makes the window untouchable and displays the progress bar
+     * It then updates the data on the firestore account, and once the account is sucessfully updated, the local static variables
+     * are also updated, so that the changes are reflected on the current app as well
+     * TODO : When the user clicks on the edit text to edit the information, all the text gets wraped into a single line, making it difficult for the user to update.
+     */
+
     private fun updateAboutInfo() {
 
         ProgressBarProfile.isIndeterminate
@@ -85,9 +99,15 @@ class ProfileActivity : AppCompatActivity() {
                 ProgressBarProfile.visibility=View.INVISIBLE
                 Toast.makeText(applicationContext, "Updated your information successfully",Toast.LENGTH_SHORT).show()
             }
-
     }
 
+    /**
+     * This function is called when the user selects an image from the gallery
+     * The function first retrieves the phone number stored in the shared preferences because the static variables are destroyed
+     * when the gallery is opened.
+     * THen if there is no problem with the selected image, the image is first uploaded on the firebase storage, and then the function
+     * [updateProfileImageOnDatabse] is called
+     */
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -116,15 +136,23 @@ class ProfileActivity : AppCompatActivity() {
     }
 
 
+    /**
+     * This function is called after the user has sucessfully selected a profile image
+     * The function retrives the URL of the image from firebase storage, and once that is sucessfull, it updates the url of the new image on the firebsase database,
+     * as well as in the local variable [UserProfileData.UserProfileImage] which updates the image on the screen as well
+     * The function then makes the screen touchable again and hides the progress bar
+     */
+
     fun updateProfileImageOnDatabse()
     {
         ref!!.child(UserProfileData.UserNumber).child("ProfileImage").downloadUrl.addOnSuccessListener {
             UserProfileData.UserProfileImage = it.toString()
+            FirebaseFirestore.getInstance().collection("Users").document(UserProfileData.UserNumber).update("profileImage" , UserProfileData.UserProfileImage)
+            window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+            ProgressBarProfile.visibility = View.INVISIBLE
         }
         Log.d("FirebaseStorage" , "${UserProfileData.UserProfileImage}")
-        FirebaseFirestore.getInstance().collection("Users").document(UserProfileData.UserNumber).update("profileImage" , UserProfileData.UserProfileImage)
-        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-        ProgressBarProfile.visibility = View.INVISIBLE
+
     }
 
 }
