@@ -16,16 +16,32 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".view.activities.ProfileOtherUser">
-        </activity>
-        <activity android:name=".view.activities.NewGroupChatActivity"/>
-        <activity android:name=".view.activities.ActivityChooseProfile"/>
-        <activity android:name=".view.activities.NewPersonalChatActivity"/>
-        <activity android:name=".view.activities.ChatActivity"/>
-        <activity android:name=".view.activities.GroupInfoActivity"/>
-        <activity android:name=".view.activities.ProfileActivity">
-        </activity>
-        <activity android:name=".view.activities.HomeActivity">
+
+        <activity android:name=".view.activities.ProfileOtherUser"
+                  android:screenOrientation="portrait" />
+        <service
+                android:name=".NotificationService"
+                android:enabled="true"
+                android:exported="true">
+        </service>
+
+        <receiver android:name=".NotificationBroadcast"
+                  android:enabled="true"
+                  android:exported="true"
+                  android:label="RestartNotificationService"/>
+
+        <activity android:name=".view.activities.NewGroupChatActivity"
+                  android:screenOrientation="portrait"  />
+        <activity android:name=".view.activities.NewPersonalChatActivity"
+                  android:screenOrientation="portrait" />
+        <activity android:name=".view.activities.ChatActivity"
+                  android:screenOrientation="portrait" />
+        <activity android:name=".view.activities.GroupInfoActivity"
+                  android:screenOrientation="portrait" />
+        <activity android:name=".view.activities.ProfileActivity"
+                  android:screenOrientation="portrait" />
+        <activity android:name=".view.activities.HomeActivity"
+                  android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -36,9 +52,12 @@
                     android:name="android.app.searchable"
                     android:resource="@xml/searchable"/>
         </activity>
-        <activity android:name=".view.activities.LoginActivity"/>
-        <activity android:name=".view.activities.DeveloperActivity"/>
-        <activity android:name=".view.activities.SearchResultsActivity">
+        <activity android:name=".view.activities.LoginActivity"
+                  android:screenOrientation="portrait" />
+        <activity android:name=".view.activities.DeveloperActivity"
+                  android:screenOrientation="portrait" />
+        <activity android:name=".view.activities.SearchResultsActivity"
+                  android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH"/>
             </intent-filter>

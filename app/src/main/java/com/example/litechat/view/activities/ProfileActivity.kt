@@ -1,4 +1,3 @@
-
 package com.example.litechat.view.activities
 
 import android.annotation.SuppressLint
@@ -10,6 +9,8 @@ import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.provider.DocumentsContract
+import android.provider.MediaStore
 import android.support.annotation.RequiresApi
 import android.text.InputType
 import android.util.Log
@@ -22,12 +23,16 @@ import com.example.litechat.model.UserProfileData
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import id.zelory.compressor.Compressor
 import kotlinx.android.synthetic.main.activity_profile.*
+import java.io.File
+import java.lang.Exception
+import java.nio.file.Files
 
 /**
- * This class doesnot follow the MVP structure
- * This is because by the time this class was written, all of us were so tired and frustrated that we thaught to just write
- * a simple calss, and make the code work as soon as possible
+ * This class doesn't follow the MVP structure
+ * This is because by the time this class was written, all of us were so tired and frustrated that we thought to just write
+ * a simple class, and make the code work as soon as possible
  */
 
 class ProfileActivity : AppCompatActivity() {
@@ -39,19 +44,27 @@ class ProfileActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.d("ProfileImage" , "profile img = ${UserProfileData.UserProfileImage}")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
         AboutTextView.setText(UserProfileData.UserAbout.toString())
         NameTextView.text = UserProfileData.UserName.toString()
-        Glide.with(applicationContext).load(UserProfileData.UserProfileImage).into(ProfileImageView).onLoadStarted(getDrawable(R.drawable.profile))
+        //Load default photo if profile image of user does not exist
+        /**
+         * Check why this shows an error
+         */
+        Glide.with(applicationContext).load(UserProfileData.UserProfileImage).into(ProfileImageView)
 
+        //OnClick listener for the gallery button to open the gallery
         ProfileImageButtonChange.setOnClickListener {
+            Log.d("Debug111" , "GalleryOpened")
             val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
                 type = "image/*"
             }
             startActivityForResult(intent, REQUEST_IMAGE_GET)
         }
 
+        //OnClick listener for the text view and image button of edit about info together
         LinearLayoutButton.setOnClickListener(View.OnClickListener {
             if (EditAboutButton.text=="Edit Information")
             {
@@ -68,9 +81,7 @@ class ProfileActivity : AppCompatActivity() {
                 AboutTextView.setLines(5)
                 AboutTextView.setHorizontallyScrolling(false)
                 updateAboutInfo()
-
             }
-
         })
 
     }
@@ -111,24 +122,33 @@ class ProfileActivity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        var preferances : SharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
-        preferances.getString("CurrentUserNumber" , "123456789")
+        Log.d("MobileProfile" , "Number = ${UserProfileData.UserNumber}")
+        /*var preferances : SharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        preferances.getString("CurrentUserNumber" , "123456789")*/
         ProgressBarProfile.isIndeterminate
         ProgressBarProfile.visibility = View.VISIBLE
         window.setFlags(
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-        Log.d("MobileNumberPrefer" , preferances.getString("CurrentUserNumber" , "123456789"))
         if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
             //val thumbnail: Bitmap = data!!.getParcelableExtra("data")
             val fullPhotoUri: Uri? = data!!.data
             Log.d("Image Search" , fullPhotoUri.toString())
             UserProfileData.UserProfileImage = fullPhotoUri.toString()
             ref = FirebaseStorage.getInstance().reference
+            var byteArray : ByteArray? = null
+            /**try {
+                var temp
+                byteArray = Files.readAllBytes(Compressor(this).compressToFile(File(fullPhotoUri!!.path)).toPath())
+            }catch( e : Exception){
+                e.printStackTrace()
+            }*/
+
             ref!!.child(UserProfileData.UserNumber).child("ProfileImage").putFile(fullPhotoUri!!)
                 .addOnSuccessListener {
                     Log.d("Firebase Storage" , "Image uploaded sucessfully")
-                    Glide.with(applicationContext).load(fullPhotoUri).into(ProfileImageView).onLoadStarted(getDrawable(R.drawable.profile))
+                    ProfileImageView.setImageURI(fullPhotoUri)
+                    UserProfileData.UserProfileImage = fullPhotoUri!!.path
                     updateProfileImageOnDatabse()
                 }
         }
@@ -146,10 +166,12 @@ class ProfileActivity : AppCompatActivity() {
     fun updateProfileImageOnDatabse()
     {
         ref!!.child(UserProfileData.UserNumber).child("ProfileImage").downloadUrl.addOnSuccessListener {
-            UserProfileData.UserProfileImage = it.toString()
-            FirebaseFirestore.getInstance().collection("Users").document(UserProfileData.UserNumber).update("profileImage" , UserProfileData.UserProfileImage)
-            window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-            ProgressBarProfile.visibility = View.INVISIBLE
+            var downloadUrl = it.toString()
+            FirebaseFirestore.getInstance().collection("Users").document(UserProfileData.UserNumber).update("profileImage" , downloadUrl).addOnCompleteListener {
+                window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                ProgressBarProfile.visibility = View.INVISIBLE
+                UserProfileData.UserProfileImage = downloadUrl
+            }
         }
         Log.d("FirebaseStorage" , "${UserProfileData.UserProfileImage}")
 

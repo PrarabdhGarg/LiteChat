@@ -17,7 +17,6 @@ import android.view.animation.AnimationUtils
 import android.widget.Toast
 import com.example.litechat.R
 import com.example.litechat.contracts.LoginContract
-import com.example.litechat.model.AllChatDataModel
 import com.example.litechat.model.UserProfileData
 import com.example.litechat.presenter.LoginActivityPresenter
 import com.google.firebase.FirebaseApp
@@ -33,7 +32,7 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
     lateinit var animationDrawable: AnimationDrawable
     var loginActivityPresenter : LoginActivityPresenter? = null   //Stores the instance of the presenter that will be used throughout this activity
     var userName : String? = null
-    var doubleBackToExitPressedOnce = false   //This variable is true if the user has pressed the button once. This variable gets reset after every 2 seconds
+    private var doubleBackToExitPressedOnce = false   //This variable is true if the user has pressed the button once. This variable gets reset after every 2 seconds
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {

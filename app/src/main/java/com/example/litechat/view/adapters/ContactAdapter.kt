@@ -2,7 +2,6 @@ package com.example.litechat.view.adapters
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,8 +11,6 @@ import com.bumptech.glide.Glide
 import com.example.litechat.R
 import com.example.litechat.listeners.CallListenerObject
 import com.example.litechat.model.ContactListData
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.auth.User
 import com.google.firebase.storage.FirebaseStorage
 import de.hdodenhof.circleimageview.CircleImageView
 
@@ -37,11 +34,12 @@ class ContactAdapter(private val callListenerObject1: CallListenerObject, privat
 
     override fun onBindViewHolder(holder: ContactHolder, position: Int) {
 
-        holder.names.text = ContactListData.contacts[position].name
-        FirebaseStorage.getInstance().reference.child(ContactListData.contacts[position].mobileNumber).child("ProfileImage").downloadUrl.addOnSuccessListener {
-
-            Glide.with(context).load(it).into(holder.img)
-        }
+            holder.names.text = ContactListData.contacts[position].name
+            FirebaseStorage.getInstance().reference.child(ContactListData.contacts[position].mobileNumber).child("ProfileImage").downloadUrl.addOnSuccessListener {
+                if (context != null) {
+                    Glide.with(context).load(it).into(holder.img)
+                }
+            }
 
         holder.names.setOnClickListener {
 

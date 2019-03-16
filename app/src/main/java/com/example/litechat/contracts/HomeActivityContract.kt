@@ -1,11 +1,7 @@
 package com.example.litechat.contracts
 
-import android.content.ContentResolver
 import android.content.Context
-import android.support.v4.app.Fragment
-import com.example.litechat.model.contactsRoom.User
 import com.example.litechat.view.fragments.FragmentChat
-import com.example.litechat.presenter.HomeActivityPresenter
 import com.example.litechat.presenter.StatusFragmentPresenter
 
 
@@ -27,7 +23,6 @@ interface HomeActivityContract {
     interface View{
 
         fun passContext(): Context
-        fun  getPersonalChats()
         fun isChatFragmentActive(): Boolean
         fun getInstanceOfFragmentChat() : FragmentChat
 

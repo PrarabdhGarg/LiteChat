@@ -3,11 +3,8 @@ package com.example.litechat.presenter
 import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
-import android.net.Uri
 import android.preference.PreferenceManager
 import android.util.Log
-import android.view.View
-import android.widget.ProgressBar
 import android.widget.Toast
 import com.example.litechat.contracts.LoginContract
 import com.example.litechat.model.AllChatDataModel

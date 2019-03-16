@@ -1,6 +1,5 @@
 package com.example.litechat.view.adapters
 
-import android.arch.persistence.room.Room
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -13,8 +12,6 @@ import com.example.litechat.model.AllChatDataModel
 import com.example.litechat.model.ContactListModel
 import com.example.litechat.model.MessageModel
 import com.example.litechat.model.UserProfileData
-import com.example.litechat.model.contactsRoom.AppDatabse
-import java.lang.Exception
 
 class AdapterForChatActivity(private var dataset:ArrayList<MessageModel>,private var context:Context): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 

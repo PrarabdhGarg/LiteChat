@@ -2,7 +2,6 @@ package com.example.litechat.contracts
 
 import android.app.Activity
 import android.content.Context
-import android.widget.ProgressBar
 import com.google.firebase.auth.PhoneAuthCredential
 
 interface LoginContract{

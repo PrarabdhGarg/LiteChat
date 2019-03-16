@@ -1,6 +1,5 @@
 package com.example.litechat.view.activities
 
-import android.app.ActivityManager
 import android.content.Intent
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
@@ -12,11 +11,8 @@ import android.widget.Toast
 import com.example.litechat.R
 import com.example.litechat.model.AllChatDataModel
 import com.example.litechat.model.ChatObject
-import com.google.android.gms.tasks.OnFailureListener
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_new_personal_chat.*
-import java.lang.reflect.Field
 import java.time.Instant
 
 class NewPersonalChatActivity : AppCompatActivity() {

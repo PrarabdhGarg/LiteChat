@@ -1,23 +1,19 @@
 
 package com.example.litechat.view.activities
 
-import android.annotation.TargetApi
 import android.arch.persistence.room.Room
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.annotation.RequiresApi
 import android.util.Log
-
 import kotlinx.android.synthetic.main.activity_chat.*
 import android.widget.Toast
-import java.lang.Double.parseDouble
 import com.example.litechat.contracts.ChatContract
 import com.example.litechat.model.AllChatDataModel
 import com.example.litechat.model.MessageModel
 import com.example.litechat.presenter.ChatPresenter
 import com.example.litechat.view.adapters.AdapterForChatActivity
-import java.lang.NumberFormatException
 import java.time.Instant
 import com.bumptech.glide.Glide
 import com.example.litechat.model.UserProfileData
@@ -29,8 +25,8 @@ import com.google.firebase.storage.FirebaseStorage
 
 class ChatActivity : AppCompatActivity(), ChatContract.CView {
 
-    var numeric=true
     private var myDataset= ArrayList<MessageModel>()
+    private var numeric = true
     private lateinit var adapterForChatActivity: AdapterForChatActivity
     private var chatPresenter = ChatPresenter(this)
     @RequiresApi(Build.VERSION_CODES.O)
@@ -63,19 +59,16 @@ class ChatActivity : AppCompatActivity(), ChatContract.CView {
         // to differentiate between group and personal chat
         try
         {
-            val num = parseDouble(AllChatDataModel.otherUserNumber)
-        }
-        catch (e: NumberFormatException)
-        {
+            var num= AllChatDataModel.otherUserNumber.toDouble()
+        }catch (e : java.lang.Exception){
             numeric = false
-        }
 
+        }
         if(numeric)
         {   //To show profile image and name of the other user in current chat
             textViewOtherUser.text = searchContactName(AllChatDataModel.otherUserNumber)
             FirebaseStorage.getInstance().reference.child(AllChatDataModel.otherUserNumber).child("ProfileImage")
               .downloadUrl.addOnSuccessListener { uri ->
-
               Glide.with(applicationContext).load(uri).into(imageViewOtherPerson)
             }
         }
