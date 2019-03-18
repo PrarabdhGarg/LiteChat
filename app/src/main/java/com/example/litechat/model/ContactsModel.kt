@@ -1,11 +1,7 @@
 package com.example.litechat.model
 
-import android.arch.persistence.room.Room
 import android.content.Context
-import android.util.Log
 import com.example.litechat.contracts.HomeActivityContract
-import com.example.litechat.model.contactsRoom.AppDatabse
-import com.example.litechat.model.contactsRoom.User
 import com.example.litechat.presenter.StatusFragmentPresenter
 
 class ContactsModel: HomeActivityContract.Model{

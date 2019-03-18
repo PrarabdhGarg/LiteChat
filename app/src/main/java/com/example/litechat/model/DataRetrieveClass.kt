@@ -5,20 +5,24 @@ import android.util.Log
 import com.example.litechat.contracts.HomeActivityContract
 import com.example.litechat.presenter.StatusFragmentPresenter
 import com.google.firebase.firestore.*
-
-import android.widget.Toast
-
-import com.example.litechat.presenter.HomeActivityPresenter
-
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.MetadataChanges
 import com.google.firebase.firestore.QuerySnapshot
 
-class DataRetriveClass : HomeActivityContract.Model{
+/**
+ * This class handles the major data retrieval from the database
+ * It contains the snapshotListener which monitors any changes to the structure and notifies recycler view of the changes
+ * in the chats appropriately
+ */
+
+class DataRetrieveClass : HomeActivityContract.Model{
 
     private val db = FirebaseFirestore.getInstance()
+
     /**
-     * This class should not be used currently as the structure of firestore is not yet finalized.
+     * This function is called whenever a signed in user opens the app once again
+     * It retrieves existing data of the user from the database and stores all of it in the static variables for use
+     * throughout the app
      */
 
     override fun getUserDataFromFirestore(number: String){
@@ -28,11 +32,18 @@ class DataRetriveClass : HomeActivityContract.Model{
                 UserProfileData.UserNumber = it.getString("number")
                 UserProfileData.UserCurrentActivity = it.get("currentActivity").toString()
                 UserProfileData.UserAbout = it.getString("about").toString()
-                UserProfileData.UserImage = it.getString("image").toString()
                 UserProfileData.UserProfileImage = it.getString("profileImage").toString()
                 Log.d("UserData" , "Data Retrieved class successfully called")
             }
     }
+
+    /**
+     * This function contains the listener that listens for any changes in the chats structure.
+     * It is once called when the listener attaches itself, and this helps in displaying the list of currently active chats
+     * Whenever a new chat comes, the chat object is added to the [AllChatDataModel.personalChatList] and then the
+     * presenter.sortPersonalChatList() method is called which informs the recycler view about the update
+     * The recycler view adapter handles if the chat is new, displays it, otherwise just shows the notification icon
+     */
 
     override fun retrievePersonalChatDataFromFirestore(presenter: HomeActivityContract.Presenter) {
 
@@ -70,6 +81,14 @@ class DataRetriveClass : HomeActivityContract.Model{
                                 Log.d("HomeActivity","Size"+AllChatDataModel.personalChatList.size.toString())
                             }
 
+                            /**
+                             * Document.modified is called wen a new message arrives
+                             * This is because the last updated field of the chat document changes
+                             * This first checks if the chat is already present or not
+                             * If it is present, it replaces the chat object that is stored corresponding to that chat in [AllChatDataModel.personalChatList]
+                             * Otherwise a new chat object is added to the Array List
+                             */
+
                             DocumentChange.Type.MODIFIED ->
                             {
                                 Log.d("FinalDebug19" , "Modified called with ${dc} \n")
@@ -93,6 +112,18 @@ class DataRetriveClass : HomeActivityContract.Model{
                                 Log.d("HomeActivity","Size"+AllChatDataModel.personalChatList.size.toString())
                             }
 
+                            DocumentChange.Type.REMOVED ->
+                            {
+                                Log.d("BeforeDeletion" , "Data : ${dc.document.data} \n Size : ${AllChatDataModel.personalChatList.size}}")
+                                var objectChatPersonal :ChatObject= ChatObject()
+                                objectChatPersonal.otherNumber=dc.document["otherNumber"].toString()
+                                objectChatPersonal.chatDocumentId=dc.document["chatDocumentId"].toString()
+                                objectChatPersonal.lastUpdated=dc.document["lastUpdated"].toString()
+                                objectChatPersonal.lastSeen = dc.document["lastSeen"].toString()
+                                AllChatDataModel.personalChatList.remove(AllChatDataModel.personalChatList.find { it.chatDocumentId == objectChatPersonal.chatDocumentId })
+                                //presenter.sortPersonalChatList()
+                                Log.d("AfterDeletion" , "Size : ${AllChatDataModel.personalChatList.size} \n Object : ${objectChatPersonal.otherNumber}")
+                            }
                         }
                     }
 
@@ -103,12 +134,17 @@ class DataRetriveClass : HomeActivityContract.Model{
                         AllChatDataModel.flagPersonalChat=false
                         Log.d("FinalDebug5", " persona presenter.sortPersonalChatList() ${AllChatDataModel.personalChatList.size}")
                         presenter.sortPersonalChatList()
-
                     }
 
                 })
     }
 
+    /**
+     * This function gets the current statuses of all users who are on the app
+     * Then if the mobile number of the user is in the contact list of the current user, then his status image is added to the
+     * [maps] variable, which is a Hash Map of mobile number and corresponding status image.
+     * This map is then passed to the adapter to display the information
+     */
 
     override fun getCurrentActivitiesOfOtherUsers(presenter: StatusFragmentPresenter, context: Context) {
         var maps = ArrayList<Pair<String , String>>()
@@ -118,7 +154,8 @@ class DataRetriveClass : HomeActivityContract.Model{
                 for (document in documents) {
                     if (document.id == UserProfileData.UserNumber)
                         continue
-                    maps.add(Pair(model.roomGetName(context , document.data.get("number").toString()) , document.data.get("profileImage").toString()))
+                    if(! (ContactListModel().roomGetName(context, document.data.get("number").toString()) == document.data.get("number").toString()))
+                        maps.add(Pair(model.roomGetName(context , document.data.get("number").toString()) , document.data.get("image").toString()))
                     //Log.d("Status" , "${maps[i].first} =>  ${maps[i].second}")
                 }
                 presenter.onStatusDataRecived(maps)

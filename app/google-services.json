@@ -15,11 +15,35 @@
       },
       "oauth_client": [
         {
-          "client_id": "371675735562-e5ombc1cno8g3mcfthh4m2fh1q6g5b04.apps.googleusercontent.com",
+          "client_id": "371675735562-skvio2p7e2orqtfa4am4e5ss03o5rb62.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.litechat",
             "certificate_hash": "04406b170c8b6490fb15ccbf8c1f231188d8fa05"
+          }
+        },
+        {
+          "client_id": "371675735562-3bgnhms4fhehcumgouul30lh4vjbqgsb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.litechat",
+            "certificate_hash": "37100823a85725ff09254aa1d2e37f50100ae3ed"
+          }
+        },
+        {
+          "client_id": "371675735562-p01q0300v23jnge8o2n510kmecp3hlrl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.litechat",
+            "certificate_hash": "539ee6c572a0eec7a1711ae92259b26550a23dfb"
+          }
+        },
+        {
+          "client_id": "371675735562-7jmauoj8qfp9055nkqbsvma6dfufqv20.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.litechat",
+            "certificate_hash": "630c70f9c4a464f9ca636e4dd7306ac9bdad20b8"
           }
         },
         {

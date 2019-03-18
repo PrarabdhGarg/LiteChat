@@ -1,14 +1,11 @@
 package com.example.litechat.view.fragments
 
 import android.Manifest
-import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.Rect
 import android.net.Uri
-
 import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
@@ -17,8 +14,6 @@ import android.support.annotation.RequiresApi
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v4.content.ContextCompat
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -28,7 +23,6 @@ import com.example.litechat.R
 import com.example.litechat.contracts.ContactFragContract
 import com.example.litechat.listeners.BoomListener
 import com.example.litechat.listeners.CallListenerObject
-import com.example.litechat.model.AllChatDataModel
 import com.example.litechat.model.ChatObject
 import com.example.litechat.model.ContactListData
 import com.example.litechat.model.UserProfileData
@@ -40,7 +34,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.nightonke.boommenu.BoomButtons.HamButton
 import kotlinx.android.synthetic.main.fragment_contact.*
 import kotlinx.android.synthetic.main.fragment_contact.view.*
-import kotlinx.android.synthetic.main.fragment_status.view.*
 import java.util.ArrayList
 
 class FragmentContact : Fragment(), ContactFragContract.View {
@@ -66,9 +59,8 @@ class FragmentContact : Fragment(), ContactFragContract.View {
     inner class getingContacts(val contactPresenter: ContactFragPresenter, val adapter: BoomListener) : AsyncTask<Void, Void, Void>() {
 
         override fun doInBackground(vararg params: Void?): Void? {
-
-                contactPresenter.getContacts(adapter)
-                ContactListData.contacts = contactPresenter.passUserList() as ArrayList<User>
+            contactPresenter.getContacts(adapter)
+            ContactListData.contacts = contactPresenter.passUserList() as ArrayList<User>
             return null
         }
 
@@ -176,14 +168,16 @@ class FragmentContact : Fragment(), ContactFragContract.View {
         adapterListener = BoomListener()
         adapterListener.setCustomObjectListener(object: BoomListener.Boom{
             override fun doThis() {
-
-                ContactListData.contacts = contactPresenter.passUserList() as ArrayList<User>
-                Log.d("ContactThread","In Listener")
-                dataSet.clear()
-                dataSet.addAll(ContactListData.contacts)
-                Log.d("ContactThread","${dataSet.size}")
-                contactLoader.visibility = View.GONE
-                view.contactRecycler.adapter!!.notifyDataSetChanged()
+                if (context != null)
+                {
+                    ContactListData.contacts = contactPresenter.passUserList() as ArrayList<User>
+                    Log.d("ContactThread","In Listener")
+                    dataSet.clear()
+                    dataSet.addAll(ContactListData.contacts)
+                    Log.d("ContactThread","${dataSet.size}")
+                    contactLoader.visibility = View.GONE
+                    view.contactRecycler.adapter!!.notifyDataSetChanged()
+                }
             }
 
         })

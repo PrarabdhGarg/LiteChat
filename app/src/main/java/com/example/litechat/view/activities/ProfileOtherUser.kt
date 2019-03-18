@@ -1,30 +1,24 @@
-
 package com.example.litechat.view.activities
 
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.Intent
-import android.content.SharedPreferences
-import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.preference.PreferenceManager
-import android.util.Log
 import android.view.View
-import android.view.WindowManager
 import com.bumptech.glide.Glide
 import com.example.litechat.R
-import com.example.litechat.model.UserProfileData
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
 import kotlinx.android.synthetic.main.activity_profile_other_user.*
+
+/**
+ * This activity is called when the user clicks on the profile image of another user
+ * It is very similar to the [ProfileActivity] with the only changes being that the buttons to edit profile image
+ * and about information are missing
+ * TODO change the default image that appears in place of the profile image on the start of the activity
+ */
 
 class ProfileOtherUser : AppCompatActivity() {
 
     var number : String? = null
-    final var REQUEST_IMAGE_GET = 1
-    var ref : StorageReference? = null
     var mobile = " "
     var about = " "
     var image = " "
@@ -35,6 +29,7 @@ class ProfileOtherUser : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile_other_user)
         mobile = intent.getStringExtra("number").toString()
+
         FirebaseFirestore.getInstance().collection("Users").document(mobile).get().addOnSuccessListener {
             names = it.data!!.get("name").toString()
             about = it.data!!.get("about").toString()
@@ -46,8 +41,6 @@ class ProfileOtherUser : AppCompatActivity() {
 
             otherProfileLoader.visibility = View.INVISIBLE
         }
-
-
 
     }
 

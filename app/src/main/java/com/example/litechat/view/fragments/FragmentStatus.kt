@@ -1,6 +1,5 @@
 package com.example.litechat.view.fragments
 
-import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -8,35 +7,24 @@ import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.ImageButton
 import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_status.*
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Rect
-import android.icu.lang.UCharacter.GraphemeClusterBreak.V
 import android.net.Uri
 import android.preference.PreferenceManager
-import android.text.Editable
-import android.text.style.LineHeightSpan
 import android.util.Log
-import android.view.WindowManager
-import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.example.litechat.R
 import com.example.litechat.contracts.StatusContract
 import com.example.litechat.listeners.BoomListener
-import com.example.litechat.model.AllChatDataModel
-import com.example.litechat.model.ContactListModel
-import com.example.litechat.model.UserDataModel
 import com.example.litechat.model.UserProfileData
 import com.example.litechat.presenter.StatusFragmentPresenter
 import com.example.litechat.view.activities.*
 import com.example.litechat.view.adapters.StatusAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.nightonke.boommenu.BoomButtons.HamButton
-import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.fragment_status.view.*
 import java.lang.Exception
 
@@ -130,10 +118,10 @@ class FragmentStatus: Fragment() , StatusContract.View{
 
     override fun onStart() {
         super.onStart()
-        Log.d("ViewPager" , "onStart of FragmentStatus Called")
+        Log.d("ViewPager" , "onStart of FragmentStatus Called , uri = ${UserProfileData.UserImage}")
         //Make and Call a function to get and display data
         view!!.RecyclerStatus.adapter = StatusAdapter(context!! , maps)
-        Glide.with(context!!).load(UserProfileData.UserImage).into(view!!.statusImageView).onLoadStarted(context!!.getDrawable(R.drawable.profile))//On starting the fragment, load the current image in the image view, whose Uri is stored locally
+        view!!.statusImageView.setImageURI(Uri.parse(UserProfileData.UserImage))//On starting the fragment, load the current image in the image view, whose Uri is stored locally
         view!!.currentActivityTextView.setText(UserProfileData.UserCurrentActivity)
 
         stausFragmentPresenter!!.getInfoForRecyclerView()
@@ -184,6 +172,7 @@ class FragmentStatus: Fragment() , StatusContract.View{
 
     override fun setStatusImageView(path: String) {
         view!!.statusImageView.setImageURI(Uri.parse(path))
+        Log.d("ViewPager" , "path = ${path}")
         view!!.statusLoader.visibility = View.INVISIBLE
     }
 

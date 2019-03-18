@@ -1,39 +1,46 @@
 package com.example.litechat.presenter
 
-import android.content.Context
-import android.provider.ContactsContract
 import android.util.Log
 import android.widget.Toast
-import com.example.litechat.contracts.ContactFragContract
 import com.example.litechat.contracts.HomeActivityContract
 import com.example.litechat.model.AllChatDataModel
-import com.example.litechat.model.ContactDataModel
-import com.example.litechat.model.ContentResolverData
-import com.example.litechat.model.DataRetriveClass
+import com.example.litechat.model.DataRetrieveClass
 import com.example.litechat.model.UserProfileData
-import com.example.litechat.model.contactsRoom.User
-import com.google.firebase.firestore.FirebaseFirestore
 
 
-class HomeActivityPresenter(contextPassed: Context , val view : HomeActivityContract.View): HomeActivityContract.Presenter{
+class HomeActivityPresenter(val view : HomeActivityContract.View): HomeActivityContract.Presenter{
 
+    private  val dataRetrieveModel = DataRetrieveClass()
 
-    private val context = contextPassed
-
-    private  val dataRetrieveModel = DataRetriveClass()
+    /**
+     *This function is called when an already signed in user opens the app again
+     * It calls the [getUserDataFromFirestore] method of the model, which populates the static variables with the required information
+     */
 
     override fun getUserDataOnLogin(number: String) {
-
         dataRetrieveModel.getUserDataFromFirestore(number)
         Toast.makeText(view.passContext() , UserProfileData.UserNumber , Toast.LENGTH_SHORT).show()
     }
 
-
+    /**
+     * Thia function calls the [retrievePersonalChatDataFromFirestore] of the model
+     * This method is responsible for providing all the data regarding the currently active chats and also listens for
+     * any changes in the chat.
+     */
 
     override fun getPersonalChatsFromFirestore() {
         Log.d("FinalDebug2"," homeActivityPresenter.getPersonalChatsFromFirestore called")
         dataRetrieveModel.retrievePersonalChatDataFromFirestore(this)
     }
+
+    /**
+     * This method is once called at the start of the app when all the currently active chats has been retrived
+     * It is also called when a new message arrives, a new chat is created or an existing chat is removed
+     * The task of this method is to notify the [AdapterForFragmentChat] that there is a change in the chat list, and
+     * then the adapter displays the change appropriately on the screen in the form of a notification icon, new chat,
+     * or the removal of a deleted chat
+     * TODO Rview the working of this method. Some things are now redundant after the change in logic for notifictions
+     */
 
     override fun sortPersonalChatList() {
         Log.d("FinalDebug6"," sortPersonalChatList() start ")

@@ -2,10 +2,8 @@ package com.example.litechat.contracts
 
 import android.content.Context
 import com.example.litechat.listeners.BoomListener
-import com.example.litechat.listeners.CallListenerObject
 import com.example.litechat.model.ChatObject
 import com.example.litechat.model.contactsRoom.User
-import java.util.ArrayList
 
 interface ContactFragContract {
 

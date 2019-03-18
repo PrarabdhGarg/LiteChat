@@ -1,23 +1,15 @@
 package com.example.litechat.presenter
 
-import android.content.ContentResolver
-import android.content.Context
 import android.net.Uri
-import android.provider.MediaStore
+import android.preference.PreferenceManager
 import android.util.Log
-import android.view.View
 import android.widget.Toast
-import com.bumptech.glide.Glide
 import com.example.litechat.contracts.StatusContract
-import com.example.litechat.model.DataRetriveClass
-import com.example.litechat.model.UserDataModel
+import com.example.litechat.model.DataRetrieveClass
 import com.example.litechat.model.UserProfileData
-import com.example.litechat.view.adapters.StatusAdapter
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.storage.FirebaseStorage
-import kotlinx.android.synthetic.main.fragment_status.view.*
-import java.io.File
 
 class StatusFragmentPresenter(view : StatusContract.View) : StatusContract.StatusPresenter
 {
@@ -62,7 +54,10 @@ class StatusFragmentPresenter(view : StatusContract.View) : StatusContract.Statu
                 mStorageRef.child(UserProfileData.UserNumber).child("StatusImage").downloadUrl.addOnSuccessListener {
                     UserProfileData.UserImage = it.toString()
                     Log.d("ProfileImage" , UserProfileData.UserImage)
-                    FirebaseFirestore.getInstance().collection("Users").document(UserProfileData.UserNumber).update("image" , UserProfileData.UserImage)
+                    FirebaseFirestore.getInstance().collection("Users").document(UserProfileData.UserNumber).update("image" , UserProfileData.UserImage).addOnCompleteListener {
+                        UserProfileData.UserImage = path.toString()
+                        PreferenceManager.getDefaultSharedPreferences(currentView.getCurrentContext()).edit().putString("StatusImage" , UserProfileData.UserImage).apply()
+                    }
                 }
                 Toast.makeText(currentView.getCurrentContext() , "Upload Successful" , Toast.LENGTH_SHORT).show()
                 currentView.setStatusImageView(path.toString())
@@ -74,7 +69,7 @@ class StatusFragmentPresenter(view : StatusContract.View) : StatusContract.Statu
     }
 
     override fun getInfoForRecyclerView() {
-        DataRetriveClass().getCurrentActivitiesOfOtherUsers(this , currentView!!.getCurrentContext())
+        DataRetrieveClass().getCurrentActivitiesOfOtherUsers(this , currentView!!.getCurrentContext())
     }
 
     override fun onStatusDataRecived(map: ArrayList<Pair<String, String>>) {

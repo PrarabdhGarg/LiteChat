@@ -26,7 +26,6 @@ class DeveloperActivity : AppCompatActivity() {
         viewAdapter = DeveloperAdapter(fnameAndImages, applicationContext)
 
         developerRecycler.apply {
-
             layoutManager = viewManager
             adapter = viewAdapter
         }

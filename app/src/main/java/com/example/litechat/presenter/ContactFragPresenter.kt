@@ -6,15 +6,12 @@ import android.os.Build
 import android.provider.ContactsContract
 import android.support.annotation.RequiresApi
 import android.util.Log
-import android.view.View
 import com.example.litechat.contracts.ContactFragContract
 import com.example.litechat.listeners.BoomListener
-import com.example.litechat.listeners.CallListenerObject
 import com.example.litechat.model.*
 import com.example.litechat.model.contactsRoom.AppDatabse
 import com.example.litechat.model.contactsRoom.User
 import com.google.firebase.firestore.FirebaseFirestore
-import java.util.ArrayList
 
 class ContactFragPresenter(viewPassed: ContactFragContract.View, contextPassed: Context): ContactFragContract.Presenter{
 
