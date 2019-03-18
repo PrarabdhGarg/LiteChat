@@ -35,7 +35,8 @@ import com.google.firebase.iid.FirebaseInstanceId
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.fragment_status.view.*
 
-class HomeActivity : AppCompatActivity(), HomeActivityContract.View, SearchView.OnQueryTextListener {
+class HomeActivity : AppCompatActivity(), HomeActivityContract.View,SearchView.OnQueryTextListener {
+
 
     /**
      * The [android.support.v4.view.PagerAdapter] that will provide
@@ -59,9 +60,9 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View, SearchView.
         Log.e("FinalCheck", "OnCreateCalled")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+        setSupportActionBar(toolbar)
         homeActivityPresenter = HomeActivityPresenter(this)
         ContentResolverData.contentResolverPassed = contentResolver
-
         // If user is already logged in, no need to open the LoginActivity again
         if (FirebaseAuth.getInstance().currentUser == null) {
             startActivity(Intent(this@HomeActivity, LoginActivity::class.java))
@@ -115,22 +116,24 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View, SearchView.
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_home, menu)
-        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+      val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
         (menu.findItem(R.id.search).actionView as SearchView).apply {
             setSearchableInfo(searchManager.getSearchableInfo(componentName))
-
+            this.isSubmitButtonEnabled=true
+            this.setOnQueryTextListener(this@HomeActivity)
         }
         return true
     }
 
-    override fun onQueryTextSubmit(text: String?): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun onQueryTextSubmit(p0: String?): Boolean {
+
+
+        return true
     }
 
-    override fun onQueryTextChange(text: String?): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun onQueryTextChange(p0: String?): Boolean {
+         return false
     }
-
     override fun onStart() {
         super.onStart()
         Log.e("FinalCheck", "OnStartCalled")

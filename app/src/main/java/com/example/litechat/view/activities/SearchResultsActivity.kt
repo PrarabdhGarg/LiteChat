@@ -5,9 +5,11 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import com.example.litechat.R
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FirebaseFirestore
 
 class SearchResultsActivity : AppCompatActivity() {
-
+     var data=FirebaseFirestore.getInstance()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search_results)
@@ -23,8 +25,17 @@ class SearchResultsActivity : AppCompatActivity() {
 
         if (Intent.ACTION_SEARCH == intent.action) {
             val query = intent.getStringExtra(SearchManager.QUERY)
-            //use the query to search your data somehow
+            var collRef:CollectionReference=data!!.collection("Chats")
+            collRef.whereEqualTo("number1",query).get().addOnCompleteListener{
+                if(it.isSuccessful){
+
+                }
+                else{
+
+                }
+            }
         }
     }
+
 
 }
