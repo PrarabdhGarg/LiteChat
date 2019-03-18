@@ -86,7 +86,6 @@ class AdapterForFragmentChat(private var dataset :ArrayList<ChatObject>, private
 
             override fun onClick(v: View?) {
 
-
                 Log.d("AllChatNumber" , AllChatDataModel.userNumberIdPM)
                   // change with number
                 /***

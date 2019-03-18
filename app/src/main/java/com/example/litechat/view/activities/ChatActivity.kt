@@ -2,14 +2,17 @@ package com.example.litechat.view.activities
 
 import android.annotation.TargetApi
 import android.arch.persistence.room.Room
+import android.content.Intent
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.annotation.RequiresApi
 import android.util.Log
+import android.view.View
 
 import kotlinx.android.synthetic.main.activity_chat.*
 import android.widget.Toast
+import android.widget.ViewAnimator
 import java.lang.Double.parseDouble
 import com.example.litechat.contracts.ChatContract
 import com.example.litechat.model.AllChatDataModel
@@ -23,7 +26,7 @@ import com.example.litechat.model.UserProfileData
 import com.example.litechat.model.contactsRoom.AppDatabse
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-
+import java.lang.Double
 
 
 class ChatActivity : AppCompatActivity(), ChatContract.CView {
@@ -50,7 +53,31 @@ class ChatActivity : AppCompatActivity(), ChatContract.CView {
          AllChatDataModel.lastUpdated=intent.getStringExtra("lastUpdated")
          var lastSeen = intent.getStringExtra("lastSeen")
          //Log.e("LastSeen" , lastSeen)
+        textViewOtherUser.setOnClickListener(View.OnClickListener {
+            try
+            {
+                val num = Double.parseDouble( AllChatDataModel.otherUserNumber)
+            }
+            catch (e: NumberFormatException)
+            {
+                numeric = false
+            }
 
+            if(numeric)
+            {   //  to show contact name of person chatting with
+                var intent = Intent(this,ProfileOtherUser::class.java)
+                intent.putExtra("number" , AllChatDataModel.otherUserNumber)
+                startActivity(intent)
+            }
+            else
+            {
+                var intent= Intent(this,GroupInfoActivity::class.java)
+              //  Log.d("GroupInfo1","documentPathId$chat")
+                intent.putExtra("documentPathId",AllChatDataModel.documentPathId)
+                startActivity(intent)
+            }
+
+        })
         //Update last seen of the user for current chat
          FirebaseFirestore.getInstance().collection("Users").document(UserProfileData.UserNumber).collection("currentChats").whereEqualTo("chatDocumentId" , AllChatDataModel.documentPathId).get().addOnSuccessListener {
              for (i in it)

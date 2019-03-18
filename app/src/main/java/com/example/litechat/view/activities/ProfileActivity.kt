@@ -5,11 +5,14 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.provider.MediaStore
 import android.support.annotation.RequiresApi
 import android.text.InputType
 import android.util.Log
@@ -23,6 +26,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import kotlinx.android.synthetic.main.activity_profile.*
+import java.io.ByteArrayOutputStream
 
 class ProfileActivity : AppCompatActivity() {
 
@@ -105,12 +109,34 @@ class ProfileActivity : AppCompatActivity() {
             Log.d("Image Search" , fullPhotoUri.toString())
             UserProfileData.UserProfileImage = fullPhotoUri.toString()
             ref = FirebaseStorage.getInstance().reference
-            ref!!.child(UserProfileData.UserNumber).child("ProfileImage").putFile(fullPhotoUri!!)
+
+            var drawablee = resources.getDrawable(R.drawable.prarabdh)
+             var  bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), fullPhotoUri);
+          //  val stream = ByteArrayOutputStream()
+
+         //   val stream = FileInputStream(File("path/to/images/rivers.jpg"))
+            val baos = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.JPEG,40,baos)
+         //   bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+            val data1 = baos.toByteArray()
+
+            var uploadTask =  ref!!.child(UserProfileData.UserNumber).child("ProfileImage").putBytes(data1)
+            uploadTask.addOnFailureListener {
+                // Handle unsuccessful uploads
+            }.addOnSuccessListener {
+                // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
+                // ...
+                Log.d("Firebase Storage" , "Image uploaded sucessfully")
+                Glide.with(applicationContext).load(fullPhotoUri).into(ProfileImageView).onLoadStarted(getDrawable(R.drawable.profile))
+                updateProfileImageOnDatabse()
+            }
+
+           /* ref!!.child(UserProfileData.UserNumber).child("ProfileImage").putFile(fullPhotoUri!!)
                 .addOnSuccessListener {
                     Log.d("Firebase Storage" , "Image uploaded sucessfully")
                     Glide.with(applicationContext).load(fullPhotoUri).into(ProfileImageView).onLoadStarted(getDrawable(R.drawable.profile))
                     updateProfileImageOnDatabse()
-                }
+                }*/
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
