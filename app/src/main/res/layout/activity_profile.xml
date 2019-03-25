@@ -29,7 +29,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintHeight_default="percent"
                     app:layout_constraintHeight_percent="0.6"
-                    android:src="@drawable/suyash"
+                    android:src="@drawable/profile"
                     android:scaleType="fitXY"
                     android:id="@+id/ProfileImageView"
                     android:layout_height="0dp"/>

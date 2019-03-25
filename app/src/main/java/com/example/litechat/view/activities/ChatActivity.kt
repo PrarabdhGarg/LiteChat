@@ -2,6 +2,7 @@
 package com.example.litechat.view.activities
 
 import android.arch.persistence.room.Room
+import android.content.Intent
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -34,7 +35,30 @@ class ChatActivity : AppCompatActivity(), ChatContract.CView {
 
         super.onCreate(savedInstanceState)
         setContentView(com.example.litechat.R.layout.activity_chat)
+        textViewOtherUser.setOnClickListener {
+            try
+            {
+                var num= AllChatDataModel.otherUserNumber.toDouble()
+            }catch (e : java.lang.Exception){
+                numeric = false
 
+            }
+
+            if(numeric)
+            {   //  to show contact name of person chatting with
+                var intent = Intent(this,ProfileOtherUser::class.java)
+                intent.putExtra("number" , AllChatDataModel.otherUserNumber)
+                startActivity(intent)
+            }
+            else
+            {
+                var intent= Intent(this,GroupInfoActivity::class.java)
+                intent.putExtra("documentPathId",AllChatDataModel.documentPathId)
+                startActivity(intent)
+            }
+
+
+        }
         adapterForChatActivity= AdapterForChatActivity(myDataset,applicationContext)
         recyclerView.apply {
             adapter=adapterForChatActivity

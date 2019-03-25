@@ -25,15 +25,8 @@ class SearchResultsActivity : AppCompatActivity() {
 
         if (Intent.ACTION_SEARCH == intent.action) {
             val query = intent.getStringExtra(SearchManager.QUERY)
-            var collRef:CollectionReference=data!!.collection("Chats")
-            collRef.whereEqualTo("number1",query).get().addOnCompleteListener{
-                if(it.isSuccessful){
 
-                }
-                else{
 
-                }
-            }
         }
     }
 
