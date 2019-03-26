@@ -147,7 +147,7 @@ class ProfileActivity : AppCompatActivity() {
 
          //   val stream = FileInputStream(File("path/to/images/rivers.jpg"))
             val baos = ByteArrayOutputStream()
-            bitmap.compress(Bitmap.CompressFormat.JPEG,40,baos)
+            bitmap.compress(Bitmap.CompressFormat.JPEG,20,baos)
          //   bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
             val data1 = baos.toByteArray()
 

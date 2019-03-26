@@ -60,7 +60,7 @@ class AdapterForFragmentChat(private var dataset :ArrayList<ChatObject>, private
                 Log.d("Firebse" , "Entered and retrivedd storage sucessfully ${it}")
                 // onLoad Started ki wjah se profile image not being displayed in fragment chat
                 try {
-                    Glide.with(context).load(it.toString()).into(holder.imageView).clearOnDetach()
+                    Glide.with(context).load(it.toString()).into(holder.imageView)
                 }catch (e : Error)
                 {
                     Log.d("Crash" , e.stackTrace.toString())
@@ -72,7 +72,7 @@ class AdapterForFragmentChat(private var dataset :ArrayList<ChatObject>, private
         }catch (e : Exception)
         {
             Log.d("Firebase" , "Entered catch \n ${e} with ${dataset[position].otherNumber}")
-            Glide.with(context).load(R.drawable.prarabdh).into(holder.imageView).clearOnDetach()
+            Glide.with(context).load(R.drawable.prarabdh).into(holder.imageView)
 
             /**FirebaseStorage.getInstance().reference.child("Groups").child(AllChatDataModel.documentPathId).downloadUrl.addOnSuccessListener {
                 Glide.with(context).load(it).into(holder.imageView).onLoadStarted(context.getDrawable(R.drawable.profile))

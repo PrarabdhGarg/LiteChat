@@ -20,7 +20,7 @@
             android:layout_marginTop="8dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/myMessage"
-            android:background="@drawable/message_item_me"/>
+            android:background="@drawable/message_item_me" app:layout_constraintVertical_chainStyle="spread_inside"/>
     <TextView
             android:text="Message"
             android:layout_width="wrap_content"
@@ -35,5 +35,18 @@
             app:layout_constraintTop_toBottomOf="@+id/myName" android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp" android:layout_marginTop="4dp"
             android:background="@drawable/message_item_me"
+    />
+
+    <ImageView
+
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:id="@+id/myImageShare"
+            android:gravity="right"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/myName" android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp" android:layout_marginTop="4dp"
+            android:src="@drawable/akshat"
+            android:visibility="invisible"
     />
 </android.support.constraint.ConstraintLayout>
