@@ -2,6 +2,7 @@ package com.example.litechat.view.activities
 
 import android.app.Activity
 import android.app.SearchManager
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -118,9 +119,9 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View,SearchView.O
         menuInflater.inflate(R.menu.menu_home, menu)
       val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
         (menu.findItem(R.id.search).actionView as SearchView).apply {
-            setSearchableInfo(searchManager.getSearchableInfo(componentName))
+            var component=ComponentName(this@HomeActivity,SearchResultsActivity::class.java)
+            setSearchableInfo(searchManager.getSearchableInfo(component))
             this.isSubmitButtonEnabled=true
-            this.setOnQueryTextListener(this@HomeActivity)
         }
         return true
     }

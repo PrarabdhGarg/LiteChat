@@ -27,14 +27,7 @@ import com.nightonke.boommenu.BoomButtons.HamButton
 import kotlinx.android.synthetic.main.fragment_chat.view.*
 import java.lang.Exception
 
-class FragmentChat : Fragment(), AllChatsContractFrag.CFView,SearchView.OnQueryTextListener {
-    override fun onQueryTextSubmit(p0: String?): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onQueryTextChange(p0: String?): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+class FragmentChat : Fragment(), AllChatsContractFrag.CFView{
 
     private lateinit var listenerForChat: ListenerForFragmentChat
     private lateinit var listenerForProfile: ListenerForFragmentChat

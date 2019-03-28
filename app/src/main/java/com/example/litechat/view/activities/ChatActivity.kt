@@ -52,6 +52,8 @@ class ChatActivity : AppCompatActivity(), ChatContract.CView {
             }
             else
             {
+
+                //to show group information
                 var intent= Intent(this,GroupInfoActivity::class.java)
                 intent.putExtra("documentPathId",AllChatDataModel.documentPathId)
                 startActivity(intent)

@@ -18,4 +18,5 @@
     <string name="search_hint">Search</string>
     <string name="action_newPersonalChat">New Chat</string>
     <string name="action_newGroupChat">New Group</string>
+    <string name="Litechat">Litechat</string>
 </resources>
