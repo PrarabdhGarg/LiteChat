@@ -19,6 +19,7 @@ import com.example.litechat.model.ContactListModel
 import com.google.firebase.storage.FirebaseStorage
 import java.lang.Error
 import java.lang.Exception
+import java.time.Instant
 
 class AdapterForFragmentChat(private var dataset :ArrayList<ChatObject>, private var context: Context,
                              private var listenerForFragmentChatImage: ListenerForFragmentChat, private var listenerForFragmentChatChat: ListenerForFragmentChat
@@ -80,10 +81,16 @@ class AdapterForFragmentChat(private var dataset :ArrayList<ChatObject>, private
 
         }
         Log.d("FinalDebug11","AllChatDataModel.personalChatList.size:${AllChatDataModel.personalChatList.size}\n${AllChatDataModel.personalChatList.contains(dataset[position])}")
+        Log.d("TestNotif" , "position = ${position} \n LastSeen  = ${AllChatDataModel.personalChatList.find { it.chatDocumentId == dataset[position].chatDocumentId }!!.lastSeen} " +
+                "\n  DocumentId = ${dataset[position].chatDocumentId} \n LastUpdated = ${AllChatDataModel.personalChatList.find { it.chatDocumentId == dataset[position].chatDocumentId }!!.lastUpdated}")
         //AllChatDataModel.personalChatList.find { it.chatDocumentId == dataset[position].chatDocumentId }!!.lastSeen < Instant.now().epochSecond.toString() &&
-        if (AllChatDataModel.personalChatList.size!=0 && (AllChatDataModel.personalChatList.find { it.chatDocumentId==dataset[position].chatDocumentId }!=null) &&  AllChatDataModel.personalChatList.find { it.chatDocumentId == dataset[position].chatDocumentId }!!.lastSeen < AllChatDataModel.personalChatList.find { it.chatDocumentId == dataset[position].chatDocumentId }!!.lastUpdated)
+        if (AllChatDataModel.personalChatList.size!=0 && (AllChatDataModel.personalChatList.find { it.chatDocumentId==dataset[position].chatDocumentId }!=null) && AllChatDataModel.personalChatList.find { it.chatDocumentId == dataset[position].chatDocumentId }!!.lastSeen < Instant.now().epochSecond.toString() && AllChatDataModel.personalChatList.find { it.chatDocumentId == dataset[position].chatDocumentId }!!.lastSeen < AllChatDataModel.personalChatList.find { it.chatDocumentId == dataset[position].chatDocumentId }!!.lastUpdated)
         {
             holder.greenDot.visibility = View.VISIBLE
+        }
+        else
+        {
+            holder.greenDot.visibility = View.INVISIBLE
         }
 
         holder.textView.setOnClickListener(object : View.OnClickListener{

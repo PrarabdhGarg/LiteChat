@@ -8,6 +8,7 @@ import android.util.Log
 class NotificationBroadcast : BroadcastReceiver(){
     override fun onReceive(context: Context?, intent: Intent?) {
         Log.d("Notification" , "Broadcast Reciver Called")
+
         context?.startService(Intent(context , NotificationService::class.java))
     }
 

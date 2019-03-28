@@ -18,7 +18,6 @@ import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.concurrent.TimeUnit
 
-
 class LoginActivityPresenter (loginView : LoginContract.LoginView): LoginContract.LoginPresenter
 {
     var loginActivity = loginView
@@ -65,7 +64,7 @@ class LoginActivityPresenter (loginView : LoginContract.LoginView): LoginContrac
      * This function is used to add all the data of a new user to the database
      */
 
-    override fun addUserToFirebase(number : String, id : String, name : String)
+    override fun addUserToFirebase(number : String , name : String)
     {
         val database = FirebaseFirestore.getInstance()
         val user = UserDataModel(Name = name , Number = number , About = UserProfileData.UserAbout)
@@ -99,6 +98,14 @@ class LoginActivityPresenter (loginView : LoginContract.LoginView): LoginContrac
                 override fun onVerificationFailed(p0: FirebaseException?) {
                     Log.d("Verification", "SMS Verification UnSucessful\n$p0")
                     Toast.makeText(context, "Verification UnSucessfull ${p0.toString()}", Toast.LENGTH_LONG).show()
+
+                }
+
+                override fun onCodeAutoRetrievalTimeOut(verificationId: String?) {
+                    Toast.makeText(context , "Timeout for code auto-retrieval. Please check your mobile number" , Toast.LENGTH_SHORT).show()
+                    loginActivity.verifyNumberManually(verificationId!! , false)
+                    //loginActivity.onLoginError()
+                    super.onCodeAutoRetrievalTimeOut(verificationId)
                 }
 
                 override fun onCodeSent(p0: String?, p1: PhoneAuthProvider.ForceResendingToken?) {
@@ -109,7 +116,7 @@ class LoginActivityPresenter (loginView : LoginContract.LoginView): LoginContrac
             }
 
         PhoneAuthProvider.getInstance()
-            .verifyPhoneNumber("+91$number", 60, TimeUnit.SECONDS, activity, mCallbacks)
+            .verifyPhoneNumber("+91$number", 10, TimeUnit.SECONDS, activity, mCallbacks)
     }
 
     /**
@@ -124,14 +131,15 @@ class LoginActivityPresenter (loginView : LoginContract.LoginView): LoginContrac
                 override fun onVerificationCompleted(p0: PhoneAuthCredential?) {
                     Log.d("Verification", "SMS Verification Sucessful\n$p0")
                     //dialog.visibility = View.INVISIBLE
-                    addUserToFirebase(number , p0.toString() , name)
+                    addUserToFirebase(number , name)
                     signInWithPhoneAuthCredential(p0!! , context)
                     Toast.makeText(context, "Verification Sucessfull", Toast.LENGTH_LONG).show()
                 }
 
                 override fun onVerificationFailed(p0: FirebaseException?) {
-                    Log.d("Verification", "SMS Verification UnSucessful\n$p0")
+                    Log.d("Verification", "SMS Verification UnSucessful.\nPlease Check your mobile number")
                     Toast.makeText(context, "Verification UnSucessfull ${p0.toString()}", Toast.LENGTH_LONG).show()
+                    loginActivity.onLoginError()
                 }
 
                 override fun onCodeSent(p0: String?, p1: PhoneAuthProvider.ForceResendingToken?) {
@@ -139,10 +147,17 @@ class LoginActivityPresenter (loginView : LoginContract.LoginView): LoginContrac
                     Log.d("Verification", "SMS Verification Sucessfully Sent")
                 }
 
+                override fun onCodeAutoRetrievalTimeOut(verificationId: String?) {
+                    Toast.makeText(context , "Timeout for code auto-retrieval. Please check your mobile number" , Toast.LENGTH_SHORT).show()
+                    loginActivity.verifyNumberManually(verificationId!! , true)
+                    //loginActivity.onLoginError()
+                    super.onCodeAutoRetrievalTimeOut(verificationId)
+                }
+
             }
 
         PhoneAuthProvider.getInstance()
-            .verifyPhoneNumber("+91$number", 60, TimeUnit.SECONDS, activity, mCallbacks)
+            .verifyPhoneNumber("+91$number", 10, TimeUnit.SECONDS, activity, mCallbacks)
     }
 
     /**

@@ -21,17 +21,16 @@ import com.example.litechat.model.UserProfileData
 import com.example.litechat.presenter.LoginActivityPresenter
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.PhoneAuthProvider
 import kotlinx.android.synthetic.main.login_screen.*
 
 class LoginActivity : AppCompatActivity() , LoginContract.LoginView
 {
     private val PERMISSIONS_REQUEST_READ_STORAGE = 200
-    var mobileNumber : String? = null
     var firebaseAuth : FirebaseAuth? = null
     lateinit var animFade: Animation
     lateinit var animationDrawable: AnimationDrawable
     var loginActivityPresenter : LoginActivityPresenter? = null   //Stores the instance of the presenter that will be used throughout this activity
-    var userName : String? = null
     private var doubleBackToExitPressedOnce = false   //This variable is true if the user has pressed the button once. This variable gets reset after every 2 seconds
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -75,7 +74,6 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
         }
 
         loginRetryButton.setOnClickListener {
-
             animationDrawable.start()
             onFirstButtonPressed()
         }
@@ -88,8 +86,6 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
      * This was necessary so that the user cannot directly go to the home screen without signing in to his account
      * This feature will only work for android devices with Api greater than 16(android 4.1) because of the [finishAffinity] method
      */
-
-
 
     override fun onDestroy() {
         loginActivityPresenter = null   //Set the instance of presenter to be null as soon as the activity gets destroyed
@@ -171,7 +167,11 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
     }
 
     override fun onLoginError() {
-        Toast.makeText(applicationContext , "Error while logging in the user" , Toast.LENGTH_SHORT).show()
+        //Toast.makeText(applicationContext , "Error while logging in the user" , Toast.LENGTH_SHORT).show()
+        /**
+         * TODO Ask Suyash to stop the background animation here
+         * */
+        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
     }
 
     override fun getCurrentContext() : Context
@@ -192,6 +192,35 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
         Handler().postDelayed(Runnable { doubleBackToExitPressedOnce = false }, 2000)
     }
 
+    /**
+     * This method is called when the time-limit for auto-retrieval of verification SMS is over
+     * The user then has to manually enter the verification code, which is then checked by Firebase
+     * and then it generates the phone auth credential
+     * The user data is added to the database by calling the suitable method
+     * Then the method to sign-in the user from the presenter is called
+     */
 
+    override fun verifyNumberManually(verificationId: String, isNewUser: Boolean) {
+        /**
+         * TODO Ask Suyash to stop the background animation here
+         * */
+        var mobile = editTextNewNumber.text.toString()
+        var name = editTextName.text.toString()
+        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+        editTextNewNumber.visibility = View.VISIBLE
+        editTextNewNumber.hint = "Enter verification Code"
+        editTextNewNumber.setText("")
+        /*editTextName.visibility = View.INVISIBLE
+        loginRetryButton.visibility = View.INVISIBLE*/
+        loginButton.text = "Verify"
+        loginButton.setOnClickListener {
+            var code = editTextNewNumber.text.toString()
+            //TODO Adding user to firebase without garauntee that verification will be successful or not. Do something
+            if (isNewUser) {
+                loginActivityPresenter!!.addUserToFirebase(mobile , name)
+            }
+            loginActivityPresenter!!.signInWithPhoneAuthCredential(PhoneAuthProvider.getCredential(verificationId , code) , applicationContext)
+        }
+    }
 }
 

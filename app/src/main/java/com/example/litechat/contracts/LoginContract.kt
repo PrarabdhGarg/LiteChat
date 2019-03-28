@@ -9,7 +9,7 @@ interface LoginContract{
     interface LoginPresenter{
 
         fun checkAccountExists (number : String)
-        fun addUserToFirebase(number : String , id : String , name : String)
+        fun addUserToFirebase(number : String , name : String)
         fun verifyNumber(number : String, activity : Activity, context: Context)
         fun verifyNumber(number : String , activity : Activity , context: Context , name: String)
         fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential, context: Context)
@@ -25,6 +25,7 @@ interface LoginContract{
         fun changeActivity()
         fun onLoginError()
         fun getCurrentContext() : Context
+        fun verifyNumberManually(verificationId : String , isNewUser : Boolean)
 
     }
 

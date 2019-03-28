@@ -67,7 +67,7 @@ class HomeActivityPresenter(val view : HomeActivityContract.View): HomeActivityC
                  {
                      Log.e("FinalCheck" , "Update other")
                      Log.d("FinalDebug8","all upate${AllChatDataModel.personalChatList.size}")
-                     view.getInstanceOfFragmentChat().updateRecyclerView()
+                     view.getInstanceOfFragmentChat().updateRecyclerViewForFirstTime()
                  }
              }
 
