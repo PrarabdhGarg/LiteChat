@@ -6,14 +6,12 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.media.RingtoneManager
-import android.os.AsyncTask
 import android.os.IBinder
 import android.preference.PreferenceManager
 import android.support.v4.app.NotificationCompat
 import android.util.Log
 import android.widget.Toast
 import com.example.litechat.model.ContactListModel
-import com.example.litechat.model.UserProfileData
 import com.google.firebase.FirebaseApp
 import com.google.firebase.firestore.*
 
@@ -55,7 +53,7 @@ class NotificationService : Service() {
                                 mBuilder.setAutoCancel(false)
                                 mBuilder.setLocalOnly(true)
                                 Log.d("Notifications" , "Try Notifications entered with ${mBuilder.build()}")
-                                manger.notify(i , mBuilder.build())
+                                manger.notify(Integer.parseInt(dc.document["otherNumber"].toString()) , mBuilder.build())
                                 i++
                             }
                         }

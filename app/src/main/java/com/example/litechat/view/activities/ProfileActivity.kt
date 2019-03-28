@@ -127,13 +127,14 @@ class ProfileActivity : AppCompatActivity() {
         Log.d("MobileProfile" , "Number = ${UserProfileData.UserNumber}")
         /*var preferances : SharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         preferances.getString("CurrentUserNumber" , "123456789")*/
-        ProgressBarProfile.isIndeterminate
-        ProgressBarProfile.visibility = View.VISIBLE
-        window.setFlags(
-            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-        if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
+
+        if (requestCode == 1 && resultCode == Activity.RESULT_OK && data!!.data.toString().contains("image")) {
             //val thumbnail: Bitmap = data!!.getParcelableExtra("data")
+            ProgressBarProfile.isIndeterminate
+            ProgressBarProfile.visibility = View.VISIBLE
+            window.setFlags(
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
             val fullPhotoUri: Uri? = data!!.data
             Log.d("Image Search" , fullPhotoUri.toString())
             UserProfileData.UserProfileImage = fullPhotoUri.toString()
@@ -153,6 +154,10 @@ class ProfileActivity : AppCompatActivity() {
                     UserProfileData.UserProfileImage = fullPhotoUri!!.path
                     updateProfileImageOnDatabse()
                 }
+        }
+        else
+        {
+            Toast.makeText(applicationContext , "Please select a valid image" , Toast.LENGTH_LONG).show()
         }
         super.onActivityResult(requestCode, resultCode, data)
     }

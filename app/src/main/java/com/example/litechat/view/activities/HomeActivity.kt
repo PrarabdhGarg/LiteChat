@@ -20,6 +20,7 @@ import android.view.Menu
 import android.view.View
 import android.widget.SearchView
 import android.widget.Toast
+import com.example.litechat.FirebaseService
 import com.example.litechat.NotificationService
 import com.example.litechat.R
 import com.example.litechat.contracts.HomeActivityContract
@@ -30,7 +31,6 @@ import com.example.litechat.presenter.HomeActivityPresenter
 import com.example.litechat.view.fragments.FragmentChat
 import com.example.litechat.view.fragments.FragmentContact
 import com.example.litechat.view.fragments.FragmentStatus
-import com.google.common.io.Resources.getResource
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.iid.FirebaseInstanceId
 import kotlinx.android.synthetic.main.activity_home.*
@@ -65,21 +65,27 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View,SearchView.O
         homeActivityPresenter = HomeActivityPresenter(this)
         ContentResolverData.contentResolverPassed = contentResolver
         // If user is already logged in, no need to open the LoginActivity again
-        if (FirebaseAuth.getInstance().currentUser == null) {
+        if (FirebaseAuth.getInstance().currentUser == null)
+        {
+            AllChatDataModel.isPresenterCalled = false
             startActivity(Intent(this@HomeActivity, LoginActivity::class.java))
-        } else {
+        } else
+        {
             //If user is already logged in, get its number from shared preferences, store it in the static variable and call the homeActivity presenter to retrieve currently active chats
             var number = PreferenceManager.getDefaultSharedPreferences(applicationContext)
                 .getString("currentUserNumber", "123456789")
             Log.d("HomeActivity", "Else enterd in auth.getIstance $number")
-            //AllChatDataModel.upadateFragmentChatFirstTime = 1
+            startService(Intent(this , FirebaseService::class.java))
             UserProfileData.UserNumber = number
             AllChatDataModel.userNumberIdPM = number
             UserProfileData.UserImage = PreferenceManager.getDefaultSharedPreferences(applicationContext).getString("StatusImage", Uri.parse(applicationContext.getDrawable(R.drawable.profile).toString()).toString())
             //If the user is already logged in, we need to retreive the users previously stored data and save it in the local variables
             homeActivityPresenter.getUserDataOnLogin(number)
-            homeActivityPresenter.getPersonalChatsFromFirestore()
-            AllChatDataModel.isPresenterCalled = true
+            if (!AllChatDataModel.isPresenterCalled)
+            {
+                homeActivityPresenter.getPersonalChatsFromFirestore()
+                AllChatDataModel.isPresenterCalled = true
+            }
 
             FirebaseInstanceId.getInstance().instanceId.addOnCompleteListener {
                 if (!it.isSuccessful) {
@@ -87,14 +93,14 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View,SearchView.O
                 } else {
                     val token = it.result?.token
                     Log.d("Notification", "Generated Token = ${token}")
+                    UserProfileData.UserToken = token
                     Log.d("Notification", "User Data Token = ${UserProfileData.UserToken}")
                 }
             }
         }
-
+        //TODO We should not start the service when the app is open as there is no point to send push notifications if the app is already running
         serviceIntent = Intent(this, NotificationService::class.java)
-        var servicceStatus: String? =
-            PreferenceManager.getDefaultSharedPreferences(applicationContext).getString("service", "no")
+        var servicceStatus: String? = PreferenceManager.getDefaultSharedPreferences(applicationContext).getString("service", "no")
         startService(serviceIntent)
         if (servicceStatus == "no") {
             startService(serviceIntent)
@@ -140,8 +146,11 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View,SearchView.O
         Log.e("FinalCheck", "OnStartCalled")
         AllChatDataModel.personalChatList.clear()
 
-        homeActivityPresenter.getPersonalChatsFromFirestore()
-        AllChatDataModel.isPresenterCalled = true
+        if (!AllChatDataModel.isPresenterCalled)
+        {
+            homeActivityPresenter.getPersonalChatsFromFirestore()
+            AllChatDataModel.isPresenterCalled = true
+        }
 
         AllChatDataModel.userNumberIdPM = UserProfileData.UserNumber
         Log.d(
@@ -254,17 +263,21 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View,SearchView.O
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         Log.d("MobileNumber" , "Number = ${UserProfileData.UserNumber}")
-        /*var preferances: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        var preferances: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         preferances.getString("CurrentUserNumber", "123456789")
-        Log.d("MobileNumberPrefer", preferances.getString("CurrentUserNumber", "123456789"))*/
+        Log.d("MobileNumberPrefer", preferances.getString("CurrentUserNumber", "123456789"))
         fragment!!.view!!.statusLoader.visibility = View.VISIBLE
-        if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
+        if (requestCode == 1 && resultCode == Activity.RESULT_OK && data!!.data.toString().contains("image")) {
             //val thumbnail: Bitmap = data!!.getParcelableExtra("data")
             val fullPhotoUri: Uri? = data!!.data
             Log.d("Image Search", fullPhotoUri.toString())
             /**Shift this line to onSucess Listener for uploading of the photo*/
             UserProfileData.UserImage = fullPhotoUri.toString()
             fragment!!.onNewStatusImageSelected(fullPhotoUri!!)
+        }
+        else
+        {
+            Toast.makeText(applicationContext , "Please select a valid image" , Toast.LENGTH_LONG).show()
         }
     }
 
@@ -282,7 +295,11 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View,SearchView.O
         Log.e("FinalCheck", "onResumeCalled")
         Log.d("Debug", "On Resume of main activity called with user ${UserProfileData.UserNumber}")
 
-        homeActivityPresenter.getPersonalChatsFromFirestore()
+        if (!AllChatDataModel.isPresenterCalled)
+        {
+            homeActivityPresenter.getPersonalChatsFromFirestore()
+            AllChatDataModel.isPresenterCalled = true
+        }
 
         Log.d("Checking", UserProfileData.UserNumber + "   " + AllChatDataModel.userNumberIdPM)
         super.onResume()
@@ -305,12 +322,14 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View,SearchView.O
     }
 
     override fun onDestroy() {
+        AllChatDataModel.isPresenterCalled = false
         Log.d("Notification", "onDestroy of HomeActivity called")
         stopService(serviceIntent)
         super.onDestroy()
     }
 
     override fun onStop() {
+        AllChatDataModel.isPresenterCalled = false
         Log.d("Notifications", "onStop of HomeActivity called")
         super.onStop()
     }

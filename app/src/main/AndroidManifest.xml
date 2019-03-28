@@ -29,10 +29,21 @@
                 android:name=".view.activities.ProfileOtherUser"
                 android:screenOrientation="portrait"/>
 
+        <service android:name=".FirebaseService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <activity
+                android:name=".view.activities.ProfileOtherUser"
+                android:screenOrientation="portrait"/>
+
         <service
                 android:name=".NotificationService"
                 android:enabled="true"
                 android:exported="true">
+
         </service>
 
         <receiver
@@ -75,6 +86,7 @@
         <activity
                 android:name=".view.activities.DeveloperActivity"
                 android:screenOrientation="portrait"/>
+
     </application>
 
 </manifest>
