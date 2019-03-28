@@ -18,6 +18,7 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.litechat.R
 import com.example.litechat.model.UserProfileData
 import com.google.firebase.firestore.FirebaseFirestore
@@ -53,7 +54,8 @@ class ProfileActivity : AppCompatActivity() {
         /**
          * Check why this shows an error
          */
-        Glide.with(applicationContext).load(UserProfileData.UserProfileImage).into(ProfileImageView)
+        Glide.with(applicationContext).load(UserProfileData.UserProfileImage).apply(RequestOptions().placeholder(applicationContext.getDrawable(R.drawable.profile)))
+            .into(ProfileImageView)
 
         //OnClick listener for the gallery button to open the gallery
         ProfileImageButtonChange.setOnClickListener {

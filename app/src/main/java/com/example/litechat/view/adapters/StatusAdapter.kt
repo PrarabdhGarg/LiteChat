@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.litechat.R
 import de.hdodenhof.circleimageview.CircleImageView
 
@@ -22,7 +23,7 @@ class StatusAdapter(private var context : Context , var map : ArrayList<Pair<Str
 
     override fun onBindViewHolder(viewHolder: StatusViewHolder, p1: Int) {
         viewHolder.currentActivities.text = map[p1].first
-        Glide.with(context).load(map[p1].second).into(viewHolder.statusImages)
+        Glide.with(context).load(map[p1].second).apply(RequestOptions().placeholder(context.getDrawable(R.drawable.profile))).into(viewHolder.statusImages)
     }
 
     inner class StatusViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)

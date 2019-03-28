@@ -1,5 +1,9 @@
 package com.example.litechat.model;
 
+import android.net.Uri;
+
+import java.util.ArrayList;
+
 /**
  * This is a static class that stores all the information related to the current user so that all classes can
  * access the data whenever required without having to wait to download data from the database again and again

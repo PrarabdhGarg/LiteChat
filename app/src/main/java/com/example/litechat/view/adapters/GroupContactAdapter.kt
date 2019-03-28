@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.litechat.R
 import com.example.litechat.model.ContactListData
 import com.example.litechat.model.UserProfileData
@@ -34,7 +35,7 @@ class GroupContactAdapter(var context: Context): RecyclerView.Adapter<GroupConta
     override fun onBindViewHolder(holder: GroupContactAdapter.GroupContactHolder, position: Int) {
 
         holder.names.text = ContactListData.contacts[position].name
-        Glide.with(context).load(R.drawable.suyash).into(holder.img)
+        Glide.with(context).load(R.drawable.profile).into(holder.img)
         holder.names.setOnClickListener{
             Log.d("check","exec")
             if(holder.check.visibility == View.INVISIBLE){
@@ -51,7 +52,7 @@ class GroupContactAdapter(var context: Context): RecyclerView.Adapter<GroupConta
             }
             else{
                 holder.check.visibility = View.INVISIBLE
-                Glide.with(context).load(R.drawable.suyash).into(holder.img)
+                Glide.with(context).load(R.drawable.profile).into(holder.img)
                 ContactListData.groupContacts.remove(ContactListData.contacts[position])
                 Log.d("check",ContactListData.groupContacts.toString())
             }
