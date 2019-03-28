@@ -42,8 +42,6 @@ class NewGroupChatActivity : AppCompatActivity() {
                 window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                 Log.d("check1", "onCLick")
 
-
-
                     for (i in 0 until ContactListData.groupContacts.size) {
                         AllChatDataModel.groupNumbers.add(ContactListData.groupContacts[i].mobileNumber)
                         Log.d("check", AllChatDataModel.groupNumbers.toString())
