@@ -19,6 +19,7 @@ import com.bumptech.glide.Glide
 import com.example.litechat.R
 import com.example.litechat.contracts.StatusContract
 import com.example.litechat.listeners.BoomListener
+import com.example.litechat.model.AllChatDataModel
 import com.example.litechat.model.UserProfileData
 import com.example.litechat.presenter.StatusFragmentPresenter
 import com.example.litechat.view.activities.*
@@ -142,6 +143,7 @@ class FragmentStatus: Fragment() , StatusContract.View{
         }
 
         changeStatusImageButton.setOnClickListener {
+            AllChatDataModel.isPresenterCalled = false
             val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
                 type = "image/*"
             }

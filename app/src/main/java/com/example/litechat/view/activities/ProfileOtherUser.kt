@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.litechat.R
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_profile_other_user.*
@@ -37,7 +38,7 @@ class ProfileOtherUser : AppCompatActivity() {
 
             AboutTextView.text = about.toString()
             NameTextView.text = names.toString()
-            Glide.with(applicationContext).load(image).into(ProfileImageView)
+            Glide.with(applicationContext).load(image).apply(RequestOptions().placeholder(applicationContext.getDrawable(R.drawable.profile))).into(ProfileImageView)
 
             otherProfileLoader.visibility = View.INVISIBLE
         }

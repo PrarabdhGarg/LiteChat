@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import android.widget.Toast
 import com.example.litechat.listeners.ListenerForFragmentChat
 import com.example.litechat.R
@@ -26,7 +27,7 @@ import com.nightonke.boommenu.BoomButtons.HamButton
 import kotlinx.android.synthetic.main.fragment_chat.view.*
 import java.lang.Exception
 
-class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
+class FragmentChat : Fragment(), AllChatsContractFrag.CFView{
 
     private lateinit var listenerForChat: ListenerForFragmentChat
     private lateinit var listenerForProfile: ListenerForFragmentChat
@@ -115,7 +116,6 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
             }
         })
 
-
         listenerForProfile.setCustomObjectListener(object : ListenerForFragmentChat.Listener {
 
             override fun onDataRecieved(number: String, chatDocumentId: String,lastUpdated:String) {
@@ -141,7 +141,6 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
                     startActivity(intent)
                 }
 
-
             }
         })
             adapterForFragmentChat = AdapterForFragmentChat(chatNamesForFragment, context!!, listenerForProfile, listenerForChat)
@@ -151,8 +150,6 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
         return view
     }
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
 
         Log.d("ViewPager" , "onCreate of FragmentChat called")
@@ -161,9 +158,8 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
 
     }
 
-
     override fun updateRecyclerView() {
-        Log.d("FinalDebug9", "upadte all start  size${AllChatDataModel.personalChatList}")
+        Log.d("FinalDebug9", "update all start  size${AllChatDataModel.personalChatList}")
         //chatNamesForFragment.clear()
         //chatNamesForFragment.addAll(AllChatDataModel.personalChatList)
         /*AllChatDataModel.personalChatList.clear()*/
@@ -178,7 +174,7 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
     }
 
     override fun updateRecyclerViewForFirstTime() {
-        Log.d("Dataa","first time code start ${adapterForFragmentChat}")
+        Log.d("Data","first time code start ${adapterForFragmentChat}")
         chatNamesForFragment.clear()
         chatNamesForFragment.addAll(AllChatDataModel.personalChatList)
         //AllChatDataModel.personalChatList.clear()
@@ -195,7 +191,4 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView {
         Log.d("ViewPager" , "onDestroyView of FragmentChat called")
         super.onDestroyView()
     }
-
-
-
 }

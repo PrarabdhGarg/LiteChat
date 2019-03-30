@@ -12,18 +12,9 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.support.annotation.RequiresApi
 import android.util.Log
-
 import android.view.View
-import android.view.WindowManager
-
-import kotlinx.android.synthetic.main.activity_chat.*
-
-import android.widget.ViewAnimator
-import java.lang.Double.parseDouble
-
 import kotlinx.android.synthetic.main.activity_chat.*
 import android.widget.Toast
-
 import com.example.litechat.contracts.ChatContract
 import com.example.litechat.model.AllChatDataModel
 import com.example.litechat.model.MessageModel
@@ -31,15 +22,12 @@ import com.example.litechat.presenter.ChatPresenter
 import com.example.litechat.view.adapters.AdapterForChatActivity
 import java.time.Instant
 import com.bumptech.glide.Glide
-import com.example.litechat.R
 import com.example.litechat.model.UserProfileData
 import com.example.litechat.model.contactsRoom.AppDatabse
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ServerTimestamp
 import com.google.firebase.storage.FirebaseStorage
-import kotlinx.android.synthetic.main.activity_profile.*
 import java.io.ByteArrayOutputStream
-import java.lang.Double
+import java.lang.Double.parseDouble
 
 
 class ChatActivity : AppCompatActivity(), ChatContract.CView {
@@ -54,7 +42,32 @@ class ChatActivity : AppCompatActivity(), ChatContract.CView {
 
         super.onCreate(savedInstanceState)
         setContentView(com.example.litechat.R.layout.activity_chat)
+        textViewOtherUser.setOnClickListener {
+            try
+            {
+                var num= AllChatDataModel.otherUserNumber.toDouble()
+            }catch (e : java.lang.Exception){
+                numeric = false
 
+            }
+
+            if(numeric)
+            {   //  to show contact name of person chatting with
+                var intent = Intent(this,ProfileOtherUser::class.java)
+                intent.putExtra("number" , AllChatDataModel.otherUserNumber)
+                startActivity(intent)
+            }
+            else
+            {
+
+                //to show group information
+                var intent= Intent(this,GroupInfoActivity::class.java)
+                intent.putExtra("documentPathId",AllChatDataModel.documentPathId)
+                startActivity(intent)
+            }
+
+
+        }
         adapterForChatActivity= AdapterForChatActivity(myDataset,applicationContext)
         recyclerView.apply {
             adapter=adapterForChatActivity
@@ -70,7 +83,7 @@ class ChatActivity : AppCompatActivity(), ChatContract.CView {
         textViewOtherUser.setOnClickListener(View.OnClickListener {
             try
             {
-                val num = Double.parseDouble( AllChatDataModel.otherUserNumber)
+                val num =  parseDouble(AllChatDataModel.otherUserNumber)
             }
             catch (e: NumberFormatException)
             {
