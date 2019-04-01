@@ -48,7 +48,7 @@ class DataRetrieveClass : HomeActivityContract.Model{
     override fun retrievePersonalChatDataFromFirestore(presenter: HomeActivityContract.Presenter) {
 
         Log.d("FinalDebug3","vf")
-        db.collection("Users").document(AllChatDataModel.userNumberIdPM).collection("currentChats")
+        db.collection("Users").document(UserProfileData.UserNumber).collection("currentChats")
             .addSnapshotListener(
                 MetadataChanges.INCLUDE,
                 EventListener<QuerySnapshot>{ snap, e ->

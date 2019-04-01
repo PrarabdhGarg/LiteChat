@@ -89,30 +89,32 @@ class AdapterForFragmentChat(private var dataset :ArrayList<ChatObject>, private
             holder.greenDot.visibility = View.INVISIBLE
         }
 
-        holder.textView.setOnClickListener(object : View.OnClickListener{
-            override fun onClick(v: View?) {
-                Log.d("AllChatNumber" , AllChatDataModel.userNumberIdPM)
-                  // change with number
-                /***
-                 *
-                 * change listner to pass chat id
-                 */
-                /*var t = ArrayList<ChatObject>()
-                t.addAll(AllChatDataModel.personalChatList)
-                var i = AllChatDataModel.personalChatList.indexOf(dataset[position])*/
-                //Log.d("Debug13" , i.toString())
-                /*if(i>=0)
-                    t.removeAt(i)
-                AllChatDataModel.personalChatList.addAll(t)*/
-                Log.d("Debug13" , AllChatDataModel.personalChatList.size.toString())
-                //holder.greenDot.visibility = View.INVISIBLE
-                Log.d("Data","first time")
-                Log.d("Person",holder.textView.text.toString())
-                //AllChatDataModel.otherUserNumber=dataset[position].otherNumber
-               listenerForFragmentChatChat.listener!!.onDataRecieved(dataset[position].otherNumber,dataset[position].chatDocumentId,dataset[position].lastUpdated)
-                // listener to send number for activity
-            }
-        })
+        holder.textView.setOnClickListener {
+            Log.d("AllChatNumber" , AllChatDataModel.userNumberIdPM)
+            // change with number
+            /***
+             *
+             * change listner to pass chat id
+             */
+            /***
+             *
+             * change listner to pass chat id
+             */
+            /*var t = ArrayList<ChatObject>()
+                        t.addAll(AllChatDataModel.personalChatList)
+                        var i = AllChatDataModel.personalChatList.indexOf(dataset[position])*/
+            //Log.d("Debug13" , i.toString())
+            /*if(i>=0)
+                            t.removeAt(i)
+                        AllChatDataModel.personalChatList.addAll(t)*/
+            Log.d("Debug13" , AllChatDataModel.personalChatList.size.toString())
+            //holder.greenDot.visibility = View.INVISIBLE
+            Log.d("Data","first time")
+            Log.d("Person",holder.textView.text.toString())
+            //AllChatDataModel.otherUserNumber=dataset[position].otherNumber
+            listenerForFragmentChatChat.listener!!.onDataRecieved(dataset[position].otherNumber,dataset[position].chatDocumentId,dataset[position].lastUpdated)
+            // listener to send number for activity
+        }
 
         holder.imageView.setOnClickListener(object: View.OnClickListener{
             override fun onClick(v: View?) {

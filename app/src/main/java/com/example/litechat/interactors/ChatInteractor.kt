@@ -7,6 +7,7 @@ import com.example.litechat.contracts.ChatContract
 import com.example.litechat.model.AllChatDataModel
 import com.example.litechat.model.MessageModel
 import com.google.firebase.firestore.*
+import com.google.firebase.messaging.FirebaseMessaging
 import java.lang.Double
 import java.lang.NumberFormatException
 
@@ -25,18 +26,29 @@ class ChatInteractor(p1: ChatContract.CPresenter) : ChatContract.CInteractor {
     override fun saveNewMessageToFirestore(messageModel: MessageModel, context: Context) {
 
         // sets new message to firestore
-        database!!.collection("Chats").document(AllChatDataModel.documentPathId).collection("messages")
-            .add(messageModel).addOnSuccessListener { res ->
-
-            Log.d("Saala", "set on server ")
-            Toast.makeText(context, "Message Sent Successfully", Toast.LENGTH_SHORT).show()
-        }
 
         try {
             val num = Double.parseDouble(AllChatDataModel.otherUserNumber)
         } catch (e: NumberFormatException) {
             numeric = false
         }
+
+        database!!.collection("Chats").document(AllChatDataModel.documentPathId).collection("messages")
+            .add(messageModel).addOnSuccessListener { res ->
+
+            Log.d("Saala", "set on server ")
+                var otherToken = ""
+                if (numeric)
+                {
+                    database!!.collection("Users").document(AllChatDataModel.otherUserNumber).get().addOnSuccessListener {
+                        otherToken = it.get("token").toString()
+
+                    }
+                }
+            Toast.makeText(context, "Message Sent Successfully", Toast.LENGTH_SHORT).show()
+        }
+
+
 
         if (numeric) {
             // sets last updated to  both the users

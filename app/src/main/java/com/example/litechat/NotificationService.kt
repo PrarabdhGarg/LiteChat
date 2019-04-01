@@ -24,7 +24,7 @@ class NotificationService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.d("Notifications" , "Service Started")
-        Toast.makeText(this , "Service Started " , Toast.LENGTH_SHORT).show()
+        // Toast.makeText(this , "Service Started " , Toast.LENGTH_SHORT).show()
         FirebaseApp.initializeApp(this)
         //serviceForNotification(this).execute()
         var i = 0
@@ -40,7 +40,7 @@ class NotificationService : Service() {
                         when (dc.type) {
                             DocumentChange.Type.MODIFIED -> {
                                 Log.d("Notification" , "Entered modified block")
-                                Toast.makeText(this , "Added the block for Modified" , Toast.LENGTH_SHORT).show()
+                                // Toast.makeText(this , "Added the block for Modified" , Toast.LENGTH_SHORT).show()
                                 var manger : NotificationManager = this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                                 manger.createNotificationChannel(NotificationChannel(dc.document["otherNumber"].toString() , "Notification1" , NotificationManager.IMPORTANCE_DEFAULT))
                                 val mBuilder = NotificationCompat.Builder(this)
@@ -65,7 +65,7 @@ class NotificationService : Service() {
 
     override fun onDestroy() {
         Log.d("Notification" , "onDestroy of service called")
-        Toast.makeText(this , "ServiceDestroyed" , Toast.LENGTH_SHORT).show()
+        // Toast.makeText(this , "ServiceDestroyed" , Toast.LENGTH_SHORT).show()
         snapListener!!.remove()
         sendBroadcast(Intent(this , NotificationBroadcast::class.java))
         super.onDestroy()
