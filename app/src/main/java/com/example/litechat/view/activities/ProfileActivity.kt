@@ -203,6 +203,7 @@ class ProfileActivity : AppCompatActivity() {
     {
         ref!!.child(UserProfileData.UserNumber).child("ProfileImage").downloadUrl.addOnSuccessListener {
             var downloadUrl = it.toString()
+
             FirebaseFirestore.getInstance().collection("Users").document(UserProfileData.UserNumber).update("profileImage" , downloadUrl).addOnCompleteListener {
                 window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                 ProgressBarProfile.visibility = View.INVISIBLE

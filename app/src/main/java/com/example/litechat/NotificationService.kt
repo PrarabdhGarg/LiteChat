@@ -24,7 +24,7 @@ class NotificationService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.d("Notifications" , "Service Started")
-        Toast.makeText(this , "Service Started " , Toast.LENGTH_SHORT).show()
+       // Toast.makeText(this , "Service Started " , Toast.LENGTH_SHORT).show()
         FirebaseApp.initializeApp(this)
         //serviceForNotification(this).execute()
         var i = 0
@@ -65,7 +65,7 @@ class NotificationService : Service() {
 
     override fun onDestroy() {
         Log.d("Notification" , "onDestroy of service called")
-        Toast.makeText(this , "ServiceDestroyed" , Toast.LENGTH_SHORT).show()
+      //  Toast.makeText(this , "ServiceDestroyed" , Toast.LENGTH_SHORT).show()
         snapListener!!.remove()
         sendBroadcast(Intent(this , NotificationBroadcast::class.java))
         super.onDestroy()

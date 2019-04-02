@@ -1,9 +1,11 @@
 
 package com.example.litechat.view.activities
 
+import android.Manifest
 import android.app.Activity
 import android.arch.persistence.room.Room
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
@@ -11,6 +13,8 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.support.annotation.RequiresApi
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
 import android.util.Log
 import android.view.View
 import kotlinx.android.synthetic.main.activity_chat.*
@@ -42,6 +46,8 @@ class ChatActivity : AppCompatActivity(), ChatContract.CView {
 
         super.onCreate(savedInstanceState)
         setContentView(com.example.litechat.R.layout.activity_chat)
+
+        checkForPermission()
         textViewOtherUser.setOnClickListener {
             try
             {
@@ -68,7 +74,7 @@ class ChatActivity : AppCompatActivity(), ChatContract.CView {
 
 
         }
-        adapterForChatActivity= AdapterForChatActivity(myDataset,applicationContext)
+        adapterForChatActivity= AdapterForChatActivity(myDataset,applicationContext,this@ChatActivity)
         recyclerView.apply {
             adapter=adapterForChatActivity
             setHasFixedSize(true)
@@ -106,7 +112,8 @@ class ChatActivity : AppCompatActivity(), ChatContract.CView {
 
         })
         //Update last seen of the user for current chat
-         FirebaseFirestore.getInstance().collection("Users").document(UserProfileData.UserNumber).collection("currentChats").whereEqualTo("chatDocumentId" , AllChatDataModel.documentPathId).get().addOnSuccessListener {
+         FirebaseFirestore.getInstance().collection("Users").document(UserProfileData.UserNumber).collection("currentChats")
+             .whereEqualTo("chatDocumentId" , AllChatDataModel.documentPathId).get().addOnSuccessListener {
              for (i in it)
              {
                  i.reference.update("lastSeen" , Instant.now().epochSecond.toString())
@@ -194,8 +201,6 @@ selectImage()
            // val thumbnail: Bitmap = data!!.getParcelableExtra("data")
             val fullPhotoUri: Uri = data!!.data
             // Do work with photo saved at fullPhotoUri
-            imageViewOtherPerson.setImageURI(fullPhotoUri)
-
             uploadImage(fullPhotoUri)
         }
     }
@@ -210,7 +215,7 @@ selectImage()
         bitmap.compress(Bitmap.CompressFormat.JPEG,20,baos)
         val data1 = baos.toByteArray()
         val timeStamp =Instant.now().epochSecond.toString()
-        val uploadTask =  ref.child("ImageSharing").child(AllChatDataModel.documentPathId).child(timeStamp).putBytes(data1)
+        val uploadTask =  ref.child("ImageSharing").child(AllChatDataModel.documentPathId).child(timeStamp+".jpg").putBytes(data1)
         uploadTask.addOnFailureListener {
             // Handle unsuccessful uploads
         }.addOnSuccessListener {
@@ -218,31 +223,32 @@ selectImage()
             // ...
             Log.d("Firebase Storage" , "Image uploaded sucessfully")
             //Glide.with(applicationContext).load(fullPhotoUri).into(ProfileImageView).onLoadStarted(getDrawable(R.drawable.profile))
-            updateProfileImageOnDatabase(timeStamp)
+            updateSharedImageOnDatabase(timeStamp)
         }
 
 
     }
 
     // method to update sent message via image
-    private fun updateProfileImageOnDatabase(timestamp : String)
+    private fun updateSharedImageOnDatabase(timestamp : String)
     {
+        val messageModelImage= MessageModel()
+        messageModelImage.message="~$^*/"+timestamp
+        messageModelImage.sentBy=AllChatDataModel.userNumberIdPM// sala ab bhi null h
+        messageModelImage.sentOn=Instant.now().epochSecond.toString()
+        chatPresenter.passNewSetMessageFromViewtoPresenter(messageModelImage,applicationContext)
 
-        ref.child("ImageSharing").child(AllChatDataModel.documentPathId).child(timestamp).downloadUrl.addOnSuccessListener {
+       /* ref.child("ImageSharing").child(AllChatDataModel.documentPathId).child(timestamp).downloadUrl.addOnSuccessListener {
             val  downloadUrl = it.toString()
             if (!downloadUrl.isEmpty())
             {
-                val messageModelImage= MessageModel()
-                messageModelImage.message="~$^*/"+downloadUrl
-                messageModelImage.sentBy=AllChatDataModel.userNumberIdPM// sala ab bhi null h
-                messageModelImage.sentOn=Instant.now().epochSecond.toString()
-                chatPresenter.passNewSetMessageFromViewtoPresenter(messageModelImage,applicationContext)
+
             }
             else
             {
                 Toast.makeText(this@ChatActivity,"Please select a image to send",Toast.LENGTH_SHORT).show()
             }
-        }
+        }*/
 
     }
 
@@ -304,6 +310,63 @@ selectImage()
             super.onBackPressed()
         }
 
+    }
+
+    private fun checkForPermission()
+    {
+        if (ContextCompat.checkSelfPermission(this@ChatActivity,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            != PackageManager.PERMISSION_GRANTED) {
+
+            // Permission is not granted
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this@ChatActivity,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                Log.d("ImageSharing10","Show expalnation")
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(this@ChatActivity,
+                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                    1)
+                Log.d("ImageSharing10","ask permison")
+
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        } else {
+            // Permission has already been granted
+        }
+
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int,
+                                            permissions: Array<String>, grantResults: IntArray) {
+        when (requestCode) {
+            1 -> {
+                // If request is cancelled, the result arrays are empty.
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    Log.d("ImageSharing10","finally permison granted")
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                } else {
+
+                    Log.d("ImageSharing10"," permison denioed again")
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return
+            }
+
+            // Add other 'when' lines to check for other
+            // permissions this app might request.
+            else -> {
+                // Ignore all other requests.
+            }
+        }
     }
  }
 
