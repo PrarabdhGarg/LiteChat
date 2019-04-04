@@ -13,7 +13,9 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.litechat.R
 import com.example.litechat.model.ContactListData
 import com.example.litechat.model.UserProfileData
+import com.google.firebase.storage.FirebaseStorage
 import de.hdodenhof.circleimageview.CircleImageView
+import java.lang.Error
 
 class GroupContactAdapter(var context: Context): RecyclerView.Adapter<GroupContactAdapter.GroupContactHolder>() {
     inner class GroupContactHolder(view: View) : RecyclerView.ViewHolder(view){
@@ -35,7 +37,15 @@ class GroupContactAdapter(var context: Context): RecyclerView.Adapter<GroupConta
     override fun onBindViewHolder(holder: GroupContactAdapter.GroupContactHolder, position: Int) {
 
         holder.names.text = ContactListData.contacts[position].name
-        Glide.with(context).load(R.drawable.profile).into(holder.img)
+        FirebaseStorage.getInstance().reference.child(ContactListData.contacts[position].mobileNumber).child("ProfileImage").downloadUrl.addOnSuccessListener {
+            try {
+                Glide.with(context).load(it.toString()).apply(RequestOptions().placeholder(context.getDrawable(R.drawable.profile))).
+                    into(holder.img)
+            }catch (e : Error)
+            {
+                Log.d("Crash" , e.stackTrace.toString())
+            }
+        }
         holder.names.setOnClickListener{
             Log.d("check","exec")
             if(holder.check.visibility == View.INVISIBLE){

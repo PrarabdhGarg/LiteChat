@@ -50,7 +50,7 @@ class NewGroupChatActivity : AppCompatActivity() {
                     newObj.groupname = groupName
                     newObj.groupmembers.addAll(AllChatDataModel.groupNumbers)
                     newObj.groupmembers.add(AllChatDataModel.userNumberIdPM)
-                    newObj.usernumber = AllChatDataModel.userNumberIdPM
+                    newObj.usernumber=AllChatDataModel.userNumberIdPM
                     Log.d("check5", newObj.toString())
 
                     // there may be a bug in this query same user creates group with same name might be a problem

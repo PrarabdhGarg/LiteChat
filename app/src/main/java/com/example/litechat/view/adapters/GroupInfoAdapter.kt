@@ -8,9 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.litechat.R
 import com.example.litechat.model.AllChatDataModel
 import com.example.litechat.model.ContactListModel
+import com.google.firebase.storage.FirebaseStorage
+import java.lang.Error
 
 
 class GroupInfoAdapter(var memlist:ArrayList<String>,var context: Context): RecyclerView.Adapter<GroupInfoAdapter.GroupInfoHolder>() {
@@ -36,7 +40,17 @@ class GroupInfoAdapter(var memlist:ArrayList<String>,var context: Context): Recy
         if(memlist.get(p1)!=AllChatDataModel.userNumberIdPM)
         p0.memName.text =(ContactListModel().roomGetName(context ,memlist.get(p1)))
         else
-        p0.memName.text="You"
+            p0.memName.text="You"
+        FirebaseStorage.getInstance().reference.child(memlist[p1]).child("ProfileImage").downloadUrl.addOnSuccessListener {
+            try {
+                Glide.with(context).load(it.toString()).apply(RequestOptions().placeholder(context.getDrawable(R.drawable.profile))).
+                    into(p0.img)
+            }catch (e : Error)
+            {
+                Log.d("Crash" , e.stackTrace.toString())
+            }
+        }
+
 
     }
 }
