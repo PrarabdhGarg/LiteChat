@@ -109,13 +109,13 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View,SearchView.O
         }
         //TODO We should not start the service when the app is open as there is no point to send push notifications if the app is already running
         //TODo We wont be needing a seperate notification service if FCM is working
-        serviceIntent = Intent(this, NotificationService::class.java)
+        /*serviceIntent = Intent(this, NotificationService::class.java)
         var servicceStatus: String? = PreferenceManager.getDefaultSharedPreferences(applicationContext).getString("service", "no")
         startService(serviceIntent)
         if (servicceStatus == "no") {
             startService(serviceIntent)
             PreferenceManager.getDefaultSharedPreferences(applicationContext).edit().putString("service", "yes").apply()
-        }
+        }*/
 
         mSectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
         // Set up the ViewPager with the sections adapter.
@@ -172,10 +172,12 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View,SearchView.O
         override fun getItem(position: Int): Fragment {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            val fragmentChat = FragmentChat()
+            var fragmentChat = FragmentChat()
             when (position) {
+
                 0 -> {
                     Log.d("Position" , "Position1 called")
+                    fragmentChat = FragmentChat()
                     fragmentChat1 = fragmentChat
                     return fragmentChat
                 }
@@ -184,7 +186,6 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View,SearchView.O
                     fragmentContact = FragmentContact()
                     return fragmentContact!!
                 }
-
 
                 2 -> {
                     val fragmentStatus = FragmentStatus()
@@ -238,7 +239,11 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View,SearchView.O
     override fun isChatFragmentActive(): Boolean
     {
         if(container.currentItem == 0)
+        {
+            Log.d("Container" , "Returned True")
+            Log.d("Container" , "Returned fragment $fragmentChat1")
             return true
+        }
         return false //function to return whether chat Fragment is displayed or not
     }
 

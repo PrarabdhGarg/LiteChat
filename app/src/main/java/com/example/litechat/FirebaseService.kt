@@ -16,7 +16,6 @@ class FirebaseService : FirebaseMessagingService() {
     }
 
     override fun onMessageReceived(p0: RemoteMessage?) {
-        //Toast.makeText(this , "Hello. ${p0}" , Toast.LENGTH_LONG).show()
         var firebase = FirebaseFirestore.getInstance()
         Log.d("Notification" , "Reference is $firebase")
         super.onMessageReceived(p0)

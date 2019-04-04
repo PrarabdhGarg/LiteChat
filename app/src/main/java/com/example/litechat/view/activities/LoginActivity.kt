@@ -168,9 +168,7 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
 
     override fun onLoginError() {
         //Toast.makeText(applicationContext , "Error while logging in the user" , Toast.LENGTH_SHORT).show()
-        /**
-         * TODO Ask Suyash to stop the background animation here
-         * */
+        animationDrawable.stop()
         window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
     }
 
@@ -201,9 +199,7 @@ class LoginActivity : AppCompatActivity() , LoginContract.LoginView
      */
 
     override fun verifyNumberManually(verificationId: String, isNewUser: Boolean) {
-        /**
-         * TODO Ask Suyash to stop the background animation here
-         * */
+        animationDrawable.stop()
         var mobile = editTextNewNumber.text.toString()
         var name = editTextName.text.toString()
         window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
