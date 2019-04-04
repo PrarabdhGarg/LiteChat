@@ -44,14 +44,16 @@ class HomeActivityPresenter(val view : HomeActivityContract.View): HomeActivityC
 
     override fun sortPersonalChatList() {
         Log.d("FinalDebug6"," sortPersonalChatList() start ")
-        if(AllChatDataModel.chatScreenStatus==2)
+        /*if(AllChatDataModel.chatScreenStatus==2)
         {
-            /***
+            *//***
              * present in frag and home activity  and not chatting
-             */
+             *//*
+            Log.d("FinalDebug7" , "Error1")
 
              if(view.isChatFragmentActive())
              {
+                 Log.d("FinalDebug7" , "Error2")
                  // Store data
              }
             else
@@ -71,6 +73,10 @@ class HomeActivityPresenter(val view : HomeActivityContract.View): HomeActivityC
                  }
              }
 
+        }*/
+
+        if (view.isChatFragmentActive()) {
+            view.getInstanceOfFragmentChat().updateRecyclerViewForFirstTime()
         }
 
     }
