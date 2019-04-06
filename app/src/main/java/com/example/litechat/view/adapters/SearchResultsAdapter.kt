@@ -62,13 +62,13 @@ class SearchResultsAdapter(private var data:ArrayList<ChatObject>, private var c
         }
       holder.textView.setOnClickListener(object : View.OnClickListener{
           override fun onClick(v: View?) {
-              Name.listener!!.onDataRecieved(data[p1].otherNumber,data[p1].chatDocumentId,data[p1].lastUpdated)
+              Name.listener!!.onDataRecieved(data[p1].otherNumber,data[p1].chatDocumentId,data[p1].lastUpdated," ")
           }
 
       })
       holder.imageView.setOnClickListener(object : View.OnClickListener{
           override fun onClick(v1: View?) {
-              Image.listener!!.onDataRecieved(data[p1].otherNumber,data[p1].chatDocumentId,data[p1].lastUpdated)
+              Image.listener!!.onDataRecieved(data[p1].otherNumber,data[p1].chatDocumentId,data[p1].lastUpdated," ")
           }
 
       })

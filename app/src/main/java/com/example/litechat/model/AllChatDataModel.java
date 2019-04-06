@@ -1,5 +1,7 @@
 package com.example.litechat.model;
 
+import com.example.litechat.model.contactsRoom.URLInfo;
+
 import java.util.ArrayList;
 
 public class AllChatDataModel {
@@ -17,6 +19,7 @@ public class AllChatDataModel {
     public static  ArrayList<ChatObject> personalChatList = new ArrayList<>();
     public static ArrayList<String> groupNumbers=new ArrayList<>();
     public static boolean isPresenterCalled = false;
+    public static ArrayList<URLInfo> urlList = new ArrayList<>();
     /**
      * 0 for any other activity than homeActivity
      * 1 for home activity but fragment chat Not open

@@ -105,12 +105,13 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView{
         listenerForProfile = ListenerForFragmentChat()
         listenerForChat.setCustomObjectListener(object : ListenerForFragmentChat.Listener {
 
-            override fun onDataRecieved(number: String, chatDocumentId: String,lastUpdated:String) {
+            override fun onDataRecieved(number: String, chatDocumentId: String,lastUpdated:String, url :String) {
                 val intent = Intent(context, ChatActivity::class.java)
                 Toast.makeText(context,number,Toast.LENGTH_LONG).show()
                 intent.putExtra("documentPathId",chatDocumentId)
                 intent.putExtra("string",number)
                 intent.putExtra("lastUpdated",lastUpdated)
+                intent.putExtra("url",url)
                 AllChatDataModel.personalChatList.clear()
                 startActivity(intent)
             }
@@ -118,7 +119,7 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView{
 
         listenerForProfile.setCustomObjectListener(object : ListenerForFragmentChat.Listener {
 
-            override fun onDataRecieved(number: String, chatDocumentId: String,lastUpdated:String) {
+            override fun onDataRecieved(number: String, chatDocumentId: String,lastUpdated:String,url:String) {
                 try
                 {
                     var num= number.toDouble()
@@ -131,6 +132,8 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView{
                 {   //  to show contact name of person chatting with
                     var intent = Intent(context,ProfileOtherUser::class.java)
                     intent.putExtra("number" , number)
+                    intent.putExtra("documentPathId",chatDocumentId)
+                    intent.putExtra("url",url)
                     startActivity(intent)
                 }
                 else
@@ -138,6 +141,8 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView{
                     var intent=Intent(context,GroupInfoActivity::class.java)
                     Log.d("GroupInfo1","documentPathId$chatDocumentId")
                     intent.putExtra("documentPathId",chatDocumentId)
+                    intent.putExtra("groupName",number)
+                    intent.putExtra("url",url)
                     startActivity(intent)
                 }
 
@@ -146,8 +151,7 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView{
             adapterForFragmentChat = AdapterForFragmentChat(chatNamesForFragment, context!!, listenerForProfile, listenerForChat)
             Log.d("FinalDebug15" , adapterForFragmentChat.toString())
             view.findViewById<RecyclerView>(R.id.recyView_FragmentChat).adapter = adapterForFragmentChat
-
-        return view
+                     return view
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -171,6 +175,10 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView{
         adapterForFragmentChat!!.notifyDataSetChanged()
         AllChatDataModel.isPresenterCalled = false
 
+    }
+
+    override fun notifyDataSetChangedToAdapter() {
+        adapterForFragmentChat!!.notifyDataSetChanged()
     }
 
     override fun updateRecyclerViewForFirstTime() {

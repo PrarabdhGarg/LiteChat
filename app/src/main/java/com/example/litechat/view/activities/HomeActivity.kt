@@ -1,25 +1,35 @@
 package com.example.litechat.view.activities
 
+import android.Manifest
 import android.app.Activity
 import android.app.SearchManager
+import android.arch.persistence.db.SupportSQLiteDatabase
+import android.arch.persistence.room.Room
+import android.arch.persistence.room.migration.Migration
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.AsyncTask
 import android.support.design.widget.TabLayout
 import android.support.v7.app.AppCompatActivity
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.os.Bundle
+import android.os.Environment
 import android.os.Handler
 import android.preference.PreferenceManager
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
 import android.util.Log
 import android.view.Menu
 import android.view.View
 import android.widget.SearchView
 import android.widget.Toast
+import com.bumptech.glide.Glide
 import com.example.litechat.FirebaseService
 import com.example.litechat.NotificationService
 import com.example.litechat.R
@@ -27,14 +37,26 @@ import com.example.litechat.contracts.HomeActivityContract
 import com.example.litechat.model.AllChatDataModel
 import com.example.litechat.model.UserProfileData
 import com.example.litechat.model.*
+import com.example.litechat.model.contactsRoom.AppDatabse
+import com.example.litechat.model.contactsRoom.URLInfo
+import com.example.litechat.model.contactsRoom.URLInfoDao
 import com.example.litechat.presenter.HomeActivityPresenter
 import com.example.litechat.view.fragments.FragmentChat
 import com.example.litechat.view.fragments.FragmentContact
 import com.example.litechat.view.fragments.FragmentStatus
+import com.facebook.spectrum.DefaultPlugins
+import com.facebook.spectrum.Spectrum
+import com.facebook.spectrum.SpectrumSoLoader
+import com.facebook.spectrum.logging.SpectrumLogcatLogger
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.storage.FirebaseStorage
+import kotlinx.android.synthetic.main.activity_group_info.*
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.fragment_status.view.*
+import java.io.File
+import java.lang.Exception
 
 class HomeActivity : AppCompatActivity(), HomeActivityContract.View,SearchView.OnQueryTextListener {
 
@@ -55,13 +77,77 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View,SearchView.O
     var fragmentContact: FragmentContact? = null
     lateinit var homeActivityPresenter: HomeActivityPresenter
     var serviceIntent: Intent? = null
+     var asyncTask =  FetchProfileImages()
     private  var doubleBackToExitPressedOnce = false
+    private var database =FirebaseFirestore.getInstance()
+    inner  class FetchProfileImages: AsyncTask<Void,Void,Void>()
+    {
+       var currentChatList=ArrayList<ChatObject>()
+        override fun doInBackground(vararg params: Void?): Void? {
 
+            Log.d("ImageHomeActivity1"," do Inbackg userNumaber${UserProfileData.UserNumber}")
+
+            database.collection("Users").document(UserProfileData.UserNumber)
+                .collection("currentChats").get().addOnSuccessListener { docs ->
+                    Log.d("ImageHomeActivity2","inside onSuccess")
+                    for(doc in docs)
+                    {
+                        var chatObject= doc.toObject(ChatObject::class.java)
+                        currentChatList.add(chatObject)
+                    }
+                    Log.d("ImageHomeActivity3","Size of CurrentChatList: ${currentChatList.size}")
+
+                }
+            Glide.get(applicationContext).clearDiskCache()
+
+          return null
+        }
+
+        override fun onPostExecute(result: Void?) {
+            Log.e("ImageHomeActivity", "Enter Post execute")
+            for (i in 0 until currentChatList.size )
+            {
+               try
+               {
+                   var t = currentChatList[i].otherNumber.toDouble()
+                   Log.e("ImageHomeActivity16", "try otherNumber :${currentChatList[i].otherNumber}")
+                   saveImageFromFirebaseToDevice(currentChatList[i].otherNumber,
+                       "${currentChatList[i].otherNumber}/ProfileImage",currentChatList[i].chatDocumentId)// .jpeg
+               }
+               catch (e: Exception)
+               {
+                   Log.e("ImageHomeActivity16", "catch otherNumber :${currentChatList[i].otherNumber}")
+                   saveImageFromFirebaseToDevice(currentChatList[i].otherNumber,
+                       "groupimages/${currentChatList[i].chatDocumentId}",currentChatList[i].chatDocumentId)// .jpeg
+               }
+            }
+
+            if(fragmentChat1!=null&&chatFragmentActive)
+            {
+                fragmentChat1!!.notifyDataSetChangedToAdapter()
+            }
+
+        }
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.e("FinalCheck", "OnCreateCalled")
+        checkForPermission()
         super.onCreate(savedInstanceState)
+        /*// initialising Spectrum's SoLoader library
+        SpectrumSoLoader.init(this)
+        // instantiaiting spectrum object
+       var  mSpectrum = Spectrum.make(
+             SpectrumLogcatLogger(Log.INFO),
+            DefaultPlugins.get()) // JPEG, PNG and WebP plugins
+       mSpectrum.transcode(
+  EncodedImageSource.from(inputFile),
+  EncodedImageSink.from(outputStream),
+  TranscodeOptions.Builder(new EncodeRequirement(JPEG, 80)).build(),
+  "my_callsite_identifier");*/
+
         setContentView(R.layout.activity_home)
         setSupportActionBar(toolbar)
+
         homeActivityPresenter = HomeActivityPresenter(this)
         ContentResolverData.contentResolverPassed = contentResolver
         // If user is already logged in, no need to open the LoginActivity again
@@ -78,12 +164,15 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View,SearchView.O
             startService(Intent(this , FirebaseService::class.java))
             UserProfileData.UserNumber = number
             AllChatDataModel.userNumberIdPM = number
+            //asyncTask.execute()
             UserProfileData.UserImage = PreferenceManager.getDefaultSharedPreferences(applicationContext).getString("StatusImage", Uri.parse(applicationContext.getDrawable(R.drawable.profile).toString()).toString())
             //If the user is already logged in, we need to retreive the users previously stored data and save it in the local variables
+
             homeActivityPresenter.getUserDataOnLogin(number)
             if (!AllChatDataModel.isPresenterCalled)
             {
-                homeActivityPresenter.getPersonalChatsFromFirestore()
+                homeActivityPresenter.getURLFromRoom(applicationContext)
+                homeActivityPresenter.getPersonalChatsFromFirestore(applicationContext)
                 AllChatDataModel.isPresenterCalled = true
             }
 
@@ -148,7 +237,7 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View,SearchView.O
 
         if (!AllChatDataModel.isPresenterCalled)
         {
-            homeActivityPresenter.getPersonalChatsFromFirestore()
+            homeActivityPresenter.getPersonalChatsFromFirestore(applicationContext)
             AllChatDataModel.isPresenterCalled = true
         }
 
@@ -218,11 +307,12 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View,SearchView.O
         override fun getItem(position: Int): Fragment {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            val fragmentChat = FragmentChat()
+            var fragmentChat = FragmentChat()
             when (position) {
                 0 -> {
                     Log.d("Position" , "Position1 called")
                     chatFragmentActive = true
+                    fragmentChat = FragmentChat()
                     fragmentChat1 = fragmentChat
                     return fragmentChat
                 }
@@ -297,7 +387,8 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View,SearchView.O
 
         if (!AllChatDataModel.isPresenterCalled)
         {
-            homeActivityPresenter.getPersonalChatsFromFirestore()
+            homeActivityPresenter.getURLFromRoom(applicationContext)
+            homeActivityPresenter.getPersonalChatsFromFirestore(applicationContext)
             AllChatDataModel.isPresenterCalled = true
         }
 
@@ -325,6 +416,20 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View,SearchView.O
         AllChatDataModel.isPresenterCalled = false
         Log.d("Notification", "onDestroy of HomeActivity called")
         stopService(serviceIntent)
+        val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("CREATE TABLE `URLCollection` (`chatDocumentId` TEXT NOT NULL, `URL` TEXT NOT NULL, " +
+                        "PRIMARY KEY(`chatDocumentId`))")
+            }
+        }
+
+        val roomdb = Room.databaseBuilder(applicationContext, AppDatabse::class.java, "Contact_Database").addMigrations(MIGRATION_1_2)
+            .addMigrations(MIGRATION_1_2).allowMainThreadQueries().build()
+        roomdb.urlInfoDao().deleteAllURLData()
+        for (item in AllChatDataModel.urlList)
+        {
+            roomdb.urlInfoDao().insertAllURLdata(item)
+        }
         super.onDestroy()
     }
 
@@ -340,5 +445,142 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View,SearchView.O
     }
 
 
+    private fun checkForPermission()
+    {
+        if (ContextCompat.checkSelfPermission(this@HomeActivity,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            != PackageManager.PERMISSION_GRANTED) {
+
+            // Permission is not granted
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this@HomeActivity,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                Log.d("HomeActivityPermission10","Show expalnation")
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(this@HomeActivity,
+                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                    1)
+                Log.d("HomeActivityPermission10","ask permison")
+
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        } else {
+            // Permission has already been granted
+        }
+
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int,
+                                            permissions: Array<String>, grantResults: IntArray) {
+        when (requestCode) {
+            1 -> {
+                // If request is cancelled, the result arrays are empty.
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    Log.d("HomeActivityPermission10","finally permison granted")
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                } else {
+
+                    Log.d("HomeActivityPermission10"," permison denioed again")
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return
+            }
+
+            // Add other 'when' lines to check for other
+            // permissions this app might request.
+            else -> {
+                // Ignore all other requests.
+            }
+        }
+    }
+
+    private fun saveImageFromFirebaseToDevice(otherNumber: String, path:String, chatDocumentId: String)
+    {
+        Log.d("ImageHomeActivity4","Enter save Iamge from firsbase")
+        // Check if storage is writable
+        Log.d("ImageHomeActivity5",isExternalStorageWritable().toString())
+
+        //checkPermissionGranted()
+        if (ContextCompat.checkSelfPermission(this@HomeActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            != PackageManager.PERMISSION_GRANTED) {
+            Log.d("ImageHomeActivity6","Permission is not granted")
+        }
+        else
+            Log.d("ImageHomeActivity7","Permission is  granted")
+
+
+        try {
+            // Make directory named litechat
+            val output =getPrivateAlbumStorageDir(this@HomeActivity,"LiteChat_ProfileImage")
+            if (!output!!.exists()) {
+                Log.d("ImageHomeActivity8", "Ouput exists" + output.mkdir())
+            }
+
+
+            Log.d("ImageHomeActivity9", "Ouput exits" + output.exists())
+
+            val localFile = File(output, "IMG_${chatDocumentId}_$otherNumber.jpeg")
+            if(localFile.exists())
+            {
+                Log.d("ImageHomeActivity10", "value of delete file :${localFile.delete()} and current state: ${localFile.exists()} newfilecreate: ${localFile.createNewFile()}")
+                /*localFile.delete()
+                localFile.createNewFile()
+*/            }
+            Log.d("ImageHomeActivity11","localFile current state :${localFile.exists()} + uri :${localFile.path}")
+            val mStorage = FirebaseStorage.getInstance("gs://litechat-3960c.appspot.com")
+            val mStorageRef = mStorage.getReference()
+
+
+            val downloadRef = mStorageRef.getRoot()
+                .child(path);// .jpeg
+            // Download and get total bytes
+            downloadRef.getFile(localFile)
+                /*.addOnProgressListener{
+
+                        showProgressNotification(1,title, "",
+                            taskSnapshot.getBytesTransferred(),
+                            taskSnapshot.getTotalByteCount());
+
+                }*/
+                .addOnSuccessListener {
+
+                    Log.d("ImageHomeActivity12", "download:SUCCESS");
+
+                    val uri = Uri.parse(localFile.path)
+                    Log.d("HomeActivity13", "download:SUCCESS and URI : $uri path :${localFile.path}")
+
+                }
+                .addOnFailureListener {
+                    Log.d("ImageHomeActivity14", "onFailure SaveimageFromFirebasetodevice +  " + it.toString())
+                }
+
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    private  fun isExternalStorageWritable(): Boolean {
+        return Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED
+    }
+
+    private  fun getPrivateAlbumStorageDir(context: Context, albumName: String): File? {
+        // Get the directory for the app's private pictures directory.
+        val file = File(context.getExternalFilesDir(
+            Environment.DIRECTORY_PICTURES), albumName)
+        if (!file.mkdir()) {
+            Log.e("ImageHomeActivity15", "Directory not created previousState :${file.exists()}")
+        }
+        return file
+    }
 }
 

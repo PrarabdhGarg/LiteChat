@@ -17,6 +17,7 @@ import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.util.Log
 import android.view.View
+import android.view.WindowManager
 import kotlinx.android.synthetic.main.activity_chat.*
 import android.widget.Toast
 import com.example.litechat.contracts.ChatContract
@@ -26,10 +27,18 @@ import com.example.litechat.presenter.ChatPresenter
 import com.example.litechat.view.adapters.AdapterForChatActivity
 import java.time.Instant
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
+import com.example.litechat.R
 import com.example.litechat.model.UserProfileData
 import com.example.litechat.model.contactsRoom.AppDatabse
+import com.facebook.spectrum.*
+import com.facebook.spectrum.image.EncodedImageFormat
+import com.facebook.spectrum.logging.SpectrumLogcatLogger
+import com.facebook.spectrum.options.TranscodeOptions
+import com.facebook.spectrum.requirements.ResizeRequirement
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import kotlinx.android.synthetic.main.activity_group_info.*
 import java.io.ByteArrayOutputStream
 import java.lang.Double.parseDouble
 
@@ -85,6 +94,13 @@ class ChatActivity : AppCompatActivity(), ChatContract.CView {
          AllChatDataModel.documentPathId=intent.getStringExtra("documentPathId")
          AllChatDataModel.lastUpdated=intent.getStringExtra("lastUpdated")
          var lastSeen = intent.getStringExtra("lastSeen")
+       //URL not reciceved from fragment contact
+
+        var urlToLoad=intent.getStringExtra("url")
+        if(urlToLoad!=null &&urlToLoad.length>10)
+            Glide.with(applicationContext).load(urlToLoad).apply(RequestOptions().placeholder(R.drawable.profile)).into(imageViewOtherPerson)
+        else
+            Glide.with(applicationContext).load(R.drawable.profile).into(imageViewOtherPerson)
          //Log.e("LastSeen" , lastSeen)
         textViewOtherUser.setOnClickListener(View.OnClickListener {
             try
@@ -176,7 +192,7 @@ class ChatActivity : AppCompatActivity(), ChatContract.CView {
 
         // button for image sharing
         buttonCamera.setOnClickListener {
-Toast.makeText(this,"Disable Window",Toast.LENGTH_SHORT).show()
+
 selectImage()
 
 
@@ -197,11 +213,23 @@ selectImage()
      }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == REQUEST_IMAGE_GET && resultCode == Activity.RESULT_OK) {
-           // val thumbnail: Bitmap = data!!.getParcelableExtra("data")
-            val fullPhotoUri: Uri = data!!.data
-            // Do work with photo saved at fullPhotoUri
-            uploadImage(fullPhotoUri)
+        Log.d("ImageSharingOnActivityRrsult",data?.data.toString())
+        if (data!=null) {
+            if (requestCode == REQUEST_IMAGE_GET && resultCode == Activity.RESULT_OK&&
+                data?.resolveType(contentResolver).toString().contains("image"))
+            {
+               // val thumbnail: Bitmap = data!!.getParcelableExtra("data")
+                progressBarChatActivity.isIndeterminate
+                progressBarChatActivity.visibility = View.VISIBLE
+
+                val fullPhotoUri: Uri = data.data
+                // Do work with photo saved at fullPhotoUri
+                uploadImage(fullPhotoUri)
+            }
+            else
+                Toast.makeText(applicationContext,"Please select valid image",Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(applicationContext,"No Image Selected",Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -210,9 +238,24 @@ selectImage()
     private fun uploadImage(fullPhotoUri: Uri)
     {
 
-        val  bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), fullPhotoUri);
+        //val  bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), fullPhotoUri);
         val baos = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG,20,baos)
+
+               //bitmap.compress(Bitmap.CompressFormat.JPEG,20,baos)
+
+                val inputStream = contentResolver.openInputStream(fullPhotoUri)
+                SpectrumSoLoader.init(this)
+                val mSpectrum = Spectrum.make(
+                    SpectrumLogcatLogger(Log.INFO),
+                    DefaultPlugins.get()
+                )
+                mSpectrum!!.transcode(
+                    EncodedImageSource.from(inputStream), EncodedImageSink.from(baos),
+                    TranscodeOptions.Builder(
+                        com.facebook.spectrum.requirements.EncodeRequirement(EncodedImageFormat.JPEG,80)
+                    ).resize(ResizeRequirement.Mode.EXACT_OR_SMALLER, 720)
+                        .build(), applicationContext)
+
         val data1 = baos.toByteArray()
         val timeStamp =Instant.now().epochSecond.toString()
         val uploadTask =  ref.child("ImageSharing").child(AllChatDataModel.documentPathId).child(timeStamp+".jpg").putBytes(data1)
@@ -237,6 +280,8 @@ selectImage()
         messageModelImage.sentBy=AllChatDataModel.userNumberIdPM// sala ab bhi null h
         messageModelImage.sentOn=Instant.now().epochSecond.toString()
         chatPresenter.passNewSetMessageFromViewtoPresenter(messageModelImage,applicationContext)
+        progressBarChatActivity.visibility = View.INVISIBLE
+       // window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
 
        /* ref.child("ImageSharing").child(AllChatDataModel.documentPathId).child(timestamp).downloadUrl.addOnSuccessListener {
             val  downloadUrl = it.toString()

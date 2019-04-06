@@ -1,21 +1,27 @@
 package com.example.litechat.view.activities
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.ImageFormat.JPEG
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Environment
 import android.preference.PreferenceManager
 
 import android.provider.DocumentsContract
 
 import android.provider.MediaStore
 import android.support.annotation.RequiresApi
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
 import android.text.InputType
 import android.util.Log
 import android.view.View
@@ -24,13 +30,22 @@ import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.litechat.R
+import com.example.litechat.model.AllChatDataModel
 import com.example.litechat.model.UserProfileData
+import com.facebook.spectrum.*
+import com.facebook.spectrum.image.EncodedImageFormat
+import com.facebook.spectrum.logging.SpectrumLogcatLogger
+import com.facebook.spectrum.options.TranscodeOptions
+import com.facebook.spectrum.requirements.EncodeRequirement
+import com.facebook.spectrum.requirements.ResizeRequirement
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.UploadTask
 
 import kotlinx.android.synthetic.main.activity_profile.*
 import java.io.ByteArrayOutputStream
+import java.io.File
 
 
 /**
@@ -45,11 +60,21 @@ class ProfileActivity : AppCompatActivity() {
     var number : String? = null
     val REQUEST_IMAGE_GET = 1   //Request code for selecting an image from the gallery
     var ref : StorageReference? = null
+    private var mSpectrum:Spectrum?= null
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.d("ProfileImage" , "profile img = ${UserProfileData.UserProfileImage}")
+
+        // initialising Spectrum's SoLoader library
+     /*   SpectrumSoLoader.init(this)
+        // instantiaiting spectrum object
+          mSpectrum = Spectrum.make(
+            SpectrumLogcatLogger(Log.INFO),
+            DefaultPlugins.get()) // JPEG, PNG and WebP plugins*/
+
+
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
         AboutTextView.setText(UserProfileData.UserAbout.toString())
@@ -131,62 +156,75 @@ class ProfileActivity : AppCompatActivity() {
         Log.d("MobileProfile" , "Number = ${UserProfileData.UserNumber}")
         /*var preferances : SharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         preferances.getString("CurrentUserNumber" , "123456789")*/
-
-        if (requestCode == 1 && resultCode == Activity.RESULT_OK && data!!.data.toString().contains("image")) {
-            //val thumbnail: Bitmap = data!!.getParcelableExtra("data")
-            ProgressBarProfile.isIndeterminate
-            ProgressBarProfile.visibility = View.VISIBLE
-            window.setFlags(
-                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-            val fullPhotoUri: Uri? = data!!.data
-            Log.d("Image Search" , fullPhotoUri.toString())
-            UserProfileData.UserProfileImage = fullPhotoUri.toString()
-            ref = FirebaseStorage.getInstance().reference
-
-
-             var  bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), fullPhotoUri);
-          //  val stream = ByteArrayOutputStream()
-
-         //   val stream = FileInputStream(File("path/to/images/rivers.jpg"))
-            val baos = ByteArrayOutputStream()
-            bitmap.compress(Bitmap.CompressFormat.JPEG,20,baos)
-         //   bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-            val data1 = baos.toByteArray()
-
-            var uploadTask =  ref!!.child(UserProfileData.UserNumber).child("ProfileImage").putBytes(data1)
-            uploadTask.addOnFailureListener {
-                // Handle unsuccessful uploads
-            }.addOnSuccessListener {
-                // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
-                // ...
-                Log.d("Firebase Storage" , "Image uploaded sucessfully")
-                Glide.with(applicationContext).load(fullPhotoUri).into(ProfileImageView).onLoadStarted(getDrawable(R.drawable.profile))
-                updateProfileImageOnDatabse()
-            }
-
-           /* ref!!.child(UserProfileData.UserNumber).child("ProfileImage").putFile(fullPhotoUri!!)
-=======
-            var byteArray : ByteArray? = null
-            /**try {
-                var temp
-                byteArray = Files.readAllBytes(Compressor(this).compressToFile(File(fullPhotoUri!!.path)).toPath())
-            }catch( e : Exception){
-                e.printStackTrace()
-            }*/
-
-            ref!!.child(UserProfileData.UserNumber).child("ProfileImage").putFile(fullPhotoUri!!)
->>>>>>> 4be1dd671431be3f4c48a6665158c9ef59539308
-                .addOnSuccessListener {
-                    Log.d("Firebase Storage" , "Image uploaded sucessfully")
-                    ProfileImageView.setImageURI(fullPhotoUri)
-                    UserProfileData.UserProfileImage = fullPhotoUri!!.path
-                    updateProfileImageOnDatabse()
-                }*/
-        }
-        else
+        if (data!=null)
         {
-            Toast.makeText(applicationContext , "Please select a valid image" , Toast.LENGTH_LONG).show()
+            val fullPhotoUri: Uri? = data.data
+
+            Log.d("ImageSearch" , fullPhotoUri.toString()+"resolv type ${data.resolveType(contentResolver)}")
+            if (requestCode == 1 && resultCode == Activity.RESULT_OK && data.resolveType(contentResolver).toString().contains("image")) {
+                //val thumbnail: Bitmap = data!!.getParcelableExtra("data")
+                ProgressBarProfile.isIndeterminate
+                ProgressBarProfile.visibility = View.VISIBLE
+                window.setFlags(
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+
+
+                UserProfileData.UserProfileImage = fullPhotoUri.toString()
+                ref = FirebaseStorage.getInstance().reference
+
+
+               // var  bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), fullPhotoUri)
+                val baos = ByteArrayOutputStream()
+               //bitmap.compress(Bitmap.CompressFormat.JPEG,20,baos)
+
+                val inputStream = contentResolver.openInputStream(fullPhotoUri)
+                SpectrumSoLoader.init(this)
+                val mSpectrum = Spectrum.make(
+                    SpectrumLogcatLogger(Log.INFO),
+                    DefaultPlugins.get()
+                )
+                mSpectrum!!.transcode(
+                    EncodedImageSource.from(inputStream), EncodedImageSink.from(baos),
+                    TranscodeOptions.Builder(
+                        EncodeRequirement
+                            (EncodedImageFormat.JPEG, EncodeRequirement.Mode.LOSSY)
+                    ).resize(ResizeRequirement.Mode.EXACT_OR_SMALLER, 720)
+                        .build(), applicationContext
+                )
+
+                val data1 = baos.toByteArray()
+
+
+                FirebaseStorage.getInstance().getReference().child(UserProfileData.UserNumber).child("ProfileImage").delete().addOnSuccessListener {
+
+                    var uploadTask =  ref!!.child(UserProfileData.UserNumber).child("ProfileImage").putBytes(data1)
+                    uploadTask.addOnFailureListener {
+                        // Handle unsuccessful uploads
+                    }.addOnSuccessListener {
+                        // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
+                        // ...
+
+                        FirebaseStorage.getInstance().getReference().child(UserProfileData.UserNumber).child("ProfileImage").downloadUrl.addOnSuccessListener {
+
+                            Log.d("Firebase Storage" , "Image uploaded sucessfully")
+                            Glide.with(applicationContext).load(it.toString()).into(ProfileImageView).onLoadStarted(getDrawable(R.drawable.profile))
+                            updateProfileImageOnDatabse(it.toString())
+
+                        }
+                    }
+
+
+                }
+
+            }
+            else
+            {
+                Toast.makeText(applicationContext , "Please select a valid image" , Toast.LENGTH_LONG).show()
+            }
+        } else
+        {
+            Toast.makeText(applicationContext , "No Image Selected" , Toast.LENGTH_LONG).show()
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
@@ -199,19 +237,19 @@ class ProfileActivity : AppCompatActivity() {
      * The function then makes the screen touchable again and hides the progress bar
      */
 
-    fun updateProfileImageOnDatabse()
+    fun updateProfileImageOnDatabse(url:String)
     {
-        ref!!.child(UserProfileData.UserNumber).child("ProfileImage").downloadUrl.addOnSuccessListener {
-            var downloadUrl = it.toString()
 
-            FirebaseFirestore.getInstance().collection("Users").document(UserProfileData.UserNumber).update("profileImage" , downloadUrl).addOnCompleteListener {
+
+            FirebaseFirestore.getInstance().collection("Users").document(UserProfileData.UserNumber).update("profileImage" , url).addOnCompleteListener {
                 window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                 ProgressBarProfile.visibility = View.INVISIBLE
-                UserProfileData.UserProfileImage = downloadUrl
+                UserProfileData.UserProfileImage = url
             }
-        }
-        Log.d("FirebaseStorage" , "${UserProfileData.UserProfileImage}")
+
+        Log.d("FirebaseStorage" , UserProfileData.UserProfileImage)
 
     }
+
 
 }

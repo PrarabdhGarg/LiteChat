@@ -1,5 +1,6 @@
 package com.example.litechat.presenter
 
+import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import com.example.litechat.contracts.HomeActivityContract
@@ -11,6 +12,9 @@ import com.example.litechat.model.UserProfileData
 class HomeActivityPresenter(val view : HomeActivityContract.View): HomeActivityContract.Presenter{
 
     private  val dataRetrieveModel = DataRetrieveClass()
+    override fun getURLFromRoom(context:Context) {
+        dataRetrieveModel.retrieveURLFromRoom(this,context)
+    }
 
     /**
      *This function is called when an already signed in user opens the app again
@@ -28,9 +32,9 @@ class HomeActivityPresenter(val view : HomeActivityContract.View): HomeActivityC
      * any changes in the chat.
      */
 
-    override fun getPersonalChatsFromFirestore() {
+    override fun getPersonalChatsFromFirestore(context: Context) {
         Log.d("FinalDebug2"," homeActivityPresenter.getPersonalChatsFromFirestore called")
-        dataRetrieveModel.retrievePersonalChatDataFromFirestore(this)
+        dataRetrieveModel.retrievePersonalChatDataFromFirestore(this,context)
     }
 
     /**
@@ -61,7 +65,7 @@ class HomeActivityPresenter(val view : HomeActivityContract.View): HomeActivityC
                      Log.e("FinalCheck" , "UpdateOneTime")
                      //AllChatDataModel.upadateFragmentChatFirstTime=0
                      Log.d("FinalDebug7"," updateRecyclerViewForFirstTime() Size  ${AllChatDataModel.personalChatList.size}")
-                     view.getInstanceOfFragmentChat().updateRecyclerViewForFirstTime()
+                     view.getInstanceOfFragmentChat(). updateRecyclerViewForFirstTime()
                  }
                  else
                  {

@@ -55,7 +55,7 @@ class SearchResultsActivity : AppCompatActivity() {
 
             listenerForChat.setCustomObjectListener(object : ListenerForFragmentChat.Listener {
 
-                override fun onDataRecieved(number: String, chatDocumentId: String,lastUpdated:String) {
+                override fun onDataRecieved(number: String, chatDocumentId: String,lastUpdated:String, url : String) {
                     val intent = Intent(this@SearchResultsActivity, ChatActivity::class.java)
                     Toast.makeText(this@SearchResultsActivity,number,Toast.LENGTH_LONG).show()
                     intent.putExtra("documentPathId",chatDocumentId)
@@ -68,7 +68,7 @@ class SearchResultsActivity : AppCompatActivity() {
 
             listenerForProfile.setCustomObjectListener(object : ListenerForFragmentChat.Listener {
 
-                override fun onDataRecieved(number: String, chatDocumentId: String,lastUpdated:String) {
+                override fun onDataRecieved(number: String, chatDocumentId: String,lastUpdated:String, url :String) {
                     try
                     {
                         var num= number.toDouble()

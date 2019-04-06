@@ -17,6 +17,12 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
+    splits {
+        abi {
+            enable true
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -28,7 +34,7 @@ android {
 dependencies {
     def room_version = "1.1.1"
     implementation "android.arch.persistence.room:runtime:$room_version"
-    implementation 'com.google.firebase:firebase-messaging:17.4.0'
+    implementation 'com.google.firebase:firebase-messaging:17.5.0'
     implementation 'com.google.firebase:firebase-crash:16.2.1'
     kapt "android.arch.persistence.room:compiler:$room_version"
     testImplementation "android.arch.persistence.room:testing:$room_version"
@@ -39,7 +45,7 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     implementation 'com.android.support:design:28.0.0'
     implementation 'com.google.firebase:firebase-auth:16.2.0'
-    implementation 'com.google.firebase:firebase-firestore:18.1.0'
+    implementation 'com.google.firebase:firebase-firestore:18.2.0'
     implementation 'com.google.firebase:firebase-core:16.0.8'
     implementation 'com.google.firebase:firebase-storage:16.1.0'
     testImplementation 'junit:junit:4.12'
@@ -55,6 +61,7 @@ dependencies {
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.3'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'id.zelory:compressor:2.1.0'
+    implementation 'com.facebook.spectrum:spectrum-default:1.0.0+'
 }
 
 apply plugin: 'com.google.gms.google-services'

@@ -3,7 +3,7 @@ package com.example.litechat.listeners
 class ListenerForFragmentChat {
 
     interface Listener {
-        fun onDataRecieved(number : String, chatDocumentId: String, lastUpdated:String)
+        fun onDataRecieved(number : String, chatDocumentId: String, lastUpdated:String, urlToPass :String)
 
 
     }

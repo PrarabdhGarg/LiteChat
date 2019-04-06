@@ -1,6 +1,8 @@
 package com.example.litechat.model
 
+import android.arch.persistence.db.SupportSQLiteDatabase
 import android.arch.persistence.room.Room
+import android.arch.persistence.room.migration.Migration
 import android.content.Context
 import android.os.Build
 import android.support.annotation.RequiresApi
@@ -10,16 +12,24 @@ import com.example.litechat.model.contactsRoom.AppDatabse
 import com.example.litechat.model.contactsRoom.User
 import com.example.litechat.view.activities.NewPersonalChatActivity
 import com.google.firebase.firestore.FirebaseFirestore
+import java.lang.Exception
 import java.time.Instant
 
 class ContactListModel : ContactFragContract.Model {
     override fun roomGetName(applicationContext: Context, number: String) : String {
         Log.d("Context" , applicationContext.toString())
+
+        val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("CREATE TABLE `URLCollection` (`chatDocumentId` TEXT NOT NULL, `URL` TEXT NOT NULL, " +
+                        "PRIMARY KEY(`chatDocumentId`))")
+            }
+        }
         val db = Room.databaseBuilder(applicationContext, AppDatabse::class.java, "Contact_Database")
-            .allowMainThreadQueries().build()
+            .addMigrations(MIGRATION_1_2).allowMainThreadQueries().build()
         var t = ""
 
-        t = db.userDao().getName(number)
+         t = db.userDao().getName(number)
 
         if(t == null)
         {
@@ -29,15 +39,28 @@ class ContactListModel : ContactFragContract.Model {
     }
 
     override fun roomDeleteData(applicationContext: Context) {
+        val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("CREATE TABLE `URLCollection` (`chatDocumentId` TEXT NOT NULL, `URL` TEXT NOT NULL, " +
+                        "PRIMARY KEY(`chatDocumentId`))")
+            }
+        }
         val db = Room.databaseBuilder(applicationContext, AppDatabse::class.java, "Contact_Database")
-            .allowMainThreadQueries().build()
+            .addMigrations(MIGRATION_1_2).allowMainThreadQueries().build()
         db.userDao().deleteAllData()
     }
 
 
     override fun roomSetData(applicationContext: Context, userList: List<User>) {
+
+        val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("CREATE TABLE `URLCollection` (`chatDocumentId` TEXT NOT NULL, `URL` TEXT NOT NULL, " +
+                        "PRIMARY KEY(`chatDocumentId`))")
+            }
+        }
         val db = Room.databaseBuilder(applicationContext, AppDatabse::class.java, "Contact_Database")
-            .allowMainThreadQueries().build()
+            .addMigrations(MIGRATION_1_2).allowMainThreadQueries().build()
 
         for (item in userList) {
 
@@ -47,12 +70,15 @@ class ContactListModel : ContactFragContract.Model {
     }
 
     override fun roomGetData(applicationContext: Context): List<User> {
-
+        val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("CREATE TABLE `URLCollection` (`chatDocumentId` TEXT NOT NULL, `URL` TEXT NOT NULL, " +
+                        "PRIMARY KEY(`chatDocumentId`))")
+            }
+        }
         val db = Room.databaseBuilder(applicationContext, AppDatabse::class.java, "Contact_Database")
-            .allowMainThreadQueries().build()
-
-        return db.userDao().getContactList()
-
+            .addMigrations(MIGRATION_1_2).allowMainThreadQueries().build()
+     return  db.userDao().getContactList()
     }
 
 

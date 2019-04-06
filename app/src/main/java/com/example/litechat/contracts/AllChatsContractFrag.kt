@@ -5,5 +5,6 @@ class AllChatsContractFrag {
     interface CFView{
         fun updateRecyclerViewForFirstTime()
         fun updateRecyclerView()
+        fun notifyDataSetChangedToAdapter()
     }
 }

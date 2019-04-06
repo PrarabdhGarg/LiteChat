@@ -1,13 +1,21 @@
 package com.example.litechat.model
 
+import android.arch.persistence.db.SupportSQLiteDatabase
+import android.arch.persistence.room.Room
+import android.arch.persistence.room.RoomDatabase
+import android.arch.persistence.room.migration.Migration
 import android.content.Context
 import android.util.Log
 import com.example.litechat.contracts.HomeActivityContract
+import com.example.litechat.model.contactsRoom.AppDatabse
+import com.example.litechat.model.contactsRoom.URLInfo
 import com.example.litechat.presenter.StatusFragmentPresenter
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.MetadataChanges
 import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.storage.FirebaseStorage
+import java.lang.Exception
 
 /**
  * This class handles the major data retrieval from the database
@@ -18,6 +26,7 @@ import com.google.firebase.firestore.QuerySnapshot
 class DataRetrieveClass : HomeActivityContract.Model{
 
     private val db = FirebaseFirestore.getInstance()
+    private  var roomdb : AppDatabse? =null
 
     /**
      * This function is called whenever a signed in user opens the app once again
@@ -45,7 +54,7 @@ class DataRetrieveClass : HomeActivityContract.Model{
      * The recycler view adapter handles if the chat is new, displays it, otherwise just shows the notification icon
      */
 
-    override fun retrievePersonalChatDataFromFirestore(presenter: HomeActivityContract.Presenter) {
+    override fun retrievePersonalChatDataFromFirestore(presenter: HomeActivityContract.Presenter,context: Context) {
 
         Log.d("FinalDebug3","vf")
         db.collection("Users").document(AllChatDataModel.userNumberIdPM).collection("currentChats")
@@ -75,6 +84,12 @@ class DataRetrieveClass : HomeActivityContract.Model{
                                 if(AllChatDataModel.personalChatList.find { it.chatDocumentId == objectChatPersonal.chatDocumentId } == null)
                                 {
                                     AllChatDataModel.personalChatList.add(objectChatPersonal)
+                                   // AllChatDataModel.urlList[AllChatDataModel.personalChatList.size-1].
+                                    //if()
+                                }
+                                if(AllChatDataModel.urlList.find { it.chatDocumentId == objectChatPersonal.chatDocumentId } == null)
+                                {
+                                    fetchURLFromFirestore(objectChatPersonal.chatDocumentId,objectChatPersonal.otherNumber,presenter,context)
                                 }
                                 Log.d("FinalDebug4","all upate in added with ${AllChatDataModel.personalChatList.size}")
                                 Log.d("FireStoreSnap",  dc.document["otherNumber"].toString())
@@ -91,14 +106,14 @@ class DataRetrieveClass : HomeActivityContract.Model{
 
                             DocumentChange.Type.MODIFIED ->
                             {
-                                Log.d("FinalDebug19" , "Modified called with ${dc} \n")
+                               // Log.d("FinalDebug19" , "Modified called with ${dc} \n")
                                 //AllChatDataModel.allChatArrayListPersonalStatic.clear()
                                 var objectChatPersonal :ChatObject= ChatObject()
                                 objectChatPersonal.otherNumber=dc.document["otherNumber"].toString()
                                 objectChatPersonal.chatDocumentId=dc.document["chatDocumentId"].toString()
                                 objectChatPersonal.lastUpdated=dc.document["lastUpdated"].toString()
                                 objectChatPersonal.lastSeen = dc.document["lastSeen"].toString()
-
+                                Log.d("FinalDebug22" , "Modified called with ${dc.document["otherNumber"]} \n")
                                 if(AllChatDataModel.personalChatList.find { it.chatDocumentId == objectChatPersonal.chatDocumentId } == null)
                                 {
                                     AllChatDataModel.personalChatList.add(objectChatPersonal)
@@ -137,6 +152,70 @@ class DataRetrieveClass : HomeActivityContract.Model{
                     }
 
                 })
+    }
+
+    private fun fetchURLFromFirestore(chatDocumentId: String, otherNumber: String,presenter: HomeActivityContract.Presenter,context: Context) {
+        val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("CREATE TABLE `URLCollection` (`chatDocumentId` TEXT NOT NULL, `URL` TEXT NOT NULL, " +
+                        "PRIMARY KEY(`chatDocumentId`))")
+            }
+        }
+        roomdb = Room.databaseBuilder(context, AppDatabse::class.java, "Contact_Database").addMigrations(MIGRATION_1_2)
+            .allowMainThreadQueries().build()
+        try
+        {
+          var x = otherNumber.toDouble()
+            //.jpeg
+            FirebaseStorage.getInstance().reference.child(otherNumber).child("ProfileImage").downloadUrl.addOnSuccessListener {
+                Log.d("RoomProfile","onSuccessOF Url FEtched personal")
+                var urlInfo= URLInfo(chatDocumentId,it.toString())
+                AllChatDataModel.urlList.add(urlInfo)
+                roomdb!!.urlInfoDao().insertAllURLdata(urlInfo)
+                presenter.sortPersonalChatList()
+
+
+            }
+        }
+        catch (e :Exception)
+        {
+            FirebaseStorage.getInstance().reference.child("groupimages").child(chatDocumentId).downloadUrl.addOnSuccessListener {
+                Log.d("RoomProfilcatcGroupe","onSuccessOF Url FEtched groupURL${it} ")
+                var urlInfo= URLInfo(chatDocumentId,it.toString())
+                AllChatDataModel.urlList.add(urlInfo)
+
+                val MIGRATION_1_2 = object : Migration(1, 2) {
+                    override fun migrate(database: SupportSQLiteDatabase) {
+                        database.execSQL("CREATE TABLE `URLCollection` (`chatDocumentId` TEXT NOT NULL, `URL` TEXT NOT NULL, " +
+                                "PRIMARY KEY(`chatDocumentId`))")
+                    }
+                }
+                roomdb = Room.databaseBuilder(context, AppDatabse::class.java, "Contact_Database").addMigrations(MIGRATION_1_2)
+                    .allowMainThreadQueries().build()
+                roomdb!!.urlInfoDao().insertAllURLdata(urlInfo)
+                presenter.sortPersonalChatList()
+
+
+            }
+        }
+
+    }
+
+    override fun retrieveURLFromRoom(presenter: HomeActivityContract.Presenter, context: Context) {
+
+        val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("CREATE TABLE `URLCollection` (`chatDocumentId` TEXT NOT NULL, `URL` TEXT NOT NULL, " +
+                        "PRIMARY KEY(`chatDocumentId`))")
+            }
+        }
+        roomdb = Room.databaseBuilder(context, AppDatabse::class.java, "Contact_Database").addMigrations(MIGRATION_1_2)
+            .allowMainThreadQueries().build()
+
+
+
+          AllChatDataModel.urlList.addAll(roomdb!!.urlInfoDao().getAllURLInfo())
+
     }
 
     /**

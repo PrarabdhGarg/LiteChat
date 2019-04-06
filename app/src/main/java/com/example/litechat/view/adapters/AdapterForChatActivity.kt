@@ -24,6 +24,7 @@ import android.net.Uri
 import android.os.Environment
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
+import com.bumptech.glide.request.RequestOptions
 import com.example.litechat.listeners.ListenerForFragmentChat
 import com.example.litechat.listeners.ListenerToPassString
 import com.example.litechat.view.activities.ChatActivity
@@ -105,6 +106,7 @@ class AdapterForChatActivity(private var dataset:ArrayList<MessageModel>,private
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if(holder.itemViewType==0)
         {    val holderMe: MyViewHolderMe= holder as MyViewHolderMe
+            holderMe.myName.visibility=View.VISIBLE
             if(position>0&&dataset[position].sentBy==dataset[position-1].sentBy)
                 holderMe.myName.visibility=View.GONE
             else
@@ -116,7 +118,7 @@ class AdapterForChatActivity(private var dataset:ArrayList<MessageModel>,private
                 {
                     override fun onDataRecieved(string: String) {
                         Log.d("ImageSharing15", "Glide ke apss ondatarecived ke andar Me")
-                        Glide.with(context).load(string).into(holderMe.myImageShare)
+                        Glide.with(context).load(string).apply(RequestOptions().placeholder(R.drawable.placeholder_image_sharing)).into(holderMe.myImageShare)
                     }
                 })
 
@@ -138,7 +140,7 @@ class AdapterForChatActivity(private var dataset:ArrayList<MessageModel>,private
                     val localFile2 = File(output2, "IMG_${AllChatDataModel.documentPathId}_${dataset[position].message.substring(5)}.jpg")
                     var uri = Uri.parse(localFile2.path)
                     Log.d("ImageSharing19","Uri for myImageShare$uri")
-                    Glide.with(context).load(uri.toString()).into(holderMe.myImageShare)
+                    Glide.with(context).load(uri.toString()).apply(RequestOptions().placeholder(R.drawable.placeholder_image_sharing)).into(holderMe.myImageShare)
                 }
 
                 else
@@ -159,11 +161,12 @@ class AdapterForChatActivity(private var dataset:ArrayList<MessageModel>,private
         else
         {
             val holderYou: MyViewHolderYou=holder as MyViewHolderYou
+            holderYou.youName.visibility=View.VISIBLE
             listenerForLoadingImageYou.setCustomObjectListener(object : ListenerToPassString.Listener
             {
                 override fun onDataRecieved(string: String) {
                     Log.d("ImageSharing15", "Glide ke apss ondatarecived ke andar You")
-                    Glide.with(context).load(string).into(holderYou.youImageShare)
+                    Glide.with(context).load(string).apply(RequestOptions().placeholder(R.drawable.placeholder_image_sharing)).into(holderYou.youImageShare)
                 }
             })
 
@@ -194,7 +197,7 @@ class AdapterForChatActivity(private var dataset:ArrayList<MessageModel>,private
                     val localFile2 = File(output2, "IMG_${AllChatDataModel.documentPathId}_${dataset[position].message.substring(5)}.jpg")
                     var uri = Uri.parse(localFile2.path)
                     Log.d("ImageSharing19","Uri for youImageShare$uri")
-                    Glide.with(context).load(uri.toString()).into(holderYou.youImageShare)
+                    Glide.with(context).load(uri.toString()).apply(RequestOptions().placeholder(R.drawable.placeholder_image_sharing)).into(holderYou.youImageShare)
                 }
 
                 else {

@@ -10,13 +10,15 @@ interface HomeActivityContract {
     interface Model{
         fun getUserDataFromFirestore(number : String)
         fun getCurrentActivitiesOfOtherUsers(presenter : StatusFragmentPresenter , context: Context)
-        fun retrievePersonalChatDataFromFirestore(presenter: HomeActivityContract.Presenter)
+        fun retrieveURLFromRoom(presenter: HomeActivityContract.Presenter,context: Context)
+        fun retrievePersonalChatDataFromFirestore(presenter: HomeActivityContract.Presenter,context: Context)
     }
 
     interface Presenter{
 
         fun getUserDataOnLogin(number : String)
-        fun getPersonalChatsFromFirestore()
+        fun getURLFromRoom(context: Context)
+        fun getPersonalChatsFromFirestore(context: Context)
         fun sortPersonalChatList()
     }
 

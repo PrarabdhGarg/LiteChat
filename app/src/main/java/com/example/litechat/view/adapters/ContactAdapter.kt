@@ -2,15 +2,19 @@ package com.example.litechat.view.adapters
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.litechat.R
 import com.example.litechat.listeners.CallListenerObject
+import com.example.litechat.model.AllChatDataModel
 import com.example.litechat.model.ContactListData
+import com.example.litechat.model.UserProfileData
 import com.google.firebase.storage.FirebaseStorage
 import de.hdodenhof.circleimageview.CircleImageView
 
@@ -33,13 +37,39 @@ class ContactAdapter(private val callListenerObject1: CallListenerObject, privat
     override fun getItemCount(): Int = ContactListData.contacts.size
 
     override fun onBindViewHolder(holder: ContactHolder, position: Int) {
-
+            Glide.with(context).clear(holder.img)
             holder.names.text = ContactListData.contacts[position].name
+
             FirebaseStorage.getInstance().reference.child(ContactListData.contacts[position].mobileNumber).child("ProfileImage").downloadUrl.addOnSuccessListener {
-                if (context != null) {
-                    Glide.with(context).load(it).into(holder.img)
-                }
+
+                Glide.with(context).load(it.toString()).apply{RequestOptions().placeholder(R.drawable.profile)}.into(holder.img)
             }
+           /* if(ContactListData.contacts[position].mobileNumber==UserProfileData.UserNumber)
+            {
+                Glide.with(context).load()
+            }*/
+
+       /* if (ContactListData.contacts[position].mobileNumber!=UserProfileData.UserNumber) {
+            try {
+                if((AllChatDataModel.urlList
+                        .find { it.chatDocumentId == AllChatDataModel.personalChatList
+                            .find { it.otherNumber==ContactListData.contacts[position].mobileNumber }!!.chatDocumentId })!= null)
+                    Glide.with(context)
+                        .apply { RequestOptions().placeholder(R.drawable.profile)}
+                        .load((AllChatDataModel.urlList
+                            .find { it.chatDocumentId == AllChatDataModel.personalChatList
+                                .find { it.otherNumber==ContactListData.contacts[position].mobileNumber }!!.chatDocumentId })!!.URL).into(holder.img)
+
+                else
+                    Glide.with(context).load(R.drawable.profile).into(holder.img)
+            } catch (e: Exception) {
+                Log.d("RoomContact","$e")
+            }
+        } else
+        {
+          Glide.with(context).load(UserProfileData.UserImage).apply(RequestOptions().placeholder(R.drawable.profile)).into(holder.img)
+        }
+*/
 
         holder.names.setOnClickListener {
 
