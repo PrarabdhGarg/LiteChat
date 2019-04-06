@@ -7,7 +7,6 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.MediaStore
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.View
@@ -47,6 +46,7 @@ class NewGroupChatActivity : AppCompatActivity() {
 
         buttong.setOnClickListener {
             groupName = num1.getText().toString()
+
             if (groupName != "") {
                 if (ContactListData.groupContacts.size > 0) {
                     groupLoader.visibility = View.VISIBLE
@@ -56,6 +56,7 @@ class NewGroupChatActivity : AppCompatActivity() {
                     )
                     Log.d("check1", "onCLick")
 
+
                     for (i in 0 until ContactListData.groupContacts.size) {
                         AllChatDataModel.groupNumbers.add(ContactListData.groupContacts[i].mobileNumber)
                         Log.d("check", AllChatDataModel.groupNumbers.toString())
@@ -64,16 +65,15 @@ class NewGroupChatActivity : AppCompatActivity() {
                     newObj.groupname = groupName
                     newObj.groupmembers.addAll(AllChatDataModel.groupNumbers)
                     newObj.groupmembers.add(AllChatDataModel.userNumberIdPM)
-                    newObj.usernumber = AllChatDataModel.userNumberIdPM
+                    newObj.usernumber.add(AllChatDataModel.userNumberIdPM)
                     Log.d("check5", newObj.toString())
 
                     // there may be a bug in this query same user creates group with same name might be a problem
                     database.collection("Chats").document().set(newObj).addOnSuccessListener {
 
-                        database.collection("Chats").whereEqualTo("usernumber", AllChatDataModel.userNumberIdPM)
+                        database.collection("Chats")
 
                             .whereEqualTo("groupname", groupName).get().addOnSuccessListener { document ->
-
                                 for (doc in document) {
                                     Log.d("check2", doc.toString() + document.toString())
                                     var timeStamp = Instant.now().epochSecond

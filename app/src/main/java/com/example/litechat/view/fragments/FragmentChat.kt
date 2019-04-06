@@ -43,6 +43,7 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView{
         bmbListener1.setCustomObjectListener(object: BoomListener.Boom{
             override fun doThis() {
                 //AllChatDataModel.upadateFragmentChatFirstTime = 1
+                AllChatDataModel.chatScreenStatus = 1
                 startActivity(Intent(activity, ProfileActivity::class.java))
             }
 
@@ -52,6 +53,7 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView{
         bmbListener2.setCustomObjectListener(object: BoomListener.Boom{
             override fun doThis() {
                 //AllChatDataModel.upadateFragmentChatFirstTime = 1
+                AllChatDataModel.chatScreenStatus = 1
                 startActivity(Intent(activity, NewGroupChatActivity::class.java))
             }
 
@@ -61,6 +63,7 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView{
         bmbListener3.setCustomObjectListener(object: BoomListener.Boom{
             override fun doThis() {
                 //AllChatDataModel.upadateFragmentChatFirstTime = 1
+                AllChatDataModel.chatScreenStatus = 1
                 startActivity(Intent(activity, DeveloperActivity::class.java))
             }
 
@@ -73,6 +76,7 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView{
                 FirebaseAuth.getInstance().signOut()
                 PreferenceManager.getDefaultSharedPreferences(context).edit().putString("CurrentUserNumber" , "").apply()
                 UserProfileData.clearData()
+                AllChatDataModel.chatScreenStatus = 1
                 startActivity(Intent(activity , LoginActivity::class.java))
             }
 
@@ -112,7 +116,8 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView{
                 intent.putExtra("string",number)
                 intent.putExtra("lastUpdated",lastUpdated)
                 intent.putExtra("url",url)
-                AllChatDataModel.personalChatList.clear()
+                //AllChatDataModel.personalChatList.clear()
+                AllChatDataModel.chatScreenStatus = 1
                 startActivity(intent)
             }
         })
@@ -134,6 +139,8 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView{
                     intent.putExtra("number" , number)
                     intent.putExtra("documentPathId",chatDocumentId)
                     intent.putExtra("url",url)
+                    //TODO Since same activity is called from fragment and chat activity, cannot write code directly in backpressed method
+                    AllChatDataModel.chatScreenStatus = 1
                     startActivity(intent)
                 }
                 else
@@ -143,6 +150,7 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView{
                     intent.putExtra("documentPathId",chatDocumentId)
                     intent.putExtra("groupName",number)
                     intent.putExtra("url",url)
+                    AllChatDataModel.chatScreenStatus = 1
                     startActivity(intent)
                 }
 

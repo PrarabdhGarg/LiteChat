@@ -1,19 +1,11 @@
 package com.example.litechat.view.activities
 
-import android.Manifest
+
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.ImageFormat.JPEG
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Environment
-import android.provider.MediaStore
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -21,15 +13,10 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.signature.MediaStoreSignature
-import com.bumptech.glide.signature.ObjectKey
 import com.example.litechat.R
-import com.example.litechat.listeners.ListenerToPassString
 import com.example.litechat.model.AllChatDataModel
 import com.example.litechat.model.NewDocumentCreate
-import com.example.litechat.model.UserProfileData
 import com.example.litechat.view.adapters.GroupInfoAdapter
 import com.facebook.spectrum.*
 import com.facebook.spectrum.image.EncodedImageFormat
@@ -42,12 +29,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import kotlinx.android.synthetic.main.activity_group_info.*
-import com.google.firebase.firestore.DocumentSnapshot
-import kotlinx.android.synthetic.main.activity_profile.*
 import java.io.ByteArrayOutputStream
-import java.io.File
 import java.lang.Exception
-import java.time.Instant
 
 
 class GroupInfoActivity : AppCompatActivity() {
@@ -56,20 +39,17 @@ class GroupInfoActivity : AppCompatActivity() {
     private var nmemlist = ArrayList<String>()
     private lateinit var viewManager: RecyclerView.LayoutManager
     val REQUEST = 1
+
     var id: String = " "
     var url = " "
     var groupNameFromIntent = " "
     var data = FirebaseFirestore.getInstance()
     var reference: StorageReference? = null
-    // var groupPic:Uri?=null
+
     var nme: String = " "
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // initialising Spectrum's SoLoader library
-
-        // instantiaiting spectrum object
-        // JPEG, PNG and WebP plugins
 
         setContentView(com.example.litechat.R.layout.activity_group_info)
         id = intent.getStringExtra("documentPathId")
@@ -109,8 +89,12 @@ class GroupInfoActivity : AppCompatActivity() {
         }
         leaveGroup.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
-                var documentReference = data.collection("Chats").document(id)
-                var itemRef =
+                var documentReference=data.collection("Chats").document(id)
+                var itemRef=data.collection("Users").document(AllChatDataModel.userNumberIdPM).collection("currentChats")
+                documentReference.update("groupmembers",FieldValue.arrayRemove(AllChatDataModel.userNumberIdPM)).addOnSuccessListener {
+
+                    Toast.makeText(this@GroupInfoActivity,"Left group..Now you can't send messages to this group",Toast.LENGTH_SHORT).show()
+
                     data.collection("Users").document(AllChatDataModel.userNumberIdPM).collection("currentChats")
                 documentReference.update("groupmembers", FieldValue.arrayRemove(AllChatDataModel.userNumberIdPM))
                     .addOnSuccessListener {
@@ -125,7 +109,16 @@ class GroupInfoActivity : AppCompatActivity() {
                                     itemRef.document(document.getId()).delete()
                                 }
                             }
+
+                        }
+                     var intent=Intent(this@GroupInfoActivity,HomeActivity::class.java)
+                    startActivity(intent)
+                    documentReference.update("usernumber",FieldValue.arrayRemove(AllChatDataModel.userNumberIdPM)).addOnSuccessListener {
+                       //hard-coded as first element of array list needs to be changed...
+                        documentReference.update("usernumber",FieldValue.arrayUnion(nmemlist[0]))
                     }
+                }
+
 
             }
 
@@ -221,4 +214,3 @@ class GroupInfoActivity : AppCompatActivity() {
 
 
 }
-

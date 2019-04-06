@@ -26,8 +26,7 @@
         <meta-data android:name="android.app.searchable"
                    android:resource="@xml/searchable"/>
     </activity>
-        <activity android:name=".view.adapters.SearchResultsAdapter">
-        </activity>
+
         <activity
                 android:name=".view.activities.ProfileOtherUser"
                 android:screenOrientation="portrait"/>
@@ -38,15 +37,11 @@
             </intent-filter>
         </service>
 
-        <activity
-                android:name=".view.activities.ProfileOtherUser"
-                android:screenOrientation="portrait"/>
 
         <service
                 android:name=".NotificationService"
                 android:enabled="true"
                 android:exported="true">
-
         </service>
 
         <receiver

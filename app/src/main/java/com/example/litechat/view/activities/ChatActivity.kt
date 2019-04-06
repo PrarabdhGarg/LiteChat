@@ -1,4 +1,3 @@
-
 package com.example.litechat.view.activities
 
 import android.Manifest
@@ -6,12 +5,10 @@ import android.app.Activity
 import android.arch.persistence.room.Room
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.MediaStore
 import android.support.annotation.RequiresApi
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
@@ -38,10 +35,8 @@ import com.facebook.spectrum.options.TranscodeOptions
 import com.facebook.spectrum.requirements.ResizeRequirement
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import kotlinx.android.synthetic.main.activity_group_info.*
 import java.io.ByteArrayOutputStream
 import java.lang.Double.parseDouble
-
 
 class ChatActivity : AppCompatActivity(), ChatContract.CView {
     private  val REQUEST_IMAGE_GET = 1
@@ -53,6 +48,7 @@ class ChatActivity : AppCompatActivity(), ChatContract.CView {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
 
+        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
         super.onCreate(savedInstanceState)
         setContentView(com.example.litechat.R.layout.activity_chat)
 
@@ -283,17 +279,6 @@ selectImage()
         progressBarChatActivity.visibility = View.INVISIBLE
        // window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
 
-       /* ref.child("ImageSharing").child(AllChatDataModel.documentPathId).child(timestamp).downloadUrl.addOnSuccessListener {
-            val  downloadUrl = it.toString()
-            if (!downloadUrl.isEmpty())
-            {
-
-            }
-            else
-            {
-                Toast.makeText(this@ChatActivity,"Please select a image to send",Toast.LENGTH_SHORT).show()
-            }
-        }*/
 
     }
 
@@ -351,7 +336,9 @@ selectImage()
             }
             AllChatDataModel.allChatArrayListPersonalStatic.clear()
             AllChatDataModel.flagOnBackPressed = true
+            AllChatDataModel.chatScreenStatus = 2
             chatPresenter.notifyModelOfBackPressed()
+            finish()
             super.onBackPressed()
         }
 

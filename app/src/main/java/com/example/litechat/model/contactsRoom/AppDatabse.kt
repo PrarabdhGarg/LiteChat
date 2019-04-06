@@ -9,4 +9,5 @@ abstract class AppDatabse: RoomDatabase(){
     abstract fun userDao(): UserDao
 
     abstract fun urlInfoDao(): URLInfoDao
+
 }

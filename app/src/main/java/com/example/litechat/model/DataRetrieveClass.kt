@@ -57,7 +57,7 @@ class DataRetrieveClass : HomeActivityContract.Model{
     override fun retrievePersonalChatDataFromFirestore(presenter: HomeActivityContract.Presenter,context: Context) {
 
         Log.d("FinalDebug3","vf")
-        db.collection("Users").document(AllChatDataModel.userNumberIdPM).collection("currentChats")
+        db.collection("Users").document(UserProfileData.UserNumber).collection("currentChats")
             .addSnapshotListener(
                 MetadataChanges.INCLUDE,
                 EventListener<QuerySnapshot>{ snap, e ->
@@ -171,6 +171,7 @@ class DataRetrieveClass : HomeActivityContract.Model{
                 Log.d("RoomProfile","onSuccessOF Url FEtched personal")
                 var urlInfo= URLInfo(chatDocumentId,it.toString())
                 AllChatDataModel.urlList.add(urlInfo)
+                roomdb!!.urlInfoDao().deleteAllURLData()
                 roomdb!!.urlInfoDao().insertAllURLdata(urlInfo)
                 presenter.sortPersonalChatList()
 
@@ -192,6 +193,7 @@ class DataRetrieveClass : HomeActivityContract.Model{
                 }
                 roomdb = Room.databaseBuilder(context, AppDatabse::class.java, "Contact_Database").addMigrations(MIGRATION_1_2)
                     .allowMainThreadQueries().build()
+                 roomdb!!.urlInfoDao().deleteAllURLData()
                 roomdb!!.urlInfoDao().insertAllURLdata(urlInfo)
                 presenter.sortPersonalChatList()
 

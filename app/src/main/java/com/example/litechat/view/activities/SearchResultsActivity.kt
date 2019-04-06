@@ -62,6 +62,7 @@ class SearchResultsActivity : AppCompatActivity() {
                     intent.putExtra("string",number)
                     intent.putExtra("lastUpdated",lastUpdated)
                     AllChatDataModel.personalChatList.clear()
+                    AllChatDataModel.chatScreenStatus = 1
                     startActivity(intent)
                 }
             })
@@ -81,6 +82,7 @@ class SearchResultsActivity : AppCompatActivity() {
                     {   //  to show contact name of person chatting with
                         var intent = Intent(this@SearchResultsActivity,ProfileOtherUser::class.java)
                         intent.putExtra("number" , number)
+                        AllChatDataModel.chatScreenStatus = 1
                         startActivity(intent)
                     }
                     else
@@ -88,6 +90,7 @@ class SearchResultsActivity : AppCompatActivity() {
                         var intent=Intent(this@SearchResultsActivity,GroupInfoActivity::class.java)
                         Log.d("GroupInfo1","documentPathId$chatDocumentId")
                         intent.putExtra("documentPathId",chatDocumentId)
+                        AllChatDataModel.chatScreenStatus = 1
                         startActivity(intent)
                     }
 

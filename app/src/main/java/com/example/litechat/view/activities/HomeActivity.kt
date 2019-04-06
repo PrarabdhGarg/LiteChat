@@ -31,15 +31,12 @@ import android.widget.SearchView
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.example.litechat.FirebaseService
-import com.example.litechat.NotificationService
 import com.example.litechat.R
 import com.example.litechat.contracts.HomeActivityContract
 import com.example.litechat.model.AllChatDataModel
 import com.example.litechat.model.UserProfileData
 import com.example.litechat.model.*
 import com.example.litechat.model.contactsRoom.AppDatabse
-import com.example.litechat.model.contactsRoom.URLInfo
-import com.example.litechat.model.contactsRoom.URLInfoDao
 import com.example.litechat.presenter.HomeActivityPresenter
 import com.example.litechat.view.fragments.FragmentChat
 import com.example.litechat.view.fragments.FragmentContact
@@ -73,10 +70,8 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View,SearchView.O
     private var mSectionsPagerAdapter: SectionsPagerAdapter? = null
     private var fragment: FragmentStatus? = null
     private var fragmentChat1: FragmentChat? = null
-    private var chatFragmentActive = false
     var fragmentContact: FragmentContact? = null
     lateinit var homeActivityPresenter: HomeActivityPresenter
-    var serviceIntent: Intent? = null
      var asyncTask =  FetchProfileImages()
     private  var doubleBackToExitPressedOnce = false
     private var database =FirebaseFirestore.getInstance()
@@ -122,7 +117,7 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View,SearchView.O
                }
             }
 
-            if(fragmentChat1!=null&&chatFragmentActive)
+            if(fragmentChat1!=null&&isChatFragmentActive())
             {
                 fragmentChat1!!.notifyDataSetChangedToAdapter()
             }
@@ -150,23 +145,32 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View,SearchView.O
 
         homeActivityPresenter = HomeActivityPresenter(this)
         ContentResolverData.contentResolverPassed = contentResolver
+
         // If user is already logged in, no need to open the LoginActivity again
         if (FirebaseAuth.getInstance().currentUser == null)
         {
             AllChatDataModel.isPresenterCalled = false
+            AllChatDataModel.chatScreenStatus = 1
             startActivity(Intent(this@HomeActivity, LoginActivity::class.java))
-        } else
+        }
+        else
         {
             //If user is already logged in, get its number from shared preferences, store it in the static variable and call the homeActivity presenter to retrieve currently active chats
-            var number = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+            var number = PreferenceManager
+                .getDefaultSharedPreferences(applicationContext)
                 .getString("currentUserNumber", "123456789")
-            Log.d("HomeActivity", "Else enterd in auth.getIstance $number")
+            Log.d("HomeActivity", "Else entered in auth.getInstance $number")
+            //Start the service for firebase cloud messaging
             startService(Intent(this , FirebaseService::class.java))
+
+            //Update the important static variables of the class from the data stored in  Shared Preferences
             UserProfileData.UserNumber = number
             AllChatDataModel.userNumberIdPM = number
             //asyncTask.execute()
             UserProfileData.UserImage = PreferenceManager.getDefaultSharedPreferences(applicationContext).getString("StatusImage", Uri.parse(applicationContext.getDrawable(R.drawable.profile).toString()).toString())
-            //If the user is already logged in, we need to retreive the users previously stored data and save it in the local variables
+
+
+            //If the user is already logged in, we need to retreive the users other previously stored data and save it in the local variables
 
             homeActivityPresenter.getUserDataOnLogin(number)
             if (!AllChatDataModel.isPresenterCalled)
@@ -176,33 +180,28 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View,SearchView.O
                 AllChatDataModel.isPresenterCalled = true
             }
 
+            //This listener is used to get the current id of the device in which the user is signed in
             FirebaseInstanceId.getInstance().instanceId.addOnCompleteListener {
                 if (!it.isSuccessful) {
                     Log.d("Notification", "Failed to retrivve the token correctly")
                 } else {
                     val token = it.result?.token
-                    Log.d("Notification", "Generated Token = ${token}")
+                    Log.d("Notification", "Generated Token = ${token} , ${UserProfileData.UserNumber}")
                     UserProfileData.UserToken = token
-                    Log.d("Notification", "User Data Token = ${UserProfileData.UserToken}")
+                    FirebaseFirestore.getInstance().collection("Users").document(UserProfileData.UserNumber).update("token" , token).addOnSuccessListener {
+                        Log.d("Notification", "User Data Token = ${UserProfileData.UserToken}")
+                    }
+
                 }
             }
         }
         //TODO We should not start the service when the app is open as there is no point to send push notifications if the app is already running
-        serviceIntent = Intent(this, NotificationService::class.java)
-        var servicceStatus: String? = PreferenceManager.getDefaultSharedPreferences(applicationContext).getString("service", "no")
-        startService(serviceIntent)
-        if (servicceStatus == "no") {
-            startService(serviceIntent)
-            PreferenceManager.getDefaultSharedPreferences(applicationContext).edit().putString("service", "yes").apply()
-        }
-        mSectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
 
+        mSectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
         // Set up the ViewPager with the sections adapter.
         container.adapter = mSectionsPagerAdapter
-
         container.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabs))
         tabs.addOnTabSelectedListener(TabLayout.ViewPagerOnTabSelectedListener(container))
-
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
 
@@ -217,86 +216,62 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View,SearchView.O
             var component=ComponentName(this@HomeActivity,SearchResultsActivity::class.java)
             setSearchableInfo(searchManager.getSearchableInfo(component))
             this.isSubmitButtonEnabled=true
+            setIconifiedByDefault(true)
         }
         return true
     }
 
     override fun onQueryTextSubmit(p0: String?): Boolean {
-
-
         return true
     }
 
     override fun onQueryTextChange(p0: String?): Boolean {
          return false
     }
+
+
     override fun onStart() {
         super.onStart()
         Log.e("FinalCheck", "OnStartCalled")
-        AllChatDataModel.personalChatList.clear()
 
+        //Clear all the data stored previously in the static data
+        // AllChatDataModel.personalChatList.clear()
         if (!AllChatDataModel.isPresenterCalled)
         {
             homeActivityPresenter.getPersonalChatsFromFirestore(applicationContext)
             AllChatDataModel.isPresenterCalled = true
         }
-
         AllChatDataModel.userNumberIdPM = UserProfileData.UserNumber
-        Log.d(
-            "FinalDebug1",
-            " homeActivityPresenter.getPersonalChatsFromFirestore called with ${AllChatDataModel.userNumberIdPM}"
-        )
+
+        /**
+         * This try catch method is used to check if the intent to the [HomeActivity] was generated from a notification,
+         * or was it a result of the normal opening of the app
+         */
+
+        try {
+            Log.d("Notification" , "Calling intent ${intent.extras.getBundle("string")}")
+            val intent1 = Intent(this, ChatActivity::class.java)
+            val document = intent.getStringExtra("documentPathId")
+            Log.d("Notification" , "Document variable $document")
+            intent1.putExtra("documentPathId",document)
+            intent1.putExtra("string",intent.getStringExtra("string"))
+            intent1.putExtra("lastUpdated",intent.getStringExtra("lastUpdated"))
+            Log.d("Notification" , "Called intent ${intent1.extras.toString()}")
+            if (document != null)
+            {
+                Log.d("Notification" , "Enterd if of the calling intent")
+                AllChatDataModel.chatScreenStatus = 1
+                intent = null
+                startActivity(intent1)
+            }
+        }
+        catch (e : Exception)
+        {
+            Log.e("Notifications" , "Entered catch block in the onStart of the Home Activity")
+        }
+
+        Log.d("FinalDebug1", " homeActivityPresenter.getPersonalChatsFromFirestore called with ${AllChatDataModel.userNumberIdPM}")
     }
-
-
-    //  override fun onOptionsItemSelected(item: MenuItem): Boolean {
-    // Handle action bar item clicks here. The action bar will
-    // automatically handle clicks on the Home/Up button, so long
-    // as you specify a parent activity in AndroidManifest.xml.
-    //    val id = item.itemId
-
-
-    /*      when (id) {
-              R.id.action_profile -> {
-
-                  // start Activity for Profile
-                  //AllChatDataModel.upadateFragmentChatFirstTime = 1
-                  startActivity(Intent(this@HomeActivity, ProfileActivity::class.java))
-                  return true
-              }
-              R.id.action_developers -> {
-
-                  //AllChatDataModel.upadateFragmentChatFirstTime = 1
-                  startActivity(Intent(this@HomeActivity, DeveloperActivity::class.java))
-                  return true
-              }
-              R.id.action_signOut -> {
-                  //AllChatDataModel.upadateFragmentChatFirstTime = 1
-                  FirebaseAuth.getInstance().signOut()
-                  PreferenceManager.getDefaultSharedPreferences(applicationContext).edit().putString("CurrentUserNumber" , "").apply()
-                  UserProfileData.clearData()
-                  startActivity(Intent(this@HomeActivity , LoginActivity::class.java))
-                  return true
-              }
-
-              R.id.action_newPersonalChat -> {
-                  //AllChatDataModel.upadateFragmentChatFirstTime = 1
-                  Log.d("AllChatNumber" , AllChatDataModel.userNumberIdPM)
-                  startActivity(Intent(this@HomeActivity,NewPersonalChatActivity::class.java))
-                  return true
-              }
-
-
-              R.id.action_newGroupChat -> {
-                  //AllChatDataModel.upadateFragmentChatFirstTime = 1
-                  Log.d("AllChatNumber" , AllChatDataModel.userNumberIdPM)
-                  startActivity(Intent(this@HomeActivity,NewGroupChatActivity::class.java))
-                  return true
-              }
-              else -> return super.onOptionsItemSelected(item)
-          }*/
-    //  }
-
 
     /**
      * A [FragmentPagerAdapter] that returns a fragment corresponding to
@@ -309,9 +284,9 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View,SearchView.O
             // Return a PlaceholderFragment (defined as a static inner class below).
             var fragmentChat = FragmentChat()
             when (position) {
+
                 0 -> {
                     Log.d("Position" , "Position1 called")
-                    chatFragmentActive = true
                     fragmentChat = FragmentChat()
                     fragmentChat1 = fragmentChat
                     return fragmentChat
@@ -319,14 +294,11 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View,SearchView.O
 
                 1 -> {
                     fragmentContact = FragmentContact()
-                    chatFragmentActive = false
                     return fragmentContact!!
                 }
 
-
                 2 -> {
                     val fragmentStatus = FragmentStatus()
-                    chatFragmentActive = false
                     fragment = fragmentStatus
                     return fragmentStatus
                 }
@@ -374,8 +346,17 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View,SearchView.O
     override fun passContext(): Context =
         applicationContext   //function to pass contentResolver to HomeActivityPresenter
 
-    override fun isChatFragmentActive(): Boolean =
-        chatFragmentActive //function to return whether chat Fragment is displayed or not
+    override fun isChatFragmentActive(): Boolean
+    {
+        if(container.currentItem == 0)
+        {
+            Log.d("Container" , "Returned True")
+            Log.d("Container" , "Returned fragment $fragmentChat1")
+            return true
+        }
+        return false //function to return whether chat Fragment is displayed or not
+    }
+
 
     override fun getInstanceOfFragmentChat(): FragmentChat =
         fragmentChat1!!  //Function to return the current instance of fragment chat
@@ -397,8 +378,6 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View,SearchView.O
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
-        stopService(serviceIntent)
         if (doubleBackToExitPressedOnce) {
             super.onBackPressed()
             return
@@ -415,7 +394,7 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View,SearchView.O
     override fun onDestroy() {
         AllChatDataModel.isPresenterCalled = false
         Log.d("Notification", "onDestroy of HomeActivity called")
-        stopService(serviceIntent)
+
         val MIGRATION_1_2 = object : Migration(1, 2) {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.execSQL("CREATE TABLE `URLCollection` (`chatDocumentId` TEXT NOT NULL, `URL` TEXT NOT NULL, " +

@@ -158,6 +158,7 @@ class FragmentContact : Fragment(), ContactFragContract.View {
             @RequiresApi(Build.VERSION_CODES.O)
             override fun startCallIntent(number: String) {
 
+                view!!.contactLoader.visibility = View.VISIBLE
                 activity!!.window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                 contactPresenter.startNewChatFromContact(number)
                 Log.d("Context",context.toString())
@@ -214,6 +215,7 @@ class FragmentContact : Fragment(), ContactFragContract.View {
 
     override fun onResume() {
         Log.e("ViewPager" , "OnResumeCalled")
+        activity!!.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
         super.onResume()
     }
 

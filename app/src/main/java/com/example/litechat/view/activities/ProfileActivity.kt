@@ -249,7 +249,6 @@ class ProfileActivity : AppCompatActivity() {
 
         Log.d("FirebaseStorage" , UserProfileData.UserProfileImage)
 
+
     }
-
-
 }

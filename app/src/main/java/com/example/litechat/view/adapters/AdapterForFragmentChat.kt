@@ -1,10 +1,7 @@
 package com.example.litechat.view.adapters
 
-import android.Manifest
 import android.annotation.TargetApi
 import android.content.Context
-import android.content.pm.PackageManager
-import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
@@ -65,6 +62,7 @@ class AdapterForFragmentChat(private var dataset :ArrayList<ChatObject>, private
          * of the recycler view, images of groups are also visible as currently we had not specified what image to overwrite
          * the previous image
          */
+        holder.textView.isClickable = true
         holder.textView.text = ContactListModel().roomGetName(context , dataset[position].otherNumber)
         Glide.with(context).clear(holder.imageView)
         Log.d("QueryF",dataset[position].otherNumber+ " \n" +position.toString())
@@ -72,61 +70,7 @@ class AdapterForFragmentChat(private var dataset :ArrayList<ChatObject>, private
             var t = dataset[position].otherNumber.toDouble()
             Log.d("RoomImage11" , "Entered try ${dataset[position].otherNumber}")
 
-            /*// previously loading image by downloading URL
-            FirebaseStorage.getInstance().reference.child(dataset[position].otherNumber).child("ProfileImage").downloadUrl.addOnSuccessListener {
-                Log.d("Firebase" , "Entered and retrieved storage successfully ${it}")
-                // onLoad Started ki wajah se profile image not being displayed in fragment chat
-                try {
-
-                    Glide.with(context).load(it.toString()).apply(RequestOptions().placeholder(context.getDrawable(R.drawable.profile))).
-                        into(holder.imageView)
-
-                }catch (e : Error)
-                {
-                    Log.d("Crash" , e.stackTrace.toString())
-                }
-
-            }*/
-
-            // saving profile images in private directory
-        /*    listenerForProfileImage.setCustomObjectListener(object : ListenerToPassString.Listener
-            {
-                override fun onDataRecieved(uri: String) {
-                    Log.d("ImageProfile15", "Glide ke apss ondatarecived ke andar Me")
-                    Glide.with(context).load(uri).into(holder.imageView)
-                   // holder.imageView.setImageURI(Uri.parse(uri))
-                }
-            })
-
-            if(searchForImageFirst(dataset[position].otherNumber,dataset[position].chatDocumentId))
-            {
-
-                Log.d("ImageProfileFragChat","image loaded from storage")
-                val output2 = getPrivateAlbumStorageDir(context,"LiteChat_ProfileImage")
-                if (!output2!!.exists()) {
-                    Log.d("ImageProfile18", "Ouput2 exists me" + output2.mkdirs())
-                }
-
-                Log.d("ImageProfile", "Ouput2 exits me" + output2.exists())
-
-                val localFile2 = File(output2, "IMG_${dataset[position].chatDocumentId}_${dataset[position].otherNumber}.jpeg")
-                var uri = Uri.parse(localFile2.path)
-                Log.d("ImageProfile","Uri for ImageProfile$uri")
-                Log.d("ImageProfile","ImageLoadedfromStorage")
-                Glide.with(context).load(uri).into(holder.imageView)
-               // holder.imageView.setImageURI(uri)
-            }
-
-            else
-            {   Log.d("ImageProfile122", "image dowwnload to be started")
-                saveImageFromFirebaseToDevice(dataset[position].otherNumber,listenerForProfileImage,
-                    "${dataset[position].otherNumber}/" + "ProfileImage",dataset[position].chatDocumentId)
-            }*/
-
-           // var x = AllChatDataModel.urlList.get(AllChatDataModel.urlList.indexOf(AllChatDataModel.urlList.find { it.chatDocumentId == dataset[position].chatDocumentId }))
-
-           // Log.e("RoomImage12","AdapterPersonal URL ${(AllChatDataModel.urlList.find { it.chatDocumentId == dataset[position].chatDocumentId })!!.URL}")
-            if((AllChatDataModel.urlList.find { it.chatDocumentId == dataset[position].chatDocumentId })!= null) {
+                 if((AllChatDataModel.urlList.find { it.chatDocumentId == dataset[position].chatDocumentId })!= null) {
                 Glide.with(context)
                     .apply { RequestOptions().placeholder(R.drawable.profile) }
                     .load((AllChatDataModel.urlList.find { it.chatDocumentId == dataset[position].chatDocumentId })!!.URL)
@@ -138,53 +82,12 @@ class AdapterForFragmentChat(private var dataset :ArrayList<ChatObject>, private
                 Glide.with(context).load(R.drawable.profile).into(holder.imageView)
                 Log.d("RoomImage14", "else of personal + ${dataset[position].otherNumber}")
             }
+            /*Glide.with(context).load("gs://litechat-3960c.appspot.com/${dataset[position].otherNumber}/ProfileImage").apply(RequestOptions().placeholder(context.getDrawable(R.drawable.profile))).
+                into(holder.imageView)*/
         }catch (e : Exception)
         {
             Log.e("RoomImage15" , "Entered catch \n ${e} with ${dataset[position].otherNumber}")
 
-         /*   //previouly for diaplying group icons
-          FirebaseStorage.getInstance().reference.child("groupimages").child(dataset[position].chatDocumentId).downloadUrl.addOnSuccessListener {
-              Glide.with(context)
-                  .load(it)
-                  .apply(RequestOptions().placeholder(context.getDrawable(R.drawable.ic_group)))
-                  .into(holder.imageView)
-
-            }*/
-
-            // displaying images from storage
-            /*listenerForGroupImage.setCustomObjectListener(object : ListenerToPassString.Listener
-            {
-                override fun onDataRecieved(uri: String) {
-                    Log.d("ImageGroup15", "Glide ke apss ondatarecived ke andar Me")
-                  Glide.with(context).load(uri).into(holder.imageView)
-                  // holder.imageView.setImageURI(Uri.parse(uri))
-                }
-            })
-
-            if(searchForImageFirst(dataset[position].otherNumber,dataset[position].chatDocumentId))
-            {
-
-
-                val output2 = getPrivateAlbumStorageDir(context,"LiteChat_ProfileImage")
-                if (!output2!!.exists()) {
-                    Log.d("ImageGroup18", "Ouput2 exists me" + output2.mkdirs())
-                }
-
-                Log.d("ImageGroup19", "Ouput2 exits me" + output2.exists())
-
-                val localFile2 = File(output2, "IMG_${dataset[position].chatDocumentId}_${dataset[position].otherNumber}.jpeg")
-                var uri = Uri.parse(localFile2.path)
-                Log.d("ImageGroup19","Uri for ImageProfile$uri")
-                Log.d("ImageGroup","ImageLoadedfromStorage")
-                Glide.with(context).load(uri).into(holder.imageView)
-               // holder.imageView.setImageURI(uri)
-            }
-
-            else
-            {   Log.d("ImageGroup122", "image dowwnload to be started")
-                saveImageFromFirebaseToDevice(dataset[position].otherNumber,listenerForProfileImage,
-                    "groupimages/${dataset[position].chatDocumentId}",dataset[position].chatDocumentId)// .jpeg
-            }*/
             if((AllChatDataModel.urlList.find { it.chatDocumentId == dataset[position].chatDocumentId })!= null) {
                 Glide.with(context)
                     .apply { RequestOptions().placeholder(R.drawable.profile) }
@@ -198,16 +101,25 @@ class AdapterForFragmentChat(private var dataset :ArrayList<ChatObject>, private
                 Log.d("RoomImage17", "else of group + ${dataset[position].otherNumber}")
 
             }
+            /*Glide.with(context).load("gs://litechat-3960c.appspot.com/groupimages/${dataset[position].chatDocumentId}").apply(RequestOptions().placeholder(context.getDrawable(R.drawable.profile))).
+                into(holder.imageView)*/
         }
 
-        Log.d("FinalDebug11","AllChatDataModel.personalChatList.size:${AllChatDataModel.personalChatList.size}\n${AllChatDataModel.personalChatList.contains(dataset[position])}")
-        /*Log.d("TestNotif" , "position = ${position} \n LastSeen  = ${AllChatDataModel.personalChatList.find { it.chatDocumentId == dataset[position].chatDocumentId }!!.lastSeen} " +
-                "\n  DocumentId = ${dataset[position].chatDocumentId} \n LastUpdated = ${AllChatDataModel.personalChatList.find { it.chatDocumentId == dataset[position].chatDocumentId }!!.lastUpdated}")*/
+        Log.d("FinalDebug11","AllChatDataModel.personalChatList.size:" +
+                "${AllChatDataModel.personalChatList.size}\n${AllChatDataModel.personalChatList.contains(dataset[position])}")
+
+
         //AllChatDataModel.personalChatList.find { it.chatDocumentId == dataset[position].chatDocumentId }!!.lastSeen < Instant.now().epochSecond.toString() &&
-        if (AllChatDataModel.personalChatList.size!=0 && (AllChatDataModel.personalChatList.find { it.chatDocumentId==dataset[position].chatDocumentId }!=null) && AllChatDataModel.personalChatList.find { it.chatDocumentId == dataset[position].chatDocumentId }!!.lastSeen < Instant.now().epochSecond.toString() && AllChatDataModel.personalChatList.find { it.chatDocumentId == dataset[position].chatDocumentId }!!.lastSeen < AllChatDataModel.personalChatList.find { it.chatDocumentId == dataset[position].chatDocumentId }!!.lastUpdated)
+
+        if (AllChatDataModel.personalChatList.size!=0 &&
+                (AllChatDataModel.personalChatList.find { it.chatDocumentId==dataset[position].chatDocumentId }!=null)
+                && AllChatDataModel.personalChatList.find { it.chatDocumentId == dataset[position].chatDocumentId }!!.lastSeen < Instant.now().epochSecond.toString() &&
+                AllChatDataModel.personalChatList.find { it.chatDocumentId == dataset[position].chatDocumentId }!!.lastSeen < AllChatDataModel.personalChatList.find { it.chatDocumentId == dataset[position].chatDocumentId }!!.lastUpdated)
         {
             holder.greenDot.visibility = View.VISIBLE
-        }else{
+        }
+        else
+        {
             holder.greenDot.visibility = View.INVISIBLE
         }
 
@@ -252,135 +164,5 @@ class AdapterForFragmentChat(private var dataset :ArrayList<ChatObject>, private
             }
         })
     }
-
-
-
-    private fun saveImageFromFirebaseToDevice(otherNumber: String, listenerToPassString: ListenerToPassString,path:String, chatDocumentId: String)
-    {
-        Log.d("ImageSharingFinal","Enter save Iamge from firsbase")
-        // Check if storage is writable
-        Log.d("ImageSharing8",isExternalStorageWritable().toString())
-
-        //checkPermissionGranted()
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-            != PackageManager.PERMISSION_GRANTED) {
-            Log.d("ImageSharing9","Permission is not granted")
-        }
-        else
-            Log.d("ImageSharing9","Permission is  granted")
-
-
-        try {
-            // Make directory named litechat
-            val output =getPrivateAlbumStorageDir(context,"LiteChat_ProfileImage")
-            if (!output!!.exists()) {
-                Log.d("ImageSharing16", "Ouput exists" + output.mkdirs())
-            }
-
-
-            Log.d("ImageSharing15", "Ouput exits" + output.exists())
-
-            val localFile = File(output, "IMG_${chatDocumentId}_$otherNumber.jpeg")
-
-            val mStorage = FirebaseStorage.getInstance("gs://litechat-3960c.appspot.com")
-            val mStorageRef = mStorage.getReference()
-
-
-            val downloadRef = mStorageRef.getRoot()
-                .child(path);// .jpeg
-            // Download and get total bytes
-            downloadRef.getFile(localFile)
-                /*.addOnProgressListener{
-
-                        showProgressNotification(1,title, "",
-                            taskSnapshot.getBytesTransferred(),
-                            taskSnapshot.getTotalByteCount());
-
-                }*/
-                .addOnSuccessListener {
-
-                    Log.d("ImageSharing12", "download:SUCCESS");
-
-                    var uri = Uri.parse(localFile.path)
-                    Log.d("ImageSharing16", "download:SUCCESS and URI : $uri path :${localFile.path}");
-
-                    /*try{
-                        Log.d("ImageSharing21","Entering Media Scanner")
-                        MediaScannerConnection.scanFile(
-                            context,
-                            arrayOf(localFile.getAbsolutePath()),
-                            null,
-                            object : MediaScannerConnection.OnScanCompletedListener {
-                                override   fun onScanCompleted(path: String, uri: Uri) {
-                                    Log.i("ExternalStorage", "Scanned $path:")
-                                    Log.i("ExternalStorage", "-> uri=$uri")
-                                }
-                            })
-                    }
-                    catch (e: Exception) {
-                        Log.d("ImageSharing8","IoException catch of media scanner")
-                        throw IOException()
-                    }*/
-
-                    listenerToPassString.listener!!.onDataRecieved(uri.toString())
-                }
-                .addOnFailureListener {
-                    Log.d("ImageSharing13", "onFailureTry2 +  " + it.toString())
-                }
-
-        } catch (e: java.lang.Exception) {
-            e.printStackTrace();
-        }
-
-        /*
-        val mediaFile =  File(dir.path + File.separator +
-        "IMG_"+ AllChatDataModel.documentPathId+timeStamp + ".jpg");*/
-
-    }
-
-    /*override fun onViewRecycled(holder: MyViewHolder) {
-        super.onViewRecycled(holder)
-        Glide.with(context).clear(holder.imageView)
-        holder.imageView.setImageResource(R.drawable.profile)
-    }*/
-   private  fun isExternalStorageWritable(): Boolean {
-        return Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED
-    }
-
-    private fun searchForImageFirst(otherNumber: String,chatDocumentId:String): Boolean
-    {
-        val output = getPrivateAlbumStorageDir(context,"LiteChat_ProfileImage")
-        if (!output!!.exists()) {
-            return false
-        }
-
-        else
-        {
-            val localFile = File(output, "IMG_${chatDocumentId}_$otherNumber.jpeg")
-            if (!localFile.exists())
-                return false
-        }
-
-
-        return true
-
-    }
-
-   private  fun getPrivateAlbumStorageDir(context: Context, albumName: String): File? {
-        // Get the directory for the app's private pictures directory.
-        val file = File(context.getExternalFilesDir(
-            Environment.DIRECTORY_PICTURES), albumName)
-        if (!file.mkdirs()) {
-            Log.e("ProfileImageDisplay1", "Directory not created")
-        }
-        return file
-    }
-
-   /* fun applyOptions(Context context, GlideBuilder builder) {
-    int bitmapPoolSizeBytes = 1024 * 1024 * 0; // 0mb
-    int memoryCacheSizeBytes = 1024 * 1024 * 0; // 0mb
-    builder.setMemoryCache(new LruResourceCache(memoryCacheSizeBytes));
-    builder.setBitmapPool(new LruBitmapPool(bitmapPoolSizeBytes));*/
-/*}*/
 
 }
