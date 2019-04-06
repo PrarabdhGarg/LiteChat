@@ -75,7 +75,7 @@ class HomeActivityPresenter(val view : HomeActivityContract.View): HomeActivityC
 
         }*/
 
-        if (view.isChatFragmentActive()) {
+        if (AllChatDataModel.chatScreenStatus == 2 && view.isChatFragmentActive()) {
             view.getInstanceOfFragmentChat().updateRecyclerViewForFirstTime()
         }
 

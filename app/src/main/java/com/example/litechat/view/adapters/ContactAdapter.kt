@@ -34,7 +34,7 @@ class ContactAdapter(private val callListenerObject1: CallListenerObject, privat
 
     override fun onBindViewHolder(holder: ContactHolder, position: Int) {
 
-            holder.names.text = ContactListData.contacts[position].name
+        holder.names.text = ContactListData.contacts[position].name
             FirebaseStorage.getInstance().reference.child(ContactListData.contacts[position].mobileNumber).child("ProfileImage").downloadUrl.addOnSuccessListener {
                 if (context != null) {
                     Glide.with(context).load(it).into(holder.img)

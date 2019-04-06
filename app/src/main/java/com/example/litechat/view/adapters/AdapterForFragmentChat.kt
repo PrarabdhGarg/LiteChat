@@ -3,7 +3,6 @@ package com.example.litechat.view.adapters
 import android.annotation.TargetApi
 import android.content.Context
 import android.os.Build
-import android.support.constraint.Placeholder
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
@@ -51,6 +50,7 @@ class AdapterForFragmentChat(private var dataset :ArrayList<ChatObject>, private
          * of the recycler view, images of groups are also visible as currently we had not specified what image to overwrite
          * the previous image
          */
+        holder.textView.isClickable = true
         holder.textView.text = ContactListModel().roomGetName(context , dataset[position].otherNumber)
         Log.d("QueryF",dataset[position].otherNumber+ " \n" +position.toString())
         try {
@@ -67,6 +67,8 @@ class AdapterForFragmentChat(private var dataset :ArrayList<ChatObject>, private
                     Log.d("Crash" , e.stackTrace.toString())
                 }
             }
+            /*Glide.with(context).load("gs://litechat-3960c.appspot.com/${dataset[position].otherNumber}/ProfileImage").apply(RequestOptions().placeholder(context.getDrawable(R.drawable.profile))).
+                into(holder.imageView)*/
         }catch (e : Exception)
         {
             Log.d("Firebase" , "Entered catch \n ${e} with ${dataset[position].otherNumber}")
@@ -77,10 +79,12 @@ class AdapterForFragmentChat(private var dataset :ArrayList<ChatObject>, private
                   .into(holder.imageView)
 
             }
+            /*Glide.with(context).load("gs://litechat-3960c.appspot.com/groupimages/${dataset[position].chatDocumentId}").apply(RequestOptions().placeholder(context.getDrawable(R.drawable.profile))).
+                into(holder.imageView)*/
         }
-        Log.d("FinalDebug11","AllChatDataModel.personalChatList.size:${AllChatDataModel.personalChatList.size}\n${AllChatDataModel.personalChatList.contains(dataset[position])}")
+        /*Log.d("FinalDebug11","AllChatDataModel.personalChatList.size:${AllChatDataModel.personalChatList.size}\n${AllChatDataModel.personalChatList.contains(dataset[position])}")
         Log.d("TestNotif" , "position = ${position} \n LastSeen  = ${AllChatDataModel.personalChatList.find { it.chatDocumentId == dataset[position].chatDocumentId }!!.lastSeen} " +
-                "\n  DocumentId = ${dataset[position].chatDocumentId} \n LastUpdated = ${AllChatDataModel.personalChatList.find { it.chatDocumentId == dataset[position].chatDocumentId }!!.lastUpdated}")
+                "\n  DocumentId = ${dataset[position].chatDocumentId} \n LastUpdated = ${AllChatDataModel.personalChatList.find { it.chatDocumentId == dataset[position].chatDocumentId }!!.lastUpdated}")*/
         //AllChatDataModel.personalChatList.find { it.chatDocumentId == dataset[position].chatDocumentId }!!.lastSeen < Instant.now().epochSecond.toString() &&
         if (AllChatDataModel.personalChatList.size!=0 && (AllChatDataModel.personalChatList.find { it.chatDocumentId==dataset[position].chatDocumentId }!=null) && AllChatDataModel.personalChatList.find { it.chatDocumentId == dataset[position].chatDocumentId }!!.lastSeen < Instant.now().epochSecond.toString() && AllChatDataModel.personalChatList.find { it.chatDocumentId == dataset[position].chatDocumentId }!!.lastSeen < AllChatDataModel.personalChatList.find { it.chatDocumentId == dataset[position].chatDocumentId }!!.lastUpdated)
         {
@@ -90,7 +94,9 @@ class AdapterForFragmentChat(private var dataset :ArrayList<ChatObject>, private
         }
 
         holder.textView.setOnClickListener {
+
             Log.d("AllChatNumber" , AllChatDataModel.userNumberIdPM)
+            holder.textView.isClickable = false
             // change with number
             /***
              *
@@ -125,18 +131,4 @@ class AdapterForFragmentChat(private var dataset :ArrayList<ChatObject>, private
         })
     }
 
-    /*private fun searchContactName(number: String): String {
-
-        val dbModel = ContactListModel()
-
-        var namePassed = dbModel.roomGetName(context, number)
-
-        if(namePassed.isEmpty()){
-            return number
-        }
-        else{
-            return namePassed
-        }
-
-    }*/
 }

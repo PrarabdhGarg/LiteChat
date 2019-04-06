@@ -7,4 +7,5 @@ import android.arch.persistence.room.RoomDatabase
 abstract class AppDatabse: RoomDatabase(){
 
     abstract fun userDao(): UserDao
+
 }

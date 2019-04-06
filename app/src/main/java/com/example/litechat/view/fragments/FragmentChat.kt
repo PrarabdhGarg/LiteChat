@@ -111,7 +111,8 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView{
                 intent.putExtra("documentPathId",chatDocumentId)
                 intent.putExtra("string",number)
                 intent.putExtra("lastUpdated",lastUpdated)
-                AllChatDataModel.personalChatList.clear()
+                //AllChatDataModel.personalChatList.clear()
+                AllChatDataModel.chatScreenStatus = 1
                 startActivity(intent)
             }
         })
@@ -131,6 +132,8 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView{
                 {   //  to show contact name of person chatting with
                     var intent = Intent(context,ProfileOtherUser::class.java)
                     intent.putExtra("number" , number)
+                    //TODO Since same activity is called from fragment and chat activity, cannot write code directly in backpressed method
+                    AllChatDataModel.chatScreenStatus = 1
                     startActivity(intent)
                 }
                 else
@@ -138,6 +141,7 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView{
                     var intent=Intent(context,GroupInfoActivity::class.java)
                     Log.d("GroupInfo1","documentPathId$chatDocumentId")
                     intent.putExtra("documentPathId",chatDocumentId)
+                    AllChatDataModel.chatScreenStatus = 1
                     startActivity(intent)
                 }
 

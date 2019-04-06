@@ -21,7 +21,6 @@ import android.view.View
 import android.widget.SearchView
 import android.widget.Toast
 import com.example.litechat.FirebaseService
-import com.example.litechat.NotificationService
 import com.example.litechat.R
 import com.example.litechat.contracts.HomeActivityContract
 import com.example.litechat.model.AllChatDataModel
@@ -36,6 +35,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.iid.FirebaseInstanceId
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.fragment_status.view.*
+import java.lang.Exception
 
 class HomeActivity : AppCompatActivity(), HomeActivityContract.View,SearchView.OnQueryTextListener {
 
@@ -54,7 +54,6 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View,SearchView.O
     private var fragmentChat1: FragmentChat? = null
     var fragmentContact: FragmentContact? = null
     lateinit var homeActivityPresenter: HomeActivityPresenter
-    var serviceIntent: Intent? = null
     private  var doubleBackToExitPressedOnce = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,6 +68,7 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View,SearchView.O
         if (FirebaseAuth.getInstance().currentUser == null)
         {
             AllChatDataModel.isPresenterCalled = false
+            AllChatDataModel.chatScreenStatus = 1
             startActivity(Intent(this@HomeActivity, LoginActivity::class.java))
         }
         else
@@ -100,10 +100,12 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View,SearchView.O
                     Log.d("Notification", "Failed to retrivve the token correctly")
                 } else {
                     val token = it.result?.token
-                    Log.d("Notification", "Generated Token = ${token}")
+                    Log.d("Notification", "Generated Token = ${token} , ${UserProfileData.UserNumber}")
                     UserProfileData.UserToken = token
-                    FirebaseFirestore.getInstance().collection("Users").document(UserProfileData.UserNumber).update("token" , token)
-                    Log.d("Notification", "User Data Token = ${UserProfileData.UserToken}")
+                    FirebaseFirestore.getInstance().collection("Users").document(UserProfileData.UserNumber).update("token" , token).addOnSuccessListener {
+                        Log.d("Notification", "User Data Token = ${UserProfileData.UserToken}")
+                    }
+
                 }
             }
         }
@@ -152,6 +154,7 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View,SearchView.O
     override fun onStart() {
         super.onStart()
         Log.e("FinalCheck", "OnStartCalled")
+
         //Clear all the data stored previously in the static data
         // AllChatDataModel.personalChatList.clear()
         if (!AllChatDataModel.isPresenterCalled)
@@ -160,6 +163,34 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View,SearchView.O
             AllChatDataModel.isPresenterCalled = true
         }
         AllChatDataModel.userNumberIdPM = UserProfileData.UserNumber
+
+        /**
+         * This try catch method is used to check if the intent to the [HomeActivity] was generated from a notification,
+         * or was it a result of the normal opening of the app
+         */
+
+        try {
+            Log.d("Notification" , "Calling intent ${intent.extras.getBundle("string")}")
+            val intent1 = Intent(this, ChatActivity::class.java)
+            val document = intent.getStringExtra("documentPathId")
+            Log.d("Notification" , "Document variable $document")
+            intent1.putExtra("documentPathId",document)
+            intent1.putExtra("string",intent.getStringExtra("string"))
+            intent1.putExtra("lastUpdated",intent.getStringExtra("lastUpdated"))
+            Log.d("Notification" , "Called intent ${intent1.extras.toString()}")
+            if (document != null)
+            {
+                Log.d("Notification" , "Enterd if of the calling intent")
+                AllChatDataModel.chatScreenStatus = 1
+                intent = null
+                startActivity(intent1)
+            }
+        }
+        catch (e : Exception)
+        {
+            Log.e("Notifications" , "Entered catch block in the onStart of the Home Activity")
+        }
+
         Log.d("FinalDebug1", " homeActivityPresenter.getPersonalChatsFromFirestore called with ${AllChatDataModel.userNumberIdPM}")
     }
 
@@ -267,7 +298,6 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View,SearchView.O
     }
 
     override fun onBackPressed() {
-        stopService(serviceIntent)
         if (doubleBackToExitPressedOnce) {
             super.onBackPressed()
             return
@@ -284,7 +314,6 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View,SearchView.O
     override fun onDestroy() {
         AllChatDataModel.isPresenterCalled = false
         Log.d("Notification", "onDestroy of HomeActivity called")
-        stopService(serviceIntent)
         super.onDestroy()
     }
 

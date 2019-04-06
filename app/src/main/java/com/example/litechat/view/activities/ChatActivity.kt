@@ -1,4 +1,3 @@
-
 package com.example.litechat.view.activities
 
 import android.arch.persistence.room.Room
@@ -8,6 +7,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.annotation.RequiresApi
 import android.util.Log
+import android.view.WindowManager
 import kotlinx.android.synthetic.main.activity_chat.*
 import android.widget.Toast
 import com.example.litechat.contracts.ChatContract
@@ -22,8 +22,6 @@ import com.example.litechat.model.contactsRoom.AppDatabse
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 
-
-
 class ChatActivity : AppCompatActivity(), ChatContract.CView {
 
     private var myDataset= ArrayList<MessageModel>()
@@ -33,8 +31,10 @@ class ChatActivity : AppCompatActivity(), ChatContract.CView {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
 
+        window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
         super.onCreate(savedInstanceState)
         setContentView(com.example.litechat.R.layout.activity_chat)
+
         textViewOtherUser.setOnClickListener {
             try
             {
@@ -195,7 +195,9 @@ class ChatActivity : AppCompatActivity(), ChatContract.CView {
             }
             AllChatDataModel.allChatArrayListPersonalStatic.clear()
             AllChatDataModel.flagOnBackPressed = true
+            AllChatDataModel.chatScreenStatus = 2
             chatPresenter.notifyModelOfBackPressed()
+            finish()
             super.onBackPressed()
         }
 
