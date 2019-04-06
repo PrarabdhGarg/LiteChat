@@ -59,6 +59,7 @@ class ChatInteractor(p1: ChatContract.CPresenter) : ChatContract.CInteractor {
                         }
                     }
                 }
+                //TODO Add notification logic for groups
             Toast.makeText(context, "Message Sent Successfully", Toast.LENGTH_SHORT).show()
         }
 

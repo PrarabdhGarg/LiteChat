@@ -15,7 +15,6 @@ import kotlinx.android.synthetic.main.activity_profile_other_user.*
  * This activity is called when the user clicks on the profile image of another user
  * It is very similar to the [ProfileActivity] with the only changes being that the buttons to edit profile image
  * and about information are missing
- * TODO change the default image that appears in place of the profile image on the start of the activity
  */
 
 class ProfileOtherUser : AppCompatActivity() {

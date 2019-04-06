@@ -15,6 +15,7 @@ import android.support.v4.app.FragmentPagerAdapter
 import android.os.Bundle
 import android.os.Handler
 import android.preference.PreferenceManager
+import android.support.v4.view.ViewPager
 import android.util.Log
 import android.view.Menu
 import android.view.View
@@ -110,14 +111,6 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View,SearchView.O
             }
         }
         //TODO We should not start the service when the app is open as there is no point to send push notifications if the app is already running
-        //TODo We wont be needing a seperate notification service if FCM is working
-        /*serviceIntent = Intent(this, NotificationService::class.java)
-        var servicceStatus: String? = PreferenceManager.getDefaultSharedPreferences(applicationContext).getString("service", "no")
-        startService(serviceIntent)
-        if (servicceStatus == "no") {
-            startService(serviceIntent)
-            PreferenceManager.getDefaultSharedPreferences(applicationContext).edit().putString("service", "yes").apply()
-        }*/
 
         mSectionsPagerAdapter = SectionsPagerAdapter(supportFragmentManager)
         // Set up the ViewPager with the sections adapter.
