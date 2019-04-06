@@ -41,7 +41,7 @@ class NewGroupChatActivity : AppCompatActivity() {
             if (ContactListData.groupContacts.size>0) {
                 groupLoader.visibility = View.VISIBLE
                 window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-                Log.d("check1", "onCLick")
+                Log.d("check1", "onClick")
 
                     for (i in 0 until ContactListData.groupContacts.size) {
                         AllChatDataModel.groupNumbers.add(ContactListData.groupContacts[i].mobileNumber)
@@ -51,13 +51,13 @@ class NewGroupChatActivity : AppCompatActivity() {
                     newObj.groupname = groupName
                     newObj.groupmembers.addAll(AllChatDataModel.groupNumbers)
                     newObj.groupmembers.add(AllChatDataModel.userNumberIdPM)
-                    newObj.usernumber=AllChatDataModel.userNumberIdPM
+                    newObj.usernumber.add(AllChatDataModel.userNumberIdPM)
                     Log.d("check5", newObj.toString())
 
                     // there may be a bug in this query same user creates group with same name might be a problem
                     database.collection("Chats").document().set(newObj).addOnSuccessListener {
 
-                        database.collection("Chats").whereEqualTo("usernumber", AllChatDataModel.userNumberIdPM)
+                        database.collection("Chats")
 
                             .whereEqualTo("groupname", groupName).get().addOnSuccessListener { document ->
                                 for (doc in document) {

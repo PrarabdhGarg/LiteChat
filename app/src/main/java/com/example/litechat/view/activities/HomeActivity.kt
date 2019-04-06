@@ -138,6 +138,7 @@ class HomeActivity : AppCompatActivity(), HomeActivityContract.View,SearchView.O
             var component=ComponentName(this@HomeActivity,SearchResultsActivity::class.java)
             setSearchableInfo(searchManager.getSearchableInfo(component))
             this.isSubmitButtonEnabled=true
+            setIconifiedByDefault(true)
         }
         return true
     }
