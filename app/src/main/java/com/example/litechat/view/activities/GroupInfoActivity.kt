@@ -74,6 +74,7 @@ class GroupInfoActivity : AppCompatActivity() {
                 var documentReference=data.collection("Chats").document(id)
                 var itemRef=data.collection("Users").document(AllChatDataModel.userNumberIdPM).collection("currentChats")
                 documentReference.update("groupmembers",FieldValue.arrayRemove(AllChatDataModel.userNumberIdPM)).addOnSuccessListener {
+
                     Toast.makeText(this@GroupInfoActivity,"Left group..Now you can't send messages to this group",Toast.LENGTH_SHORT).show()
                     data.collection("Users").document(AllChatDataModel.userNumberIdPM).collection("currentChats")
                        .whereEqualTo("otherNumber",nme).get().addOnCompleteListener {
