@@ -15,6 +15,7 @@ import com.example.litechat.model.ContactListData
 import com.example.litechat.model.NewDocumentCreate
 import com.example.litechat.view.adapters.GroupContactAdapter
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.android.synthetic.main.activity_new_group_chat.*
 import java.time.Instant
 
@@ -59,7 +60,6 @@ class NewGroupChatActivity : AppCompatActivity() {
                         database.collection("Chats").whereEqualTo("usernumber", AllChatDataModel.userNumberIdPM)
 
                             .whereEqualTo("groupname", groupName).get().addOnSuccessListener { document ->
-
                                 for (doc in document) {
                                     Log.d("check2", doc.toString() + document.toString())
                                     var timeStamp = Instant.now().epochSecond

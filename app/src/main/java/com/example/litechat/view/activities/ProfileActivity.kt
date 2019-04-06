@@ -140,13 +140,8 @@ class ProfileActivity : AppCompatActivity() {
             UserProfileData.UserProfileImage = fullPhotoUri.toString()
             ref = FirebaseStorage.getInstance().reference
             var byteArray : ByteArray? = null
-            /**try {
-                var temp
-                byteArray = Files.readAllBytes(Compressor(this).compressToFile(File(fullPhotoUri!!.path)).toPath())
-            }catch( e : Exception){
-                e.printStackTrace()
-            }*/
 
+            ref!!.child(UserProfileData.UserNumber).child("ProfileImage").delete()
             ref!!.child(UserProfileData.UserNumber).child("ProfileImage").putFile(fullPhotoUri!!)
                 .addOnSuccessListener {
                     Log.d("Firebase Storage" , "Image uploaded sucessfully")
@@ -179,6 +174,7 @@ class ProfileActivity : AppCompatActivity() {
                 ProgressBarProfile.visibility = View.INVISIBLE
                 UserProfileData.UserProfileImage = downloadUrl
             }
+
         }
         Log.d("FirebaseStorage" , "${UserProfileData.UserProfileImage}")
 
