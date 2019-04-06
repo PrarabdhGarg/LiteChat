@@ -71,11 +71,14 @@ class AdapterForFragmentChat(private var dataset :ArrayList<ChatObject>, private
         {
             Log.d("Firebase" , "Entered catch \n ${e} with ${dataset[position].otherNumber}")
             FirebaseStorage.getInstance().reference.child("groupimages").child(dataset[position].chatDocumentId).downloadUrl.addOnSuccessListener {
-              Glide.with(context)
-                  .load(it)
-                  .apply(RequestOptions().placeholder(context.getDrawable(R.drawable.ic_group)))
-                  .into(holder.imageView)
-
+             try {
+                 Glide.with(context)
+                     .load(it)
+                     .apply(RequestOptions().placeholder(context.getDrawable(R.drawable.ic_group)))
+                     .into(holder.imageView)
+             }catch (e:Error){
+                 Log.d("Crash" , e.stackTrace.toString())
+             }
             }
         }
      //   Log.d("FinalDebug11","AllChatDataModel.personalChatList.size:${AllChatDataModel.personalChatList.size}\n${AllChatDataModel.personalChatList.contains(dataset[position])}")

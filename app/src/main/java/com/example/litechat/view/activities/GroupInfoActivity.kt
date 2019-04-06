@@ -22,8 +22,8 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import kotlinx.android.synthetic.main.activity_group_info.*
 import com.google.firebase.firestore.DocumentSnapshot
-
-
+import com.example.litechat.view.fragments.FragmentChat
+import kotlin.random.Random
 
 
 class GroupInfoActivity : AppCompatActivity() {
@@ -37,6 +37,7 @@ class GroupInfoActivity : AppCompatActivity() {
     var reference:StorageReference?=null
     var groupPic:Uri?=null
     var nme:String=" "
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(com.example.litechat.R.layout.activity_group_info)
@@ -82,6 +83,12 @@ class GroupInfoActivity : AppCompatActivity() {
                                 itemRef.document(document.getId()).delete()
                             }
                         }
+                     var intent=Intent(this@GroupInfoActivity,HomeActivity::class.java)
+                    startActivity(intent)
+                    documentReference.update("usernumber",FieldValue.arrayRemove(AllChatDataModel.userNumberIdPM)).addOnSuccessListener {
+//hard-coded as first element of array list needs to be changed...
+                        documentReference.update("usernumber",FieldValue.arrayUnion(nmemlist[0]))
+                    }
                 }
 
             }
