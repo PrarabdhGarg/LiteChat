@@ -196,6 +196,8 @@ class ChatInteractor(p1: ChatContract.CPresenter) : ChatContract.CInteractor {
                                 object1.sentBy = dc.document["sentBy"].toString()
                                 object1.message = dc.document["message"].toString()
 
+
+
                                 AllChatDataModel.allChatArrayListPersonalStatic.add(object1)
 
                                 Log.d("FireStoreSnap", dc.document["message"].toString())
