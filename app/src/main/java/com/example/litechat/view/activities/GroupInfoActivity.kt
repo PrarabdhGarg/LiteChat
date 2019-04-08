@@ -77,8 +77,8 @@ class GroupInfoActivity : AppCompatActivity() {
             Log.d("Data", "Query" + result.toString())
             var obj = result.toObject(NewDocumentCreate::class.java)
             nmemlist = obj!!.groupmembers
-            groupName.text = obj.groupname
-            nme = obj.groupname
+            groupName.text = obj!!.groupname
+            nme = obj!!.groupname
             Log.d("names", nmemlist.toString())
             var viewAdapter = GroupInfoAdapter(nmemlist, this)
             recyclerViewGroupinfo.apply {

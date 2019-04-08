@@ -33,7 +33,7 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView{
     private lateinit var listenerForProfile: ListenerForFragmentChat
     private var chatNamesForFragment = ArrayList<ChatObject>()
     private  var adapterForFragmentChat: AdapterForFragmentChat? =null
-    private  var numeric =true
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         Log.d("ViewPager" , "onCreateView of FragmentChat called")
@@ -125,16 +125,13 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView{
         listenerForProfile.setCustomObjectListener(object : ListenerForFragmentChat.Listener {
 
             override fun onDataRecieved(number: String, chatDocumentId: String,lastUpdated:String,url:String) {
+
+
+
                 try
                 {
                     var num= number.toDouble()
-                }catch (e :Exception){
-                    numeric = false
-
-                }
-
-                if(numeric)
-                {   //  to show contact name of person chatting with
+                    //  to show contact name of person chatting with
                     var intent = Intent(context,ProfileOtherUser::class.java)
                     intent.putExtra("number" , number)
                     intent.putExtra("documentPathId",chatDocumentId)
@@ -142,9 +139,8 @@ class FragmentChat : Fragment(), AllChatsContractFrag.CFView{
                     //TODO Since same activity is called from fragment and chat activity, cannot write code directly in backpressed method
                     AllChatDataModel.chatScreenStatus = 1
                     startActivity(intent)
-                }
-                else
-                {
+                }catch (e :Exception){
+
                     var intent=Intent(context,GroupInfoActivity::class.java)
                     Log.d("GroupInfo1","documentPathId$chatDocumentId")
                     intent.putExtra("documentPathId",chatDocumentId)

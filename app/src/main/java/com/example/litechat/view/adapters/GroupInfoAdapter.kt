@@ -45,7 +45,7 @@ class GroupInfoAdapter(var memlist:ArrayList<String>,var context: Context): Recy
             try {
                 Glide.with(context).load(it.toString()).apply(RequestOptions().placeholder(context.getDrawable(R.drawable.profile))).
                     into(p0.img)
-            }catch (e : Error)
+            }catch (e : Exception)
             {
                 Log.d("Crash" , e.stackTrace.toString())
             }

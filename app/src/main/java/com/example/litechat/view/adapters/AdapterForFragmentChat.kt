@@ -2,11 +2,7 @@ package com.example.litechat.view.adapters
 
 import android.annotation.TargetApi
 import android.content.Context
-import android.net.Uri
 import android.os.Build
-import android.os.Environment
-import android.support.constraint.Placeholder
-import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
@@ -15,28 +11,20 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.example.litechat.listeners.ListenerForFragmentChat
 import com.example.litechat.R
-import com.example.litechat.listeners.ListenerToPassString
 import com.example.litechat.model.AllChatDataModel
 import com.example.litechat.model.ChatObject
 import com.example.litechat.model.ContactListModel
-import com.google.firebase.storage.FirebaseStorage
-import java.io.File
-import java.io.IOException
-import java.lang.Error
 import java.lang.Exception
-import java.net.URI
 import java.time.Instant
+
 
 class AdapterForFragmentChat(private var dataset :ArrayList<ChatObject>, private var context: Context,
                              private var listenerForFragmentChatImage: ListenerForFragmentChat, private var listenerForFragmentChatChat: ListenerForFragmentChat
 ): RecyclerView.Adapter<AdapterForFragmentChat.MyViewHolder>() {
 
-    private  var listenerForProfileImage=ListenerToPassString()
-    private  var listenerForGroupImage=ListenerToPassString()
 
     class MyViewHolder(val view: View): RecyclerView.ViewHolder(view){
 
@@ -147,17 +135,18 @@ class AdapterForFragmentChat(private var dataset :ArrayList<ChatObject>, private
         })
 
         holder.imageView.setOnClickListener(object: View.OnClickListener{
-            override fun onClick(v: View?) {
-            Log.d("GroupInfo2","documentId from adapter${dataset[position].chatDocumentId}")
+            override fun onClick(v: View?)
+            {
+                Log.d("GroupInfo2","documentId from adapter${dataset[position].chatDocumentId}")
                 // give number to launch profile
-                var urlToPass = " "
-                if((AllChatDataModel.urlList.find { it.chatDocumentId == dataset[position].chatDocumentId })!= null) {
+                var urlToPass =" "
+                if((AllChatDataModel.urlList.find { it.chatDocumentId == dataset[position].chatDocumentId })!= null)
+                {
                     urlToPass = (AllChatDataModel.urlList.find { it.chatDocumentId == dataset[position].chatDocumentId })!!.URL
                     Log.d("RoomImage21", "if of onclick + ${dataset[position].otherNumber}")
                 }
                 else
                 {
-
                     Log.d("RoomImage14", "else of onclick+ ${dataset[position].otherNumber}")
                 }
                 listenerForFragmentChatImage.listener!!.onDataRecieved(dataset[position].otherNumber,dataset[position].chatDocumentId,dataset[position].lastUpdated,urlToPass)
